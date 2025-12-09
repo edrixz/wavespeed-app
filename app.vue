@@ -152,7 +152,20 @@ const handleSubmit = async () => {
     }, 2000);
   } catch (error: any) {
     isProcessing.value = false;
-    addLog(`Lỗi hệ thống: ${error.message}`, "error");
+    console.log("Full Error Object:", error);
+
+    // Logic ưu tiên để lấy tin nhắn lỗi chính xác nhất:
+    // 1. Lấy message từ cấu trúc data chi tiết (nếu server WaveSpeed trả về)
+    // 2. Lấy statusMessage (nơi chứa "Insufficient credits...")
+    // 3. Nếu không có, mới lấy message chung chung
+    const errorMsg =
+      error.response?._data?.data?.message ||
+      error.response?._data?.statusMessage ||
+      error.response?._data?.message ||
+      error.message ||
+      "Lỗi không xác định";
+
+    addLog(`Lỗi từ API: ${errorMsg}`, "error");
   }
 };
 </script>
