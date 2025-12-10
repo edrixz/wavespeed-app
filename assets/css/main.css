@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* --- Custom Scrollbar (Global) --- */
+
+/* Dành cho Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 6px; /* Chiều rộng cho thanh dọc */
+  height: 6px; /* Chiều cao cho thanh ngang */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Nền trong suốt để hòa vào màu web */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #374151; /* Màu xám đậm (gray-700) */
+  border-radius: 9999px; /* Bo tròn mềm mại */
+  border: 1px solid transparent; /* Tạo khoảng hở nhỏ giúp thanh cuộn nhìn 'bay' hơn */
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #4b5563; /* Sáng lên chút khi di chuột (gray-600) */
+}
+
+/* Dành cho Firefox */
+* {
+  scrollbar-width: thin; /* Thanh cuộn mảnh */
+  scrollbar-color: #374151 transparent; /* Màu thumb và track */
+}

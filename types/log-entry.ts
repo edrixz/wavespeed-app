@@ -1,5 +1,4 @@
-export type LogEntry = {
-  time: string;
+export type LogStatus = {
   message: string;
-  type: "info" | "error" | "success";
+  type: "info" | "error" | "success" | "loading";
 };

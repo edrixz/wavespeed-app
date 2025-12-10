@@ -1,18 +1,19 @@
-import type { LogEntry } from "~/types";
+import type { LogStatus } from "~/types";
 
 export const useLogger = () => {
-  const logs = ref<LogEntry[]>([]);
+  // Khởi tạo trạng thái mặc định
+  const loggerStatus = ref<LogStatus>({
+    message: "Ready to generate.",
+    type: "info",
+  });
 
-  const addLog = (
+  // Hàm set status mới
+  const setStatus = (
     message: string,
-    type: "info" | "error" | "success" = "info"
+    type: "info" | "error" | "success" | "loading" = "info"
   ) => {
-    logs.value.push({
-      time: new Date().toLocaleTimeString(),
-      message,
-      type,
-    });
+    loggerStatus.value = { message, type };
   };
 
-  return { logs, addLog };
+  return { loggerStatus, setStatus };
 };

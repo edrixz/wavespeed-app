@@ -4,5 +4,6 @@ export type seedreamEditPayload = {
   enable_safety_checker: boolean;
   images: string[];
   prompt: string;
+  negative_prompt: string;
   size: string;
 };

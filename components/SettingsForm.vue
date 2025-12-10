@@ -2,6 +2,7 @@
 // Nhận v-model trực tiếp cho object settings
 const settings = defineModel<{
   prompt: string;
+  negative_prompt: string;
   width: number;
   height: number;
   enableSafetyChecker: boolean;
@@ -9,8 +10,8 @@ const settings = defineModel<{
   enableBase64Output: boolean;
 }>({ required: true });
 
-// Danh sách các tỷ lệ mẫu
-const ratios = {
+// 1. DATA: Định nghĩa các tỷ lệ
+const ratiosData = {
   square: [{ label: "1:1", w: 1, h: 1 }],
   vertical: [
     { label: "3:4", w: 3, h: 4 },
@@ -24,102 +25,135 @@ const ratios = {
   ],
 };
 
-// Hàm áp dụng tỷ lệ với kích thước lớn nhất (Max 4096)
+// 2. COMPUTED: Gộp tất cả thành 1 danh sách phẳng để loop 1 lần cho tiện
+const ratioList = computed(() => [
+  ...ratiosData.square,
+  ...ratiosData.vertical,
+  ...ratiosData.horizontal,
+]);
+
+// 3. LOGIC: Tính style cho nút hiển thị (giữ nguyên logic cũ)
+const getButtonStyle = (w: number, h: number) => {
+  const BASE_SIZE = 20; // Kích thước chuẩn (px)
+
+  if (w > h) {
+    // Ngang
+    return { width: `${BASE_SIZE}px`, height: `${(BASE_SIZE * h) / w}px` };
+  }
+  if (h > w) {
+    // Dọc
+    return { height: `${BASE_SIZE}px`, width: `${(BASE_SIZE * w) / h}px` };
+  }
+  // Vuông
+  return { width: `${BASE_SIZE * 0.9}px`, height: `${BASE_SIZE * 0.9}px` };
+};
+
+// 4. LOGIC: Apply kích thước (giữ nguyên)
 const applyRatio = (wRatio: number, hRatio: number) => {
   const MAX_SIZE = 4096;
   let newW, newH;
-
   if (wRatio > hRatio) {
-    // Nếu là ảnh ngang: Width max, Height theo tỷ lệ
     newW = MAX_SIZE;
     newH = (MAX_SIZE * hRatio) / wRatio;
   } else if (hRatio > wRatio) {
-    // Nếu là ảnh dọc: Height max, Width theo tỷ lệ
     newH = MAX_SIZE;
     newW = (MAX_SIZE * wRatio) / hRatio;
   } else {
-    // Vuông
     newW = MAX_SIZE;
     newH = MAX_SIZE;
   }
-
-  // Làm tròn về bội số của 64 để tránh lỗi AI
   settings.value.width = Math.round(newW / 64) * 64;
   settings.value.height = Math.round(newH / 64) * 64;
+};
+
+// Hàm kiểm tra xem tỷ lệ hiện tại có khớp với nút này không
+const isActiveRatio = (wRatio: number, hRatio: number) => {
+  const currentRatio = settings.value.width / settings.value.height;
+  const targetRatio = wRatio / hRatio;
+
+  // So sánh với sai số rất nhỏ (epsilon) để tránh lỗi số học
+  return Math.abs(currentRatio - targetRatio) < 0.05;
 };
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-5">
     <div>
-      <label class="block text-sm font-medium mb-2 text-gray-300">Prompt</label>
+      <label class="block text-sm font-medium mb-2 text-gray-300">
+        Prompt <span class="text-red-500">*</span>
+      </label>
       <textarea
         v-model="settings.prompt"
-        rows="4"
-        class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
-      />
+        rows="3"
+        class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+        placeholder="Describe..."
+      ></textarea>
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-2 text-gray-300"
+        >Negative</label
+      >
+      <textarea
+        v-model="settings.negative_prompt"
+        rows="2"
+        class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-red-500 outline-none resize-none"
+        placeholder="Bad quality..."
+      ></textarea>
     </div>
 
-    <div>
-      <label class="block text-sm font-medium mb-3 text-gray-300"
-        >Quick Ratios (Max Size)</label
-      >
-      <div class="space-y-2">
-        <div class="flex gap-2">
-          <span class="text-xs text-gray-500 w-16 flex items-center"
-            >Square:</span
-          >
-          <button
-            v-for="r in ratios.square"
+    <div class="space-y-5">
+      <div>
+        <label class="block text-sm font-medium mb-3 text-gray-300"
+          >Aspect Ratio</label
+        >
+
+        <div
+          class="flex flex-wrap gap-2 bg-gray-700/30 p-2 rounded-lg border border-gray-700/50 justify-between"
+        >
+          <div
+            v-for="r in ratioList"
             :key="r.label"
+            class="flex flex-col items-center gap-2 group cursor-pointer"
             @click="applyRatio(r.w, r.h)"
-            class="px-3 py-1 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded text-xs transition-colors"
           >
-            {{ r.label }}
-          </button>
-        </div>
-        <div class="flex gap-2">
-          <span class="text-xs text-gray-500 w-16 flex items-center"
-            >Vertical:</span
-          >
-          <button
-            v-for="r in ratios.vertical"
-            :key="r.label"
-            @click="applyRatio(r.w, r.h)"
-            class="px-3 py-1 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded text-xs transition-colors"
-          >
-            {{ r.label }}
-          </button>
-        </div>
-        <div class="flex gap-2">
-          <span class="text-xs text-gray-500 w-16 flex items-center"
-            >Horizontal:</span
-          >
-          <button
-            v-for="r in ratios.horizontal"
-            :key="r.label"
-            @click="applyRatio(r.w, r.h)"
-            class="px-3 py-1 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded text-xs transition-colors"
-          >
-            {{ r.label }}
-          </button>
+            <div class="h-8 w-8 flex items-end justify-center">
+              <div
+                class="border-2 rounded-[2px] transition-all shadow-sm duration-200"
+                :class="
+                  isActiveRatio(r.w, r.h)
+                    ? 'bg-blue-600 border-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.5)]'
+                    : 'bg-gray-600 border-gray-500 group-hover:bg-gray-500 group-hover:border-gray-400'
+                "
+                :style="getButtonStyle(r.w, r.h)"
+              ></div>
+            </div>
+
+            <span
+              class="text-[10px] font-mono transition-colors duration-200"
+              :class="
+                isActiveRatio(r.w, r.h)
+                  ? 'text-blue-400 font-bold'
+                  : 'text-gray-400 group-hover:text-gray-300'
+              "
+            >
+              {{ r.label }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
 
     <div
-      class="grid grid-cols-1 gap-5 bg-gray-700/30 p-4 rounded-lg border border-gray-700/50"
+      class="grid grid-cols-2 gap-4 bg-gray-700/30 p-3 rounded-lg border border-gray-700/50"
     >
       <div>
-        <div class="flex justify-between items-center mb-2">
-          <label class="text-xs text-gray-400">Width (px)</label>
+        <div class="flex justify-between items-center mb-1">
+          <label class="text-xs text-gray-400">Width</label>
           <input
             type="number"
             v-model.number="settings.width"
-            min="64"
-            max="4096"
+            class="w-16 bg-transparent text-right text-xs text-blue-400 font-bold outline-none"
             step="64"
-            class="w-20 bg-gray-800 border border-gray-600 rounded px-2 py-1 text-right text-xs focus:ring-1 focus:ring-blue-500 outline-none text-blue-400 font-bold"
           />
         </div>
         <input
@@ -128,20 +162,17 @@ const applyRatio = (wRatio: number, hRatio: number) => {
           min="64"
           max="4096"
           step="64"
-          class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
+          class="w-full h-1.5 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
         />
       </div>
-
       <div>
-        <div class="flex justify-between items-center mb-2">
-          <label class="text-xs text-gray-400">Height (px)</label>
+        <div class="flex justify-between items-center mb-1">
+          <label class="text-xs text-gray-400">Height</label>
           <input
             type="number"
             v-model.number="settings.height"
-            min="64"
-            max="4096"
+            class="w-16 bg-transparent text-right text-xs text-blue-400 font-bold outline-none"
             step="64"
-            class="w-20 bg-gray-800 border border-gray-600 rounded px-2 py-1 text-right text-xs focus:ring-1 focus:ring-blue-500 outline-none text-blue-400 font-bold"
           />
         </div>
         <input
@@ -150,13 +181,9 @@ const applyRatio = (wRatio: number, hRatio: number) => {
           min="64"
           max="4096"
           step="64"
-          class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
+          class="w-full h-1.5 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
         />
       </div>
-
-      <p class="text-[10px] text-center text-gray-500 font-mono mt-1">
-        Final Size: {{ settings.width }} x {{ settings.height }}
-      </p>
     </div>
 
     <div class="space-y-3 p-3 bg-gray-700/30 rounded-lg">
@@ -187,3 +214,19 @@ const applyRatio = (wRatio: number, hRatio: number) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
