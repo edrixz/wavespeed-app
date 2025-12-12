@@ -171,7 +171,7 @@ const handleGenerate = async () => {
         <h1
           class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
         >
-          Wavespeed Seedream v4.5
+          Wavespeed Seedream
         </h1>
 
         <ImageUploader
@@ -181,7 +181,7 @@ const handleGenerate = async () => {
           @replace-image="handleReplaceImage"
         />
 
-        <SettingsForm v-model="settings" />
+        <SettingsForm v-model="settings" :preview-images="previewImages" />
 
         <div
           class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gray-900/90 backdrop-blur-md border-t border-gray-700 lg:static lg:bg-transparent lg:border-none lg:p-0 transition-all"

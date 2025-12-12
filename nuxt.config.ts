@@ -2,7 +2,21 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    [
+      "@nuxtjs/google-fonts",
+      {
+        families: {
+          "Be Vietnam Pro": [300, 400, 500, 600, 700],
+        },
+        display: "swap",
+        subsets: ["vietnamese"],
+        download: true,
+        inject: true,
+      },
+    ],
+  ],
   css: ["~/assets/css/main.css"],
   runtimeConfig: {
     // Private keys (chỉ server mới thấy)

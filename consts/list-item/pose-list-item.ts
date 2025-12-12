@@ -1,0 +1,85 @@
+export const poseListItem = [
+  {
+    name: "Cơ bản / Tĩnh",
+    items: [
+      { label: "🧍 Đứng (Standing)", value: "Standing Pose" },
+      { label: "🪑 Ngồi (Sitting)", value: "Sitting Pose" },
+      { label: "🧎 Quỳ (Kneeling)", value: "Kneeling Pose" },
+      { label: "🛌 Nằm (Lying)", value: "Lying Down Pose" },
+      { label: "🧘 Thiền/Yoga", value: "Meditation Pose, Yoga Pose" },
+      { label: "🧱 Dựa tường", value: "Against a Wall Pose" },
+      { label: "Dựa người", value: "Leaning Pose" },
+      { label: "Ngồi vắt chân", value: "Sitting Cross-Legged Pose" },
+      { label: "Ngồi thư giãn", value: "Relaxing Sitting Pose" },
+      { label: "Ngồi năng động", value: "Dynamic Sitting Pose" },
+      { label: "Cúi người", value: "Crouching Pose, Bending Pose" },
+    ],
+  },
+  {
+    name: "Hành động / Di chuyển",
+    items: [
+      { label: "🚶 Đi bộ", value: "Walking Pose, Casual Stroll Pose" },
+      { label: "🏃 Chạy", value: "Running Pose" },
+      { label: "🦘 Nhảy (Jump)", value: "Jumping Pose, Dynamic Jump Pose" },
+      { label: "💃 Nhảy múa", value: "Dancing Pose, Artistic Dance Pose" },
+      { label: "🤸 Nhào lộn", value: "Cartwheel Pose" },
+      { label: "Đuổi theo", value: "Chasing Pose" }, // Sửa typo Chassing
+      { label: "Hành động mạnh", value: "Dynamic Action Pose" },
+      { label: "Chiến đấu", value: "Battle Pose, Kung Fu Pose" },
+      { label: "Bay/Lơ lửng", value: "Floating Pose" }, // Bổ sung cho phong phú
+    ],
+  },
+  {
+    name: "Thời trang / Nghệ thuật",
+    items: [
+      { label: "✨ Người mẫu", value: "Fashion Model Pose, High Fashion Pose" },
+      { label: "S-Shape", value: "S-curve Pose, S-shape Pose" },
+      { label: "Vogue", value: "Vogue Pose" },
+      { label: "Quyến rũ", value: "Captivating Pose, Feminine Pose" },
+      { label: "Nam tính", value: "Masculine Pose, Power Pose" },
+      { label: "Ngoái nhìn", value: "Looking Back Over Shoulder Pose" },
+      { label: "Nghiêng đầu", value: "Tilted Head Pose" },
+      { label: "Chân dung", value: "Headshot Pose, Close-Up Beauty Shot Pose" },
+      { label: "Jojo Style", value: "Jojo Pose" },
+      { label: "Contrapposto", value: "Contrapposto Pose" },
+    ],
+  },
+  {
+    name: "Tương tác Tay",
+    items: [
+      { label: "Tay chống hông", value: "Hand-on-Hip Pose" },
+      { label: "Tay lên cao", value: "Arms Up Pose, Reaching Pose" },
+      { label: "Vuốt tóc", value: "Touching Hair Pose, Ajusting Hair Pose" },
+      { label: "Chạm mặt", value: "Touching Face Pose, One Hand on Face Pose" },
+      { label: "Chỉnh áo", value: "Adjusting Clothing Pose" },
+      { label: "Vẫy tay", value: "Waving Hand Pose" },
+      { label: "Khoanh tay", value: "Crossed Arms Pose" },
+      { label: "Che tai", value: "Touching Ear Pose" },
+    ],
+  },
+  {
+    name: "Cầm nắm (Holding)",
+    items: [
+      { label: "📱 Điện thoại", value: "Holding Phone Pose" },
+      { label: "🍦 Kem", value: "Holding Ice Cream Pose" },
+      { label: "👜 Túi xách", value: "Holding Bag Pose" },
+      { label: "🍷 Ly nước", value: "Holding Glass Pose" },
+      { label: "🎤 Micro", value: "Holding Microphone Pose" },
+      { label: "🎧 Tai nghe", value: "Holding Headset Pose" },
+      { label: "🖊️ Bút", value: "Holding Pen Pose" },
+      { label: "📖 Đọc sách", value: "Reading Book Pose" },
+      { label: "Tương tác đồ vật", value: "Interacting with Props Pose" },
+    ],
+  },
+  {
+    name: "Cảm xúc / Khác",
+    items: [
+      { label: "😆 Cười lớn", value: "Laughing Candidly Pose" },
+      { label: "😶 Nhìn xa xăm", value: "Gazing into the Distance Pose" },
+      { label: "🚬 Hút thuốc", value: "Smoking Pose" },
+      { label: "🧘 Thư giãn", value: "Relaxing Pose" },
+      { label: "💪 Khoe cơ bắp", value: "Muscle Pose" },
+      { label: "Giãn cơ", value: "Stretching Pose" },
+    ],
+  },
+];

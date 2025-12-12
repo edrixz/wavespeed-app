@@ -1,4 +1,10 @@
 <script setup lang="ts">
+const props = defineProps<{
+  previewImages: string[];
+}>();
+
+const useBuilder = ref(true);
+
 // Nhận v-model trực tiếp cho object settings
 const settings = defineModel<{
   prompt: string;
@@ -78,16 +84,57 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
 
 <template>
   <div class="space-y-5">
-    <div>
-      <label class="block text-sm font-medium mb-2 text-gray-300">
-        Prompt <span class="text-red-500">*</span>
-      </label>
+    <div class="flex justify-between items-center mb-2">
+      <label class="text-sm font-medium text-gray-300">Prompt Mode</label>
+      <div class="bg-gray-700 p-1 rounded-lg flex text-xs font-bold">
+        <button
+          @click="useBuilder = false"
+          class="px-3 py-1 rounded transition-all"
+          :class="
+            !useBuilder
+              ? 'bg-gray-600 text-white shadow'
+              : 'text-gray-400 hover:text-gray-200'
+          "
+        >
+          Simple
+        </button>
+        <button
+          @click="useBuilder = true"
+          class="px-3 py-1 rounded transition-all"
+          :class="
+            useBuilder
+              ? 'bg-blue-600 text-white shadow'
+              : 'text-gray-400 hover:text-gray-200'
+          "
+        >
+          Builder
+        </button>
+      </div>
+    </div>
+
+    <PromptBuilder
+      v-if="useBuilder"
+      :preview-images="previewImages"
+      v-model="settings.prompt"
+    />
+
+    <div v-else>
+      <div class="flex justify-between mb-2">
+        <label class="text-sm font-medium text-gray-300">
+          Prompt <span class="text-red-500">*</span>
+        </label>
+        <span
+          class="text-xs text-gray-500 cursor-pointer hover:text-blue-400"
+          @click="settings.prompt = ''"
+          >Clear</span
+        >
+      </div>
       <textarea
         v-model="settings.prompt"
-        rows="3"
-        class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none"
-        placeholder="Describe..."
-      ></textarea>
+        rows="6"
+        class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none placeholder-gray-500"
+        placeholder="Describe what you want to see..."
+      />
     </div>
     <div>
       <label class="block text-sm font-medium mb-2 text-gray-300"
@@ -95,10 +142,10 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
       >
       <textarea
         v-model="settings.negative_prompt"
-        rows="2"
+        rows="6"
         class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-red-500 outline-none resize-none"
         placeholder="Bad quality..."
-      ></textarea>
+      />
     </div>
 
     <div class="space-y-5">
