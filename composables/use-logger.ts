@@ -1,19 +1,27 @@
 import type { LogStatus } from "~/types";
 
-export const useLogger = () => {
-  // Khởi tạo trạng thái mặc định
-  const loggerStatus = ref<LogStatus>({
-    message: "Ready to generate.",
-    type: "info",
-  });
+// 1. Đưa state ra ngoài hàm để nó trở thành Global (Singleton)
+// Chỉ khởi tạo 1 lần duy nhất trong suốt vòng đời App
+const globalLoggerStatus = ref<LogStatus>({
+  message: "Ready to generate.",
+  type: "info",
+});
 
-  // Hàm set status mới
+export const useLogger = () => {
+  // 2. Hàm setStatus cập nhật vào biến Global đó
   const setStatus = (
     message: string,
     type: "info" | "error" | "success" | "loading" = "info"
   ) => {
-    loggerStatus.value = { message, type };
+    console.log(`[Logger] ${type.toUpperCase()}: ${message}`);
+    
+    // Gán object mới để trigger reactivity
+    globalLoggerStatus.value = { message, type };
   };
 
-  return { loggerStatus, setStatus };
+  // 3. Trả về biến Global
+  return { 
+    loggerStatus: globalLoggerStatus, 
+    setStatus 
+  };
 };

@@ -1,51 +1,16 @@
 <script setup lang="ts">
-const props = defineProps<{
-  previewImages: string[];
-}>();
+import { useImageUploader } from "~/composables";
 
-const emit = defineEmits<{
-  (e: "files-selected", files: FileList): void;
-  (e: "remove-image", index: number): void;
-  (e: "replace-image", index: number, file: File): void;
-}>();
-
-// Ref cho các input ẩn
-const mainInputRef = ref<HTMLInputElement | null>(null);
-const replaceInputRef = ref<HTMLInputElement | null>(null);
-const replacingIndex = ref<number | null>(null);
-
-// --- ACTIONS ---
-
-// 1. Thêm ảnh mới
-const triggerAdd = () => {
-  mainInputRef.value?.click();
-};
-const onFileChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  if (target.files) emit("files-selected", target.files);
-  target.value = "";
-};
-
-// 2. Thay thế ảnh
-const triggerReplace = (index: number) => {
-  replacingIndex.value = index;
-  replaceInputRef.value?.click();
-};
-// Hàm xử lý khi input ẩn chọn được file mới
-const onReplaceFileChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  // Chỉ lấy file đầu tiên (vì chỉ thay thế 1 ảnh)
-  const file = target.files?.[0];
-
-  if (file && replacingIndex.value !== null) {
-    // Bắn sự kiện về cha kèm index và file mới
-    emit("replace-image", replacingIndex.value, file);
-  }
-
-  // Reset
-  target.value = "";
-  replacingIndex.value = null;
-};
+const {
+  previewImages,
+  mainInputRef,
+  replaceInputRef,
+  triggerAdd,
+  triggerReplace,
+  onFileChange,
+  onReplaceFileChange,
+  removeImage,
+} = useImageUploader();
 </script>
 
 <template>
@@ -90,20 +55,11 @@ const onReplaceFileChange = (event: Event) => {
 
         <button
           v-if="previewImages.length > 1"
-          @click.stop="emit('remove-image', idx)"
+          @click.stop="removeImage(idx)"
           class="absolute top-1 right-1 p-1 rounded-full bg-black/50 text-gray-300 hover:bg-red-600 hover:text-white transition-colors z-20 backdrop-blur-sm"
           title="Remove image"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            class="w-3.5 h-3.5"
-          >
-            <path
-              d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
-            />
-          </svg>
+          <IconsClose />
         </button>
 
         <div
@@ -120,16 +76,7 @@ const onReplaceFileChange = (event: Event) => {
         <div
           class="w-8 h-8 rounded-full bg-gray-700 group-hover:bg-blue-900/50 flex items-center justify-center transition-colors"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            class="w-5 h-5"
-          >
-            <path
-              d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
-            />
-          </svg>
+          <IconsPlus />
         </div>
         <span class="text-[10px] font-bold uppercase tracking-wider"
           >Add New</span

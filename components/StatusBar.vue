@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import type { LogStatus } from "~/types";
 
-defineProps<{
-  loggerStatus: LogStatus;
-}>();
+const loggerStatus = defineModel<LogStatus>({ required: true });
 </script>
 
 <template>

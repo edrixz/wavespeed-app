@@ -17,7 +17,7 @@ const props = defineProps<{
 
 const emit = defineEmits(["update:modelValue"]);
 
-const showBasicInfo = ref(true);
+const showBasicInfo = ref(false);
 const showSkinDetails = ref(false);
 const showFaceDetails = ref(false);
 const showHairDetails = ref(false);
@@ -158,6 +158,8 @@ const generatedPrompt = computed(() => {
       // 3. Nối lại và thêm duy nhất 1 từ "Pose" ở cuối
       // Kết quả: "Standing, Holding Phone, Laughing Candidly Pose."
       desc += ` Pose: ${cleanPoses.join(", ")}, ${s.expression}. `;
+    } else {
+      desc += ` Pose: ${s.expression}. `;
     }
 
     p += desc;
@@ -461,12 +463,6 @@ const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
                     class="text-xs font-bold text-blue-300 uppercase tracking-wide"
                     >Identity & Body</span
                   >
-                  <span
-                    class="text-[9px] text-gray-500 font-normal normal-case"
-                    v-if="!showBasicInfo"
-                  >
-                    {{ sub.gender }}, {{ sub.age }}yo, {{ sub.bodyType }}
-                  </span>
                 </div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
