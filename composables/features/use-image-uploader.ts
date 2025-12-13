@@ -2,13 +2,13 @@ import { ref } from "vue";
 import { useLogger } from "~/composables";
 const { setStatus } = useLogger();
 
-export const useImageUploader = () => {
-  // Image State
-  const defaultImageUrl =
-    "https://d1q70pf5vjeyhc.cloudfront.net/media/92d2d4ca66f84793adcb20742b15d262/images/1764761316371833793_r5ZX531Z.jpeg";
-  const selectedFiles = ref<File[]>([]);
-  const previewImages = ref<string[]>([defaultImageUrl]);
+// Image State
+const defaultImageUrl =
+  "https://d1q70pf5vjeyhc.cloudfront.net/media/92d2d4ca66f84793adcb20742b15d262/images/1764761316371833793_r5ZX531Z.jpeg";
+const selectedFiles = ref<File[]>([]);
+const previewImages = ref<string[]>([defaultImageUrl]);
 
+export const useImageUploader = () => {
   // Ref cho các input ẩn
   const mainInputRef = ref<HTMLInputElement | null>(null);
   const replaceInputRef = ref<HTMLInputElement | null>(null);
