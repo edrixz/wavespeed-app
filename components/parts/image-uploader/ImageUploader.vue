@@ -2,13 +2,13 @@
 import { useImageUploader } from "~/composables";
 
 const {
-  previewImages,
-  mainInputRef,
+  images,
+  addInputRef,
   replaceInputRef,
-  triggerAdd,
-  triggerReplace,
-  onFileChange,
-  onReplaceFileChange,
+  addImage,
+  replaceImage,
+  onAddChange,
+  onReplaceChange,
   removeImage,
 } = useImageUploader();
 </script>
@@ -20,41 +20,41 @@ const {
         Reference Images
         <span
           class="text-xs text-gray-500 font-normal"
-          v-if="previewImages.length > 0"
+          v-if="images.length > 0"
         >
-          ({{ previewImages.length }} active)
+          ({{ images.length }} active)
         </span>
       </label>
     </div>
 
     <input
-      ref="mainInputRef"
+      ref="addInputRef"
       type="file"
       multiple
       accept="image/*"
       class="hidden"
-      @change="onFileChange"
+      @change="onAddChange"
     />
     <input
       ref="replaceInputRef"
       type="file"
       accept="image/*"
       class="hidden"
-      @change="onReplaceFileChange"
+      @change="onReplaceChange"
     />
 
     <div class="grid grid-cols-3 gap-3">
       <div
-        v-for="(img, idx) in previewImages"
+        v-for="(img, idx) in images"
         :key="idx"
-        @click="triggerReplace(idx)"
+        @click="replaceImage(idx)"
         class="group relative aspect-square bg-gray-800 rounded-lg border border-gray-700 overflow-hidden hover:border-blue-500 transition-all cursor-pointer hover:opacity-90"
         title="Click to replace image"
       >
-        <img :src="img" class="w-full h-full object-cover" />
+        <img :src="img.url" class="w-full h-full object-cover" />
 
         <button
-          v-if="previewImages.length > 1"
+          v-if="images.length > 1"
           @click.stop="removeImage(idx)"
           class="absolute top-1 right-1 p-1 rounded-full bg-black/50 text-gray-300 hover:bg-red-600 hover:text-white transition-colors z-20 backdrop-blur-sm"
           title="Remove image"
@@ -70,7 +70,7 @@ const {
       </div>
 
       <button
-        @click="triggerAdd"
+        @click="addImage"
         class="aspect-square flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-600 bg-gray-800/30 text-gray-400 hover:text-blue-400 hover:border-blue-500 hover:bg-gray-800 transition-all group"
       >
         <div

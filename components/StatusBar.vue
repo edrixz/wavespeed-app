@@ -11,6 +11,7 @@ const loggerStatus = defineModel<LogStatus>({ required: true });
       'border-blue-500/50 bg-blue-900/10': loggerStatus.type === 'loading',
       'border-green-500/50 bg-green-900/10': loggerStatus.type === 'success',
       'border-red-500/50 bg-red-900/10': loggerStatus.type === 'error',
+      'border-yellow-500/50 bg-yellow-900/10': loggerStatus.type === 'warning',
     }"
   >
     <div class="flex-shrink-0">
@@ -50,6 +51,21 @@ const loggerStatus = defineModel<LogStatus>({ required: true });
       </svg>
 
       <svg
+        v-else-if="loggerStatus.type === 'warning'"
+        class="w-5 h-5 text-yellow-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg>
+
+      <svg
         v-else
         class="w-5 h-5 text-blue-400"
         fill="none"
@@ -75,6 +91,7 @@ const loggerStatus = defineModel<LogStatus>({ required: true });
             'text-green-300': loggerStatus.type === 'success',
             'text-red-300': loggerStatus.type === 'error',
             'text-gray-300': loggerStatus.type === 'info',
+            'text-yellow-300': loggerStatus.type === 'warning',
           }"
         >
           {{ loggerStatus.message }}

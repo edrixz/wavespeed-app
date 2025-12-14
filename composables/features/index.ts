@@ -1,1 +1,1 @@
-export * from "./use-image-uploader";
+export * from "./image-uploader";

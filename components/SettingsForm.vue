@@ -1,8 +1,4 @@
 <script setup lang="ts">
-const props = defineProps<{
-  previewImages: string[];
-}>();
-
 const useBuilder = ref(true);
 
 // Nhận v-model trực tiếp cho object settings
@@ -114,7 +110,6 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
 
     <PromptBuilder
       v-if="useBuilder"
-      :preview-images="previewImages"
       v-model="settings.prompt"
     />
 

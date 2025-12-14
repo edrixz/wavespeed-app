@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
-import { useLogger, useWaveSpeed, useUploadToTmpFiles, useImageUploader } from "./composables";
+import {
+  useLogger,
+  useWaveSpeed,
+  useUploadToTmpFiles,
+  useImageUploader,
+} from "./composables";
 import type { GenerateSettings, seedreamEditPayload } from "./types";
 
 const { loggerStatus, setStatus } = useLogger();
 const { uploadMultipleFiles } = useUploadToTmpFiles();
 const { isProcessing, resultImage, submitTask, pollTask } = useWaveSpeed();
-const {
-  previewImages,
-  selectedFiles,
-} = useImageUploader();
+const { images, filesToUpload } = useImageUploader();
 
 // Settings State
 const settings = reactive<GenerateSettings>({
@@ -24,9 +26,8 @@ const settings = reactive<GenerateSettings>({
   enableBase64Output: false,
 });
 
-
 const handleGenerate = async () => {
-  if (previewImages.value.length === 0) {
+  if (images.value.length === 0) {
     setStatus("Vui lòng có ít nhất 1 ảnh reference!", "error");
     return;
   }
@@ -40,18 +41,19 @@ const handleGenerate = async () => {
     const finalImageUrls: string[] = [];
 
     // Lấy URL cũ
-    previewImages.value.forEach((img) => {
-      if (img.startsWith("http") && !img.startsWith("blob:"))
-        finalImageUrls.push(img);
+    images.value.forEach((img) => {
+      if (img.url.startsWith("http") && !img.url.startsWith("blob:"))
+        finalImageUrls.push(img.url);
     });
 
     // Upload file mới
-    if (selectedFiles.value.length > 0) {
+    if (filesToUpload.value.length > 0) {
       setStatus(
-        `Đang upload ${selectedFiles.value.length} ảnh lên server tạm...`,
+        `Đang upload ${filesToUpload.value.length} ảnh lên server tạm...`,
         "loading"
       );
-      const uploadedUrls = await uploadMultipleFiles(selectedFiles.value);
+
+      const uploadedUrls = await uploadMultipleFiles(filesToUpload.value);
       finalImageUrls.push(...uploadedUrls);
       setStatus("Upload xong.", "success");
     }
@@ -115,7 +117,7 @@ const handleGenerate = async () => {
         <!-- Reference Image Uploader -->
         <PartsImageUploader />
 
-        <SettingsForm v-model="settings" :preview-images="previewImages" />
+        <SettingsForm v-model="settings" />
 
         <div
           class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gray-900/90 backdrop-blur-md border-t border-gray-700 lg:static lg:bg-transparent lg:border-none lg:p-0 transition-all"

@@ -11,7 +11,7 @@ export const useLogger = () => {
   // 2. Hàm setStatus cập nhật vào biến Global đó
   const setStatus = (
     message: string,
-    type: "info" | "error" | "success" | "loading" = "info"
+    type: "info" | "warning" | "error" | "success" | "loading" = "info"
   ) => {
     console.log(`[Logger] ${type.toUpperCase()}: ${message}`);
     

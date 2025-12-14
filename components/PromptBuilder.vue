@@ -10,8 +10,9 @@ import {
 } from "~/consts";
 import type { Subject } from "~/types";
 
+const { images } = useImageUploader();
+
 const props = defineProps<{
-  previewImages: string[];
   modelValue: string; // v-model liên kết với settings.prompt ở cha
 }>();
 
@@ -430,7 +431,7 @@ const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
                   None
                 </div>
                 <div
-                  v-for="(img, imgIdx) in previewImages"
+                  v-for="(img, imgIdx) in images"
                   :key="imgIdx"
                   @click="toggleRefImage(idx, imgIdx)"
                   class="h-12 w-12 rounded flex-shrink-0 cursor-pointer border-2 relative overflow-hidden transition-all group"
@@ -440,7 +441,7 @@ const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
                       : 'border-gray-700 opacity-60 hover:opacity-100'
                   "
                 >
-                  <img :src="img" class="w-full h-full object-cover" />
+                  <img :src="img.url" class="w-full h-full object-cover" />
                   <div
                     class="absolute bottom-0 right-0 bg-blue-600 text-white text-[8px] px-1 font-bold"
                   >
