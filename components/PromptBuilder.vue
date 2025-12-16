@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, watch } from "vue";
+import { useImageUploader } from "~/composables";
+import { usePromptBuilderStore } from "~/stores/prompt-builder-store";
 import {
   bodyTypeListItem,
   faceDetailListItem,
@@ -8,9 +10,15 @@ import {
   poseListItem,
   sceneData,
 } from "~/consts";
-import type { Subject } from "~/types";
 
+// Lấy images từ useImageUploader
 const { images } = useImageUploader();
+
+// Lấy subjects, activeSubjectId, scene từ Store
+const store = usePromptBuilderStore();
+const { addSubject, removeSubject } = store;
+const { subjects, activeSubjectId, scene, generatedPrompt } =
+  storeToRefs(store);
 
 const props = defineProps<{
   modelValue: string; // v-model liên kết với settings.prompt ở cha
@@ -25,228 +33,9 @@ const showHairDetails = ref(false);
 const showPoseDetails = ref(false);
 const showGlobalScene = ref(false);
 
-// Mặc định có 1 đối tượng
-const subjects = ref<Subject[]>([
-  {
-    id: 1,
-    role: "The main subject",
-    refImageIdx: 0,
-    gender: "Female",
-    age: 20,
-    bodyType: "Petite",
-    faceShape: "",
-    skin: "Realistic Skin Details, Natural Skin Texture, Highly Detailed Skin, Pore-level Skin Detail",
-    freckles: "",
-    eyes: "",
-    iris: "",
-    hairLength: "",
-    hairColor: "",
-    hairStyle: "",
-    beard: "",
-    makeup: "",
-    clothes: "",
-    pose: "",
-    expression: "Looking at camera",
-  },
-  {
-    id: 2,
-    role: "The man",
-    refImageIdx: 1,
-    gender: "Male",
-    age: 20,
-    bodyType: "Fit",
-    faceShape: "",
-    skin: "Realistic Skin Details, Natural Skin Texture, Highly Detailed Skin, Pore-level Skin Detail",
-    freckles: "",
-    eyes: "",
-    iris: "",
-    hairLength: "",
-    hairColor: "",
-    hairStyle: "",
-    beard: "",
-    makeup: "",
-    clothes: "",
-    pose: "",
-    expression: "Looking at camera",
-  },
-]);
-
-// State lưu Tab đang active (Mặc định là ID của subject đầu tiên)
-const activeSubjectId = ref<number>(subjects.value[0].id);
-
-const scene = ref({
-  interaction:
-    "hardcore sex, Covered in sweat, flirty, sweaty, (Different Sex Positions: The man was touching the girl's vagina while his other hand was squeezing her breasts.)", // e.g. "Holding hands", "Walking together"
-  background: "Keep location as in Image #1",
-  viewpoint: "",
-  lighting: "",
-  camera: "Shot on Sony A7R V, 85mm Lens, f/1.4",
-  film: "",
-  quality:
-    "Photorealistic detail, 8k uhd, high-resolution skin, natural lighting. (breathtaking realistic) , (pale skin) , (huge tits:1.2) , naked tits, huge tits, hard nipples, wet skin, realistic, stunning colorful picture, award-winning photo. best shadows, realistic, wet, huge tits, (hard nipples) , hyperrealistic. High-end beauty retouch, micro-contrast boosted for realistic skin texture, film grain, color grading with cinematic tones",
-});
-
-// --- LOGIC: PROMPT GENERATION ENGINE ---
-const generatedPrompt = computed(() => {
-  // 1. SETUP: Viewpoint & Intro
-  let p = `${scene.value.viewpoint || "A shot"} of `;
-
-  // Liệt kê danh sách (e.g. "a woman and a man")
-  const rolesList = subjects.value
-    .map((s) => {
-      const ageGender = `${s.gender}`.trim();
-      const isNaked = s.clothes === "" ? "nude" : "";
-      return `a ${isNaked} ${ageGender}${
-        s.refImageIdx !== -1
-          ? ` (Reference Face: Image #${s.refImageIdx + 1})`
-          : ""
-      }`;
-    })
-    .join(" and ");
-
-  p += `${rolesList}. `;
-
-  // 2. INTERACTION (Nếu có nhiều hơn 1 người)
-  if (subjects.value.length > 1 && scene.value.interaction) {
-    p += `They are ${scene.value.interaction}. `;
-  }
-
-  // 3. SUBJECT DETAILS LOOP
-  subjects.value.forEach((s, i) => {
-    // Bắt đầu mô tả từng người
-    let bodyTypeDesc = s.bodyType ? ` with ${s.bodyType} body` : "";
-    let desc = `${s.gender}${bodyTypeDesc}. `;
-
-    // face shape
-    if (s.faceShape) desc += `Face shape: ${s.faceShape}. `;
-
-    // Ghép Skin + Freckles vào chung 1 câu về da
-    let skinDesc = [s.skin, s.freckles].filter(Boolean).join(", ");
-    if (skinDesc) desc += `Skin details: ${skinDesc}. `;
-
-    // Ghép Eyes + Iris vào chung
-    let eyeDesc = [s.eyes, s.iris].filter(Boolean).join(", ");
-    if (eyeDesc) desc += `Eyes: ${eyeDesc}. `;
-
-    // Hair details
-    let hairParts = [];
-    if (s.hairLength) hairParts.push(s.hairLength);
-    if (s.hairColor) hairParts.push(s.hairColor);
-    let hairDesc = "";
-    if (hairParts.length > 0) {
-      hairDesc += hairParts.join(" ") + " hair"; // -> "Long blonde hair"
-    }
-    if (s.hairStyle) {
-      // Nếu đã có mô tả dài/màu, thêm dấu phẩy
-      if (hairDesc) hairDesc += `, ${s.hairStyle}`;
-      else hairDesc += s.hairStyle;
-    }
-    if (hairDesc) desc += `Hair: ${hairDesc}. `;
-    if (s.beard) desc += `Beard: ${s.beard}. `;
-    if (s.makeup) desc += `Makeup: ${s.makeup}. `;
-
-    // Trang phục & Dáng
-    if (s.clothes) desc += `Wearing ${s.clothes}. `;
-
-    // Pose
-    if (s.pose) {
-      const rawPoses = s.pose.split(",");
-
-      // 2. Xóa chữ "Pose" (không phân biệt hoa thường) ở cuối mỗi cụm từ
-      // Ví dụ: "Standing Pose" -> "Standing"
-      const cleanPoses = rawPoses.map((p) => p.trim().replace(/\s+Pose$/i, ""));
-
-      // 3. Nối lại và thêm duy nhất 1 từ "Pose" ở cuối
-      // Kết quả: "Standing, Holding Phone, Laughing Candidly Pose."
-      desc += ` Pose: ${cleanPoses.join(", ")}, ${s.expression}. `;
-    } else {
-      desc += ` Pose: ${s.expression}. `;
-    }
-
-    p += desc;
-  });
-
-  // 4. ENVIRONMENT & TECH SPECS
-  if (scene.value.background) p += `Background: ${scene.value.background}. `;
-  if (scene.value.lighting) p += `Lighting: ${scene.value.lighting}. `;
-
-  // Tech Stack
-  const tech = [scene.value.camera, scene.value.film, scene.value.quality]
-    .filter(Boolean)
-    .join(", ");
-  p += `${tech}.`;
-
-  return p;
-});
-
-// Update ngược ra ngoài v-model
-watch(
-  generatedPrompt,
-  (val) => {
-    emit("update:modelValue", val);
-  },
-  { immediate: true }
-);
-
-// --- ACTIONS ---
-const addSubject = () => {
-  const newId = Date.now();
-  subjects.value.push({
-    id: Date.now(),
-    role: subjects.value.length === 0 ? "The woman" : "The man",
-    refImageIdx: -1,
-    gender: "Male",
-    age: 20,
-    bodyType: "",
-    faceShape: "",
-    freckles: "",
-    skin: "Detailed skin texture, pores",
-    eyes: "",
-    iris: "",
-    hairLength: "",
-    hairColor: "",
-    hairStyle: "",
-    beard: "",
-    makeup: "",
-    clothes: "",
-    pose: "",
-    expression: "Looking at camera",
-  });
-  // Tự động chuyển sang tab mới tạo
-  activeSubjectId.value = newId;
-};
-
-const removeSubject = (index: number) => {
-  const idToRemove = subjects.value[index].id;
-
-  // Logic: Nếu đang xóa đúng tab hiện tại, phải chuyển active sang tab khác
-  if (idToRemove === activeSubjectId.value) {
-    const newIndex = index === 0 ? 1 : index - 1;
-    if (subjects.value[newIndex]) {
-      activeSubjectId.value = subjects.value[newIndex].id;
-    }
-  }
-  subjects.value.splice(index, 1);
-};
-
 const toggleRefImage = (subjectIdx: number, imgIdx: number) => {
-  // Nếu đang chọn chính nó thì bỏ chọn (-1), ngược lại thì chọn
   subjects.value[subjectIdx].refImageIdx =
     subjects.value[subjectIdx].refImageIdx === imgIdx ? -1 : imgIdx;
-};
-
-// --- COPY FUNCTION ---
-const isCopied = ref(false);
-
-const copyPrompt = () => {
-  // Vì generatedPrompt là computed, phải dùng .value để lấy giá trị
-  navigator.clipboard.writeText(generatedPrompt.value);
-
-  // Hiệu ứng đổi chữ "Copy" thành "Copied!" trong 2 giây
-  isCopied.value = true;
-  setTimeout(() => {
-    isCopied.value = false;
-  }, 2000);
 };
 
 // LOGIC XỬ LÝ CHỌN NHIỀU (TOGGLE)
@@ -319,10 +108,10 @@ const updateScene = (
 ) => {
   if (mode === "single") {
     // @ts-ignore
-    scene.value[key] = scene.value[key] === value ? "" : value;
+    scene[key] = scene[key] === value ? "" : value;
   } else {
     // @ts-ignore
-    let currentTags = scene.value[key]
+    let currentTags = scene[key]
       ? scene.value[key]
           .split(",")
           .map((s) => s.trim())
@@ -332,17 +121,24 @@ const updateScene = (
     if (index !== -1) currentTags.splice(index, 1);
     else currentTags.push(value);
     // @ts-ignore
-    scene.value[key] = currentTags.join(", ");
+    scene[key] = currentTags.join(", ");
   }
 };
 
 // Helper check active cho Scene
 const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
-  // @ts-ignore
-  if (!scene.value[key]) return false;
-  // @ts-ignore
-  return scene.value[key].includes(value);
+  const currentVal = scene.value[key];
+  if (!currentVal) return false;
+  return currentVal.includes(value);
 };
+
+watch(
+  () => store.generatedPrompt,
+  (newVal) => {
+    emit("update:modelValue", newVal);
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -350,22 +146,21 @@ const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
     class="flex flex-col gap-6 bg-gray-800/40 p-4 rounded-xl border border-gray-700"
   >
     <div
-      class="flex justify-between items-center border-b border-gray-700 pb-3"
+      class="flex flex-col gap-2 justify-between items-center border-b border-gray-700 pb-3"
     >
-      <div class="flex items-center gap-2">
+      <div class="w-full flex items-center gap-2">
         <span class="text-lg">🛠️</span>
         <h3 class="text-sm font-bold text-gray-200 uppercase tracking-wider">
           Prompt Builder
         </h3>
       </div>
-      <button
-        @click="copyPrompt"
-        class="text-[10px] font-bold cursor-pointer hover:underline transition-colors flex items-center gap-1"
-        :class="isCopied ? 'text-green-400' : 'text-blue-400'"
-      >
-        <span v-if="isCopied">✓ Copied!</span>
-        <span v-else>Copy Prompt</span>
-      </button>
+
+      <div class="flex w-full justify-between">
+        <PartsImageAnalyzer />
+
+        <!-- Copy Button -->
+        <PartsButtonCopy />
+      </div>
     </div>
 
     <div>
@@ -373,7 +168,7 @@ const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
         class="flex items-center gap-2 mb-4 overflow-x-auto pb-2 custom-scrollbar"
       >
         <button
-          v-for="(sub, idx) in subjects"
+          v-for="sub in subjects"
           :key="sub.id"
           @click="activeSubjectId = sub.id"
           class="flex items-center gap-2 px-4 py-2 rounded-t-lg text-xs font-bold border-b-2 transition-all whitespace-nowrap"
@@ -383,10 +178,10 @@ const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
               : 'bg-transparent text-gray-500 border-transparent hover:text-gray-300 hover:bg-gray-800/50'
           "
         >
-          {{ sub.role || `Subject ${idx + 1}` }}
+          {{ sub.role || `Subject ${sub.id + 1}` }}
           <span
             v-if="subjects.length > 1"
-            @click.stop="removeSubject(idx)"
+            @click.stop="removeSubject(sub.id)"
             class="ml-1 text-gray-600 hover:text-red-400 p-0.5 rounded-full hover:bg-gray-700"
             >✕</span
           >
@@ -815,25 +610,6 @@ const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
                     </button>
                   </div>
                 </div>
-
-                <div v-if="sub.gender === 'Male'">
-                  <h5 class="category-title">Beard (Râu)</h5>
-                  <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="item in faceDetailListItem.beard"
-                      :key="item.value"
-                      @click="
-                        updateAttribute(sub, 'beard', item.value, 'single')
-                      "
-                      class="btn-chip"
-                      :class="
-                        sub.beard === item.value ? 'active-orange' : 'inactive'
-                      "
-                    >
-                      {{ item.label }}
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -1221,47 +997,7 @@ const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
           Generated Prompt Preview
         </label>
 
-        <button
-          @click="copyPrompt"
-          class="text-[10px] font-bold cursor-pointer hover:underline transition-colors flex items-center gap-1 bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded border border-gray-700"
-          :class="
-            isCopied
-              ? 'text-green-400 border-green-500/30'
-              : 'text-blue-400 border-blue-500/30'
-          "
-        >
-          <span v-if="isCopied" class="flex items-center gap-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              class="w-3 h-3"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Copied!
-          </span>
-          <span v-else class="flex items-center gap-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              class="w-3 h-3"
-            >
-              <path
-                d="M7 3.5A1.5 1.5 0 018.5 2h3.879a1.5 1.5 0 011.06.44l3.122 3.12A1.5 1.5 0 0117 6.622V12.5a1.5 1.5 0 01-1.5 1.5h-1v-3.379a3 3 0 00-.879-2.121L10.5 5.379A3 3 0 008.379 4.5H7v-1z"
-              />
-              <path
-                d="M4.5 6A1.5 1.5 0 003 7.5v9A1.5 1.5 0 004.5 18h7a1.5 1.5 0 001.5-1.5v-5.879a1.5 1.5 0 00-.44-1.06L9.44 6.439A1.5 1.5 0 008.378 6H4.5z"
-              />
-            </svg>
-            Copy
-          </span>
-        </button>
+        <PartsButtonCopy />
       </div>
 
       <div

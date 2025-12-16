@@ -3,3 +3,4 @@ export * from "./generate-settings";
 export * from "./api";
 export * from "./prompt";
 export * from "./images";
+export * from "./gemini";

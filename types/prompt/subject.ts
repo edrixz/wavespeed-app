@@ -1,27 +1,33 @@
 export type Subject = {
-  id: number;
-  role: string; // e.g. "The Woman", "The Man"
+  id: string;
   refImageIdx: number; // -1: None, 0, 1, 2...: Index of uploaded image
 
-  // Appearance
-  gender: string;
-  age: number;
-  bodyType: string;
-  faceShape: string;
+  role: string; // e.g. "The Woman", "The Man"
 
-  // Details
-  skin: string; // Pores, freckles, imperfections...
-  freckles: string; // Freckles details
-  eyes: string; // Color, shape, iris details...
-  iris: string; // Iris details
-  hairLength: string;
-  hairColor: string;
-  hairStyle: string;
-  beard: string; // For male
+  // Identity
+  gender: string;
+  age: string;
+  bodyType: string;
+  skin: string; // Gộp skinTone + texture
+
+  // Face
+  faceShape: string;
+  eyes: string;
+  iris: string;
+  nose: string;
+  lips: string;
+  freckles: string;
+  expression: string;
   makeup: string;
 
-  // State
-  clothes: string;
-  pose: string;
-  expression: string;
+  // Hair
+  hairColor: string;
+  hairStyle: string; // Gộp style + texture
+  hairLength: string;
+
+  // Fashion
+  clothes: string; // Gộp mainClothing + fabric + details + accessories
+
+  // Pose
+  pose: string; // Gộp action + posture + hands
 };

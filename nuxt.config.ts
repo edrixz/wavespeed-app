@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   modules: [
+    "@pinia/nuxt",
     "@nuxtjs/tailwindcss",
     [
       "@nuxtjs/google-fonts",
@@ -21,6 +22,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Private keys (chỉ server mới thấy)
     wavespeedApiKey: process.env.NUXT_WAVESPEED_API_KEY,
+    geminiApiKey: process.env.GEMINI_API_KEY,
     // Public keys (client thấy)
     public: {},
   },
