@@ -18,12 +18,6 @@ const { addSubject, removeSubject } = promptStore;
 const { subjects, activeSubjectId, scene, generatedPrompt } =
   storeToRefs(promptStore);
 
-const props = defineProps<{
-  modelValue: string; // v-model liên kết với settings.prompt ở cha
-}>();
-
-const emit = defineEmits(["update:modelValue"]);
-
 const showBasicInfo = ref(false);
 const showSkinDetails = ref(false);
 const showFaceDetails = ref(false);
@@ -129,14 +123,6 @@ const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
   if (!currentVal) return false;
   return currentVal.includes(value);
 };
-
-watch(
-  () => generatedPrompt,
-  (newVal) => {
-    emit("update:modelValue", newVal);
-  },
-  { immediate: true }
-);
 </script>
 
 <template>

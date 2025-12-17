@@ -2,6 +2,10 @@ import { defineStore } from "pinia";
 import type { Scene, Subject } from "~/types";
 
 export const usePromptBuilderStore = defineStore("promptBuilder", () => {
+  const { setStatus } = useLogger();
+  const payloadStore = useWavespeedPayloadStore();
+  const { prompt } = storeToRefs(payloadStore);
+
   // --- 1. STATE (Dữ liệu) ---
   const subjects = ref<Subject[]>([
     {
@@ -188,6 +192,22 @@ export const usePromptBuilderStore = defineStore("promptBuilder", () => {
     return p;
   });
 
+  const applyToWavespeedPayload = () => {
+    if (!generatedPrompt.value) return;
+
+    // Gán giá trị từ Builder sang Wavespeed payload
+    prompt.value = generatedPrompt.value;
+
+    // (Tùy chọn) Hiệu ứng thông báo nhỏ
+    setStatus(`Applied to main prompt!`, "success");
+  };
+
+  const copyToClipboard = async () => {
+    await navigator.clipboard.writeText(generatedPrompt.value);
+    // Nếu bạn muốn bấm Copy là nó tự điền vào Settings luôn thì gọi hàm apply tại đây:
+    applyToWavespeedPayload();
+  };
+
   return {
     subjects,
     activeSubjectId,
@@ -195,6 +215,8 @@ export const usePromptBuilderStore = defineStore("promptBuilder", () => {
     scene,
     addSubject,
     removeSubject,
+    applyToWavespeedPayload,
+    copyToClipboard,
     generatedPrompt,
   };
 });

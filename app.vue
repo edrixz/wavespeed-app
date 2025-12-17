@@ -1,7 +1,17 @@
 <script setup lang="ts">
-import { reactive } from "vue";
 import { useLogger, useWaveSpeed, useUploadToTmpFiles } from "./composables";
-import type { GenerateSettings, seedreamEditPayload } from "./types";
+import type { seedreamEditPayload } from "./types";
+
+const payloadStore = useWavespeedPayloadStore();
+const {
+  prompt,
+  negative_prompt,
+  width,
+  height,
+  enableSafetyChecker,
+  enableBase64Output,
+  enableSyncMode,
+} = storeToRefs(payloadStore);
 
 const { loggerStatus, setStatus } = useLogger();
 const { uploadMultipleFiles } = useUploadToTmpFiles();
@@ -9,19 +19,6 @@ const { isProcessing, resultImage, submitTask, pollTask } = useWaveSpeed();
 
 const imageStore = useImageStore();
 const { images, filesToUpload } = storeToRefs(imageStore);
-
-// Settings State
-const settings = reactive<GenerateSettings>({
-  width: 2752,
-  height: 4096,
-  prompt:
-    "Keep the model's pose and the flowing shape of the liquid clothing unchanged. Change the clothing material from silver metal to completely transparent clear water.",
-  negative_prompt:
-    "blurry, low quality, jpeg artifacts, ugly, deformed, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, signature, watermark, bad feet, distorted, mutation.",
-  enableSafetyChecker: false,
-  enableSyncMode: false,
-  enableBase64Output: false,
-});
 
 const handleGenerate = async () => {
   if (images.value.length === 0) {
@@ -57,13 +54,13 @@ const handleGenerate = async () => {
 
     // 2. Gọi API
     const payload = <seedreamEditPayload>{
-      enable_base64_output: settings.enableBase64Output,
-      enable_sync_mode: settings.enableSyncMode,
-      enable_safety_checker: settings.enableSafetyChecker,
-      prompt: settings.prompt,
-      negative_prompt: settings.negative_prompt,
+      enable_base64_output: enableBase64Output.value,
+      enable_sync_mode: enableSyncMode.value,
+      enable_safety_checker: enableSafetyChecker.value,
+      prompt: prompt.value,
+      negative_prompt: negative_prompt.value,
       images: finalImageUrls,
-      size: `${settings.width}*${settings.height}`,
+      size: `${width.value}*${height.value}`,
     };
 
     setStatus("Đang gửi yêu cầu tới AI...", "loading");
@@ -101,6 +98,7 @@ const handleGenerate = async () => {
 
 <template>
   <div class="min-h-screen bg-gray-900 text-white p-6 pb-32 lg:pb-6 font-sans">
+    {{ height }}
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div
         class="lg:col-span-1 space-y-6 bg-gray-800 p-6 rounded-xl border border-gray-700 h-fit"
@@ -114,7 +112,7 @@ const handleGenerate = async () => {
         <!-- Reference Image Uploader -->
         <PartsImageUploader />
 
-        <SettingsForm v-model="settings" />
+        <SettingsForm />
 
         <div
           class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gray-900/90 backdrop-blur-md border-t border-gray-700 lg:static lg:bg-transparent lg:border-none lg:p-0 transition-all"

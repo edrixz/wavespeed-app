@@ -16,7 +16,7 @@ export const useImageStore = defineStore("images", () => {
 
   // --- INTERNAL HELPERS (Không export, chỉ dùng nội bộ) ---
   const generateId = () =>
-    `img_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    `img_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 
   const createItem = (file: File): ImageItem => ({
     id: generateId(),

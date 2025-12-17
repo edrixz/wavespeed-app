@@ -1,17 +1,12 @@
 <script lang="ts" setup>
 const store = usePromptBuilderStore();
-const { generatedPrompt } = storeToRefs(store);
+const { copyToClipboard } = store;
 
 // 3. Logic Copy
 const isCopied = ref(false);
 const copyPrompt = async () => {
-  // Lấy text từ Getter của Pinia (Không cần .value)
-  const textToCopy = generatedPrompt;
-
-  if (!textToCopy) return;
-
   try {
-    await navigator.clipboard.writeText(textToCopy.value);
+    await copyToClipboard();
 
     // Hiệu ứng "Copied!"
     isCopied.value = true;

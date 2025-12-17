@@ -1,16 +1,16 @@
 <script setup lang="ts">
-const useBuilder = ref(true);
+const payloadStore = useWavespeedPayloadStore();
+const {
+  prompt,
+  negative_prompt,
+  width,
+  height,
+  enableSafetyChecker,
+  enableBase64Output,
+  enableSyncMode,
+} = storeToRefs(payloadStore);
 
-// Nhận v-model trực tiếp cho object settings
-const settings = defineModel<{
-  prompt: string;
-  negative_prompt: string;
-  width: number;
-  height: number;
-  enableSafetyChecker: boolean;
-  enableSyncMode: boolean;
-  enableBase64Output: boolean;
-}>({ required: true });
+const useBuilder = ref(false);
 
 // 1. DATA: Định nghĩa các tỷ lệ
 const ratiosData = {
@@ -64,13 +64,13 @@ const applyRatio = (wRatio: number, hRatio: number) => {
     newW = MAX_SIZE;
     newH = MAX_SIZE;
   }
-  settings.value.width = Math.round(newW / 64) * 64;
-  settings.value.height = Math.round(newH / 64) * 64;
+  width.value = Math.round(newW / 64) * 64;
+  height.value = Math.round(newH / 64) * 64;
 };
 
 // Hàm kiểm tra xem tỷ lệ hiện tại có khớp với nút này không
 const isActiveRatio = (wRatio: number, hRatio: number) => {
-  const currentRatio = settings.value.width / settings.value.height;
+  const currentRatio = width.value / height.value;
   const targetRatio = wRatio / hRatio;
 
   // So sánh với sai số rất nhỏ (epsilon) để tránh lỗi số học
@@ -108,10 +108,7 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
       </div>
     </div>
 
-    <PromptBuilder
-      v-if="useBuilder"
-      v-model="settings.prompt"
-    />
+    <PromptBuilder v-if="useBuilder" />
 
     <div v-else>
       <div class="flex justify-between mb-2">
@@ -120,12 +117,12 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
         </label>
         <span
           class="text-xs text-gray-500 cursor-pointer hover:text-blue-400"
-          @click="settings.prompt = ''"
+          @click="prompt = ''"
           >Clear</span
         >
       </div>
       <textarea
-        v-model="settings.prompt"
+        v-model="prompt"
         rows="6"
         class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none placeholder-gray-500"
         placeholder="Describe what you want to see..."
@@ -136,7 +133,7 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
         >Negative</label
       >
       <textarea
-        v-model="settings.negative_prompt"
+        v-model="negative_prompt"
         rows="6"
         class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-red-500 outline-none resize-none"
         placeholder="Bad quality..."
@@ -193,14 +190,14 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
           <label class="text-xs text-gray-400">Width</label>
           <input
             type="number"
-            v-model.number="settings.width"
+            v-model.number="width"
             class="w-16 bg-transparent text-right text-xs text-blue-400 font-bold outline-none"
             step="64"
           />
         </div>
         <input
           type="range"
-          v-model.number="settings.width"
+          v-model.number="width"
           min="64"
           max="4096"
           step="64"
@@ -212,14 +209,14 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
           <label class="text-xs text-gray-400">Height</label>
           <input
             type="number"
-            v-model.number="settings.height"
+            v-model.number="height"
             class="w-16 bg-transparent text-right text-xs text-blue-400 font-bold outline-none"
             step="64"
           />
         </div>
         <input
           type="range"
-          v-model.number="settings.height"
+          v-model.number="height"
           min="64"
           max="4096"
           step="64"
@@ -232,7 +229,7 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
       <label class="flex items-center space-x-2 cursor-pointer">
         <input
           type="checkbox"
-          v-model="settings.enableSafetyChecker"
+          v-model="enableSafetyChecker"
           class="form-checkbox text-blue-500 rounded bg-gray-700 border-gray-600"
         />
         <span class="text-sm">Safety Checker</span>
@@ -240,7 +237,7 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
       <label class="flex items-center space-x-2 cursor-pointer">
         <input
           type="checkbox"
-          v-model="settings.enableSyncMode"
+          v-model="enableSyncMode"
           class="form-checkbox text-blue-500 rounded bg-gray-700 border-gray-600"
         />
         <span class="text-sm">Sync Mode</span>
@@ -248,7 +245,7 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
       <label class="flex items-center space-x-2 cursor-pointer">
         <input
           type="checkbox"
-          v-model="settings.enableBase64Output"
+          v-model="enableBase64Output"
           class="form-checkbox text-blue-500 rounded bg-gray-700 border-gray-600"
         />
         <span class="text-sm">Base64 Output</span>
