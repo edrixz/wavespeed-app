@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useImageUploader } from "~/composables";
 
+const imageStore = useImageStore();
+const { images } = storeToRefs(imageStore);
+
 const {
-  images,
   addInputRef,
   replaceInputRef,
   addImage,

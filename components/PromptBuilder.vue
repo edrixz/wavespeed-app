@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { useImageUploader } from "~/composables";
 import { usePromptBuilderStore } from "~/stores/prompt-builder-store";
 import {
   bodyTypeListItem,
@@ -11,14 +10,13 @@ import {
   sceneData,
 } from "~/consts";
 
-// Lấy images từ useImageUploader
-const { images } = useImageUploader();
+const imageStore = useImageStore();
+const { images } = storeToRefs(imageStore);
 
-// Lấy subjects, activeSubjectId, scene từ Store
-const store = usePromptBuilderStore();
-const { addSubject, removeSubject } = store;
+const promptStore = usePromptBuilderStore();
+const { addSubject, removeSubject } = promptStore;
 const { subjects, activeSubjectId, scene, generatedPrompt } =
-  storeToRefs(store);
+  storeToRefs(promptStore);
 
 const props = defineProps<{
   modelValue: string; // v-model liên kết với settings.prompt ở cha
@@ -133,7 +131,7 @@ const hasSceneAttr = (key: keyof typeof scene.value, value: string) => {
 };
 
 watch(
-  () => store.generatedPrompt,
+  () => generatedPrompt,
   (newVal) => {
     emit("update:modelValue", newVal);
   },

@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import {
-  useLogger,
-  useWaveSpeed,
-  useUploadToTmpFiles,
-  useImageUploader,
-} from "./composables";
+import { reactive } from "vue";
+import { useLogger, useWaveSpeed, useUploadToTmpFiles } from "./composables";
 import type { GenerateSettings, seedreamEditPayload } from "./types";
 
 const { loggerStatus, setStatus } = useLogger();
 const { uploadMultipleFiles } = useUploadToTmpFiles();
 const { isProcessing, resultImage, submitTask, pollTask } = useWaveSpeed();
-const { images, filesToUpload } = useImageUploader();
+
+const imageStore = useImageStore();
+const { images, filesToUpload } = storeToRefs(imageStore);
 
 // Settings State
 const settings = reactive<GenerateSettings>({

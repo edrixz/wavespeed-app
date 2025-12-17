@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useImageAnalyzer, useImageUploader, useLogger } from "~/composables";
+import { useImageAnalyzer, useLogger } from "~/composables";
 
 const store = usePromptBuilderStore();
 const { currentSubject } = storeToRefs(store);
@@ -7,7 +7,9 @@ const { currentSubject } = storeToRefs(store);
 // --- GEMINI INTEGRATION ---
 const { setStatus } = useLogger();
 const { analyzeImage, isAnalyzing, analyzingMode } = useImageAnalyzer();
-const { images } = useImageUploader();
+
+const imageStore = useImageStore();
+const { images } = storeToRefs(imageStore);
 
 const handleMagicFill = async (mode: "fast" | "pro") => {
   // 1. Xác định ảnh cần phân tích (Giữ nguyên logic cũ)
