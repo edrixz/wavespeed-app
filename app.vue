@@ -1,104 +1,11 @@
 <script setup lang="ts">
-import { useLogger, useWaveSpeed, useUploadToTmpFiles } from "./composables";
-import type { seedreamEditPayload } from "./types";
-
-const payloadStore = useWavespeedPayloadStore();
-const {
-  prompt,
-  negative_prompt,
-  width,
-  height,
-  enableSafetyChecker,
-  enableBase64Output,
-  enableSyncMode,
-} = storeToRefs(payloadStore);
-
-const { loggerStatus, setStatus } = useLogger();
-const { uploadMultipleFiles } = useUploadToTmpFiles();
-const { isProcessing, resultImage, submitTask, pollTask } = useWaveSpeed();
-
-const imageStore = useImageStore();
-const { images, filesToUpload } = storeToRefs(imageStore);
-
-const handleGenerate = async () => {
-  if (images.value.length === 0) {
-    setStatus("Vui lòng có ít nhất 1 ảnh reference!", "error");
-    return;
-  }
-
-  isProcessing.value = true;
-  resultImage.value = null;
-  setStatus("Bắt đầu xử lý...", "info");
-
-  try {
-    // 1. Chuẩn bị URL
-    const finalImageUrls: string[] = [];
-
-    // Lấy URL cũ
-    images.value.forEach((img) => {
-      if (img.url.startsWith("http") && !img.url.startsWith("blob:"))
-        finalImageUrls.push(img.url);
-    });
-
-    // Upload file mới
-    if (filesToUpload.value.length > 0) {
-      setStatus(
-        `Đang upload ${filesToUpload.value.length} ảnh lên server tạm...`,
-        "loading"
-      );
-
-      const uploadedUrls = await uploadMultipleFiles(filesToUpload.value);
-      finalImageUrls.push(...uploadedUrls);
-      setStatus("Upload xong.", "success");
-    }
-
-    // 2. Gọi API
-    const payload = <seedreamEditPayload>{
-      enable_base64_output: enableBase64Output.value,
-      enable_sync_mode: enableSyncMode.value,
-      enable_safety_checker: enableSafetyChecker.value,
-      prompt: prompt.value,
-      negative_prompt: negative_prompt.value,
-      images: finalImageUrls,
-      size: `${width.value}*${height.value}`,
-    };
-
-    setStatus("Đang gửi yêu cầu tới AI...", "loading");
-    const taskId = await submitTask(payload);
-    setStatus(`Task ID: ${taskId}. Đang vẽ (Vui lòng đợi)...`, "loading");
-
-    // 3. Polling
-    const finalUrl = await pollTask(taskId, (taskStatus) => {
-      // Cập nhật trạng thái realtime từ polling
-      setStatus(`AI đang xử lý: ${taskStatus}...`, "loading");
-    });
-
-    resultImage.value = finalUrl;
-    setStatus("Hoàn thành! Ảnh đã sẵn sàng.", "success");
-  } catch (error: any) {
-    isProcessing.value = false;
-
-    // Logic ưu tiên để lấy tin nhắn lỗi chính xác nhất:
-    // 1. Lấy message từ cấu trúc data chi tiết (nếu server WaveSpeed trả về)
-    // 2. Lấy statusMessage (nơi chứa "Insufficient credits...")
-    // 3. Nếu không có, mới lấy message chung chung
-    const errorMsg =
-      error.response?._data?.data?.message ||
-      error.response?._data?.statusMessage ||
-      error.response?._data?.message ||
-      error.message ||
-      "Lỗi không xác định";
-
-    setStatus(`Lỗi: ${errorMsg}`, "error");
-  } finally {
-    isProcessing.value = false;
-  }
-};
+const { loggerStatus } = useLogger();
+const { isCanNotGenerate, isProcessing, resultImage, handleGenerate } =
+  useWavespeedApiGenerate();
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-900 text-white p-6 pb-32 lg:pb-6 font-sans">
-    {{ height }}
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div
         class="lg:col-span-1 space-y-6 bg-gray-800 p-6 rounded-xl border border-gray-700 h-fit"
@@ -119,7 +26,7 @@ const handleGenerate = async () => {
         >
           <button
             @click="handleGenerate"
-            :disabled="isProcessing"
+            :disabled="isProcessing || isCanNotGenerate"
             class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-700 disabled:to-gray-800 disabled:cursor-not-allowed rounded-lg font-bold transition-all flex items-center justify-center gap-2 shadow-lg group relative overflow-hidden"
           >
             <div
