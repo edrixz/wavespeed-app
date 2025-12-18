@@ -15,8 +15,10 @@ export const useWavespeedPayloadStore = defineStore("wavespeedPayload", () => {
   const enableBase64Output = ref(false);
 
   // 2. Helper reset (nếu cần)
-  const resetSettings = () => {
+  const resetPrompt = () => {
     // Logic reset về mặc định nếu cần
+    prompt.value =
+      "Keep the model's pose and the flowing shape of the liquid clothing unchanged. Change the clothing material from silver metal to completely transparent clear water.";
   };
 
   return {
@@ -27,6 +29,6 @@ export const useWavespeedPayloadStore = defineStore("wavespeedPayload", () => {
     enableSafetyChecker,
     enableSyncMode,
     enableBase64Output,
-    resetSettings,
+    resetPrompt,
   };
 });

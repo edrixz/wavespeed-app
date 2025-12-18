@@ -9,6 +9,7 @@ const {
   enableBase64Output,
   enableSyncMode,
 } = storeToRefs(payloadStore);
+const { resetPrompt } = payloadStore;
 
 const useBuilder = ref(false);
 
@@ -117,8 +118,8 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
         </label>
         <span
           class="text-xs text-gray-500 cursor-pointer hover:text-blue-400"
-          @click="prompt = ''"
-          >Clear</span
+          @click="resetPrompt"
+          >Reset</span
         >
       </div>
       <textarea

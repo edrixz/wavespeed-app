@@ -61,7 +61,7 @@ const {
           class="absolute top-1 right-1 p-1 rounded-full bg-black/50 text-gray-300 hover:bg-red-600 hover:text-white transition-colors z-20 backdrop-blur-sm"
           title="Remove image"
         >
-          <IconsClose />
+          <PartsIconsClose />
         </button>
 
         <div
@@ -78,7 +78,7 @@ const {
         <div
           class="w-8 h-8 rounded-full bg-gray-700 group-hover:bg-blue-900/50 flex items-center justify-center transition-colors"
         >
-          <IconsPlus />
+          <PartsIconsPlus />
         </div>
         <span class="text-[10px] font-bold uppercase tracking-wider"
           >Add New</span

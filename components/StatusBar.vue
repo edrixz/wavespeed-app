@@ -1,12 +1,24 @@
 <script setup lang="ts">
-import type { LogStatus } from "~/types";
+const { progress, loggerStatus } = useLogger();
 
-const loggerStatus = defineModel<LogStatus>({ required: true });
+// Màu sắc thanh progress tương ứng với loại thông báo
+const progressColor = computed(() => {
+  switch (loggerStatus.value.type) {
+    case "error":
+      return "bg-red-500";
+    case "success":
+      return "bg-green-500";
+    case "warning":
+      return "bg-yellow-500";
+    default:
+      return "bg-blue-500";
+  }
+});
 </script>
 
 <template>
   <div
-    class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 flex items-center gap-3 shadow-sm min-h-[50px] transition-colors duration-300"
+    class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 flex items-center gap-3 shadow-sm min-h-[50px] transition-colors duration-300 relative overflow-hidden"
     :class="{
       'border-blue-500/50 bg-blue-900/10': loggerStatus.type === 'loading',
       'border-green-500/50 bg-green-900/10': loggerStatus.type === 'success',
@@ -14,78 +26,26 @@ const loggerStatus = defineModel<LogStatus>({ required: true });
       'border-yellow-500/50 bg-yellow-900/10': loggerStatus.type === 'warning',
     }"
   >
-    <div class="flex-shrink-0">
+    <div class="flex-shrink-0 flex items-center justify-center w-5">
       <div
         v-if="loggerStatus.type === 'loading'"
         class="animate-spin rounded-full h-5 w-5 border-2 border-blue-500 border-t-transparent"
       ></div>
 
-      <svg
-        v-else-if="loggerStatus.type === 'success'"
-        class="w-5 h-5 text-green-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5 13l4 4L19 7"
-        ></path>
-      </svg>
+      <PartsIconsSuccess v-else-if="loggerStatus.type === 'success'" />
 
-      <svg
-        v-else-if="loggerStatus.type === 'error'"
-        class="w-5 h-5 text-red-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        ></path>
-      </svg>
+      <PartsIconsError v-else-if="loggerStatus.type === 'error'" />
 
-      <svg
-        v-else-if="loggerStatus.type === 'warning'"
-        class="w-5 h-5 text-yellow-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        ></path>
-      </svg>
+      <PartsIconsWarning v-else-if="loggerStatus.type === 'warning'" />
 
-      <svg
-        v-else
-        class="w-5 h-5 text-blue-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        ></path>
-      </svg>
+      <PartsIconsInformation v-else />
     </div>
 
-    <div class="flex-1 overflow-hidden relative h-6">
+    <div class="flex-1 overflow-hidden relative h-5">
       <Transition name="slide-up" mode="out-in">
         <p
           :key="loggerStatus.message"
-          class="text-sm font-medium truncate absolute w-full"
+          class="text-sm font-medium truncate absolute w-full leading-5"
           :class="{
             'text-blue-200': loggerStatus.type === 'loading',
             'text-green-300': loggerStatus.type === 'success',
@@ -98,6 +58,13 @@ const loggerStatus = defineModel<LogStatus>({ required: true });
         </p>
       </Transition>
     </div>
+
+    <div
+      v-if="loggerStatus.message && loggerStatus.type !== 'loading'"
+      class="absolute bottom-0 left-0 h-[2px] transition-all duration-100 ease-linear"
+      :class="progressColor"
+      :style="{ width: `${progress}%` }"
+    ></div>
   </div>
 </template>
 
