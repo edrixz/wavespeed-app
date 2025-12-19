@@ -2,45 +2,174 @@
 @tailwind components;
 @tailwind utilities;
 
-/* --- Ẩn nút tăng giảm (Spinners) của Input Number --- */
+@layer base {
+  body {
+    @apply bg-gray-900 text-gray-100 font-sans antialiased;
+  }
+}
 
-/* Dành cho Chrome, Safari, Edge, Opera */
+@layer components {
+  /* --- LAYOUT & CONTAINERS --- */
+  .panel-card {
+    @apply bg-gray-800/50 border border-gray-700 rounded-xl overflow-hidden backdrop-blur-sm;
+  }
+
+  .section-title {
+    @apply text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2;
+  }
+
+  /* --- FORM ELEMENTS --- */
+  .input-field {
+    @apply bg-gray-900/50 border border-gray-700 text-gray-200 text-sm rounded-lg 
+           focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-all
+           placeholder:text-gray-600;
+  }
+
+  .select-field {
+    @apply bg-gray-900/50 border border-gray-700 text-gray-200 text-sm rounded-lg 
+           focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none;
+  }
+
+  /* --- BUTTONS --- */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-700 hover:bg-gray-600 text-gray-200 active:scale-95;
+  }
+
+  .btn-danger {
+    @apply btn bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white border border-red-600/20 active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white;
+  }
+
+  .btn-icon {
+    @apply p-2 rounded-full hover:bg-gray-700 text-gray-400 hover:text-white transition-colors;
+  }
+
+  /* --- PROMPT BUILDER ITEMS (Chi tiết từ các list-item) --- */
+  .selectable-item {
+    @apply px-3 py-1.5 rounded-md text-xs font-medium border border-gray-700 
+           bg-gray-800/30 text-gray-400 cursor-pointer transition-all
+           hover:border-gray-500 hover:text-gray-200;
+  }
+
+  .selectable-item.active {
+    @apply border-blue-500 bg-blue-500/10 text-blue-400 shadow-sm shadow-blue-500/20;
+  }
+
+  /* --- CHIPS & BADGES --- */
+  /* Style chung cho nút bấm dạng thẻ (Chip) */
+  .btn-chip {
+    @apply px-3 py-1.5 rounded border text-[10px] font-medium transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95 text-left;
+  }
+  /* Trạng thái chưa chọn */
+  .inactive {
+    @apply bg-gray-800 border-gray-600 text-gray-400 hover:bg-gray-700 hover:text-gray-200;
+  }
+  /* Các màu Active khác nhau để phân biệt từng mục */
+  .active-purple {
+    @apply bg-purple-600 border-purple-500 text-white shadow-md ring-1 ring-purple-400;
+  }
+  .active-blue {
+    @apply bg-blue-600 border-blue-500 text-white shadow-md ring-1 ring-blue-400;
+  }
+  .active-cyan {
+    @apply bg-cyan-600 border-cyan-500 text-white shadow-md ring-1 ring-cyan-400;
+  }
+  .active-pink {
+    @apply bg-pink-600 border-pink-500 text-white shadow-md ring-1 ring-pink-400;
+  }
+  .active-orange {
+    @apply bg-orange-600 border-orange-500 text-white shadow-md ring-1 ring-orange-400;
+  }
+  .active-amber {
+    @apply bg-amber-600 border-amber-500 text-white shadow-md ring-1 ring-amber-400;
+  }
+  .active-emerald {
+    @apply bg-emerald-600 border-emerald-500 text-white shadow-md ring-1 ring-emerald-400;
+  }
+  .active-indigo {
+    @apply bg-indigo-600 border-indigo-500 text-white shadow-md ring-1 ring-indigo-400;
+  }
+
+  .badge {
+    @apply px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter;
+  }
+
+  .badge-blue {
+    @apply badge bg-blue-500/20 text-blue-400 border border-blue-500/20;
+  }
+  .badge-green {
+    @apply badge bg-emerald-500/20 text-emerald-400 border border-emerald-500/20;
+  }
+
+  /* --- IMAGE UPLOADER SPECIFIC --- */
+  .image-preview-card {
+    @apply relative aspect-[3/4] rounded-lg overflow-hidden border-2 border-dashed border-gray-700 
+           hover:border-blue-500 transition-colors group bg-gray-900;
+  }
+}
+
+/* --- UTILITIES (Custom bổ sung) --- */
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.lbl {
+  @apply block text-[10px] text-gray-500 mb-1 font-semibold uppercase tracking-wide;
+}
+.inp {
+  @apply w-full bg-gray-800 border border-gray-600 text-gray-200 text-xs rounded px-2.5 py-2 focus:outline-none focus:border-blue-500 transition-all;
+}
+.inp-area {
+  @apply w-full bg-gray-800 border border-gray-600 text-gray-200 text-xs rounded px-2.5 py-2 focus:outline-none focus:border-blue-500 resize-none transition-all;
+}
+
+/* --- Ẩn nút tăng giảm (Spinners) của Input Number --- */
+/* Ẩn nút tăng giảm của Input Number */
 .no-spinner::-webkit-outer-spin-button,
 .no-spinner::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
-/* Dành cho Firefox */
 .no-spinner {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 
-/* --- Custom Scrollbar (Global) --- */
-
-/* Dành cho Chrome, Edge, Safari */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px; /* Chiều rộng cho thanh dọc */
-  height: 6px; /* Chiều cao cho thanh ngang */
+  width: 6px;
+  height: 6px;
 }
-
 ::-webkit-scrollbar-track {
-  background: transparent; /* Nền trong suốt để hòa vào màu web */
+  background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-  background-color: #374151; /* Màu xám đậm (gray-700) */
-  border-radius: 9999px; /* Bo tròn mềm mại */
-  border: 1px solid transparent; /* Tạo khoảng hở nhỏ giúp thanh cuộn nhìn 'bay' hơn */
+  background-color: #374151;
+  border-radius: 9999px;
+  border: 1px solid transparent;
   background-clip: content-box;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #4b5563; /* Sáng lên chút khi di chuột (gray-600) */
+  background-color: #4b5563;
 }
-
-/* Dành cho Firefox */
 * {
-  scrollbar-width: thin; /* Thanh cuộn mảnh */
-  scrollbar-color: #374151 transparent; /* Màu thumb và track */
+  scrollbar-width: thin;
+  scrollbar-color: #374151 transparent;
 }

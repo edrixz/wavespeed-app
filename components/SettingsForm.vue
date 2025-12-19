@@ -125,7 +125,7 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
       <textarea
         v-model="prompt"
         rows="6"
-        class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none placeholder-gray-500"
+        class="inp w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none placeholder-gray-500"
         placeholder="Describe what you want to see..."
       />
     </div>
@@ -136,7 +136,7 @@ const isActiveRatio = (wRatio: number, hRatio: number) => {
       <textarea
         v-model="negative_prompt"
         rows="6"
-        class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-red-500 outline-none resize-none"
+        class="inp w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-red-500 outline-none resize-none"
         placeholder="Bad quality..."
       />
     </div>

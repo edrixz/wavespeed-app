@@ -62,21 +62,4 @@ const { updateAttr, isActive } = usePromptBuilder();
   </div>
 </template>
 
-<style scoped>
-.btn-chip {
-  @apply px-3 py-1.5 rounded border text-[10px] font-medium transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95 text-left;
-}
-/* Trạng thái chưa chọn */
-.inactive {
-  @apply bg-gray-800 border-gray-600 text-gray-400 hover:bg-gray-700 hover:text-gray-200;
-}
-.active-blue {
-  @apply bg-blue-600 border-blue-500 text-white shadow-md ring-1 ring-blue-400;
-}
-.active-pink {
-  @apply bg-pink-600 border-pink-500 text-white shadow-md ring-1 ring-pink-400;
-}
-.active-purple {
-  @apply bg-purple-600 border-purple-500 text-white shadow-md ring-1 ring-purple-400;
-}
-</style>
+<style scoped></style>
