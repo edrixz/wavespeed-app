@@ -10,6 +10,10 @@
 
 @layer components {
   /* --- LAYOUT & CONTAINERS --- */
+  .category-title {
+    @apply text-[10px] font-bold text-gray-500 uppercase mb-2 border-l-2 border-gray-600 pl-2;
+  }
+
   .panel-card {
     @apply bg-gray-800/50 border border-gray-700 rounded-xl overflow-hidden backdrop-blur-sm;
   }

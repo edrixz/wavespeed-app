@@ -1,6 +1,8 @@
 <script setup lang="ts">
-defineProps<{ title: string; color: string; isOpen: boolean }>();
+const props = defineProps<{ title: string; color: string; isOpen: boolean }>();
 defineEmits(["toggle"]);
+
+const textColor = computed(() => `text-${props.color}-300`);
 </script>
 
 <template>
@@ -14,23 +16,12 @@ defineEmits(["toggle"]);
       <div class="flex items-center gap-2">
         <span
           class="text-xs font-bold uppercase tracking-wide"
-          :class="`text-${color}-300`"
-          >{{ title }}</span
+          :class="textColor"
         >
+          {{ title }}
+        </span>
       </div>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        class="w-4 h-4 text-gray-400 transition-transform duration-200"
-        :class="isOpen ? 'rotate-180' : ''"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-          clip-rule="evenodd"
-        />
-      </svg>
+      <PartsIconsArrow :is-open="isOpen" />
     </button>
     <Transition name="expand">
       <div v-show="isOpen" class="p-4 bg-gray-900/50 border-t border-gray-700">

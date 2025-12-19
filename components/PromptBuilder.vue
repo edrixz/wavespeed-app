@@ -14,7 +14,6 @@ const toggle = (name: string) =>
 const toggleRefImage = (subjectId: string, imgIdx: number) => {
   const targetSubject = subjects.value.find((sub) => sub.id === subjectId);
   if (targetSubject) {
-    // Nếu đang chọn đúng ảnh đó rồi thì reset về -1, ngược lại thì gán index mới
     targetSubject.refImageIdx =
       targetSubject.refImageIdx === imgIdx ? -1 : imgIdx;
   }
@@ -121,7 +120,7 @@ const toggleRefImage = (subjectId: string, imgIdx: number) => {
 
       <PartsPromptBuilderSection
         title="Identity & Body"
-        color="blue"
+        color="white"
         :is-open="openSection === 'identity'"
         @toggle="toggle('identity')"
       >
@@ -139,7 +138,7 @@ const toggleRefImage = (subjectId: string, imgIdx: number) => {
 
       <PartsPromptBuilderSection
         title="Hair & Style"
-        color="amber"
+        color="yellow"
         :is-open="openSection === 'hair'"
         @toggle="toggle('hair')"
       >
@@ -148,7 +147,7 @@ const toggleRefImage = (subjectId: string, imgIdx: number) => {
 
       <PartsPromptBuilderSection
         title="Outfit & Pose"
-        color="emerald"
+        color="green"
         :is-open="openSection === 'outfit'"
         @toggle="toggle('outfit')"
       >
@@ -160,7 +159,7 @@ const toggleRefImage = (subjectId: string, imgIdx: number) => {
 
       <PartsPromptBuilderSection
         title="Scene"
-        color="orange"
+        color="blue"
         :is-open="openSection === 'scene'"
         @toggle="toggle('scene')"
       >
@@ -188,18 +187,6 @@ const toggleRefImage = (subjectId: string, imgIdx: number) => {
 </template>
 
 <style scoped>
-.category-title {
-  @apply text-[10px] font-bold text-gray-500 uppercase mb-2 border-l-2 border-gray-600 pl-2;
-}
-.lbl {
-  @apply block text-[10px] text-gray-500 mb-1 font-semibold uppercase tracking-wide;
-}
-.inp {
-  @apply w-full bg-gray-800 border border-gray-600 text-gray-200 text-xs rounded px-2.5 py-2 focus:outline-none focus:border-blue-500 transition-all;
-}
-.inp-area {
-  @apply w-full bg-gray-800 border border-gray-600 text-gray-200 text-xs rounded px-2.5 py-2 focus:outline-none focus:border-blue-500 resize-none transition-all;
-}
 .animate-fade-in {
   animation: fadeIn 0.2s ease-out;
 }
