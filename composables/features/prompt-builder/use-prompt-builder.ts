@@ -29,5 +29,17 @@ export const usePromptBuilder = () => {
     return target[key].includes(value);
   };
 
-  return { updateAttr, isActive };
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      setTimeout(() => {
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 150);
+    }
+  };
+
+  return { updateAttr, isActive, scrollToSection };
 };

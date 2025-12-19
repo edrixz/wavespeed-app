@@ -3,14 +3,23 @@ const props = defineProps<{ title: string; color: string; isOpen: boolean }>();
 defineEmits(["toggle"]);
 
 const textColor = computed(() => `text-${props.color}-300`);
+
+const { scrollToSection } = usePromptBuilder();
 </script>
 
 <template>
-  <div
-    class="mb-4 border border-gray-700 rounded-lg overflow-hidden transition-all duration-300"
+  <section
+    :id="title"
+    class="mb-4 border border-gray-700 rounded-lg overflow-hidden transition-all duration-300 scroll-mt-20"
   >
     <button
-      @click="$emit('toggle')"
+      @click="
+        async () => {
+          await $emit('toggle');
+          await nextTick();
+          await scrollToSection(props.title);
+        }
+      "
       class="w-full flex items-center justify-between p-3 bg-gray-800 hover:bg-gray-700 transition-colors group"
     >
       <div class="flex items-center gap-2">
@@ -28,7 +37,7 @@ const textColor = computed(() => `text-${props.color}-300`);
         <slot />
       </div>
     </Transition>
-  </div>
+  </section>
 </template>
 
 <style scoped>
@@ -41,5 +50,10 @@ const textColor = computed(() => `text-${props.color}-300`);
 .expand-leave-to {
   max-height: 0;
   opacity: 0;
+}
+
+.scroll-mt-20 {
+  /* Khi cuộn đến, nó sẽ tự cách mép trên 80px */
+  scroll-margin-top: 5rem;
 }
 </style>
