@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { usePromptBuilder } from "~/composables";
 import { bodyTypeListItem } from "~/consts";
 import type { SubjectData } from "~/types";
 const props = defineProps<{ modelValue?: SubjectData }>();
-const { updateAttr, isActive } = usePromptBuilder();
 </script>
 
 <template>
@@ -47,29 +45,12 @@ const { updateAttr, isActive } = usePromptBuilder();
 
     <div class="col-span-12">
       <label class="lbl">Body Type & Skin Tone</label>
-      <div
-        class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar"
-      >
-        <div
-          v-for="group in bodyTypeListItem"
-          :key="group.name"
-          class="flex gap-2"
-        >
-          <button
-            v-for="item in group.items"
-            :key="item.value"
-            @click="updateAttr(modelValue, 'bodyType', item.value, 'single')"
-            class="btn-chip"
-            :class="
-              isActive(modelValue, 'bodyType', item.value)
-                ? 'active-blue'
-                : 'inactive'
-            "
-          >
-            {{ item.label }}
-          </button>
-        </div>
-      </div>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.bodyType"
+        :options="bodyTypeListItem.map((i) => i.value)"
+        mode="single"
+        active-class="active-blue"
+      />
     </div>
   </div>
 </template>

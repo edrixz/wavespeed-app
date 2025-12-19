@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { usePromptBuilder } from "~/composables";
 import { poseListItem } from "~/consts";
 import type { OutfitData, PoseData } from "~/types";
 const props = defineProps<{ outfit?: OutfitData; pose?: PoseData }>();
-const { updateAttr, isActive } = usePromptBuilder();
 </script>
 
 <template>
@@ -24,19 +22,12 @@ const { updateAttr, isActive } = usePromptBuilder();
 
     <div v-for="group in poseListItem" :key="group.name">
       <h5 class="category-title border-emerald-600">{{ group.name }}</h5>
-      <div class="flex flex-wrap gap-2">
-        <button
-          v-for="item in group.items"
-          :key="item.value"
-          @click="updateAttr(pose, 'action', item.value, 'multi')"
-          class="btn-chip"
-          :class="
-            isActive(pose, 'action', item.value) ? 'active-emerald' : 'inactive'
-          "
-        >
-          {{ item.label }}
-        </button>
-      </div>
+      <PartsPromptBuilderTagSelector
+        v-model="pose!.action"
+        :options="group.items.map((i) => i.value)"
+        mode="multi"
+        active-class="active-emerald"
+      />
     </div>
   </div>
 </template>

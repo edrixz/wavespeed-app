@@ -60,4 +60,5 @@ export const faceDetailListItem = {
     { label: "Lịch lãm", value: "Corporate Beard" },
     { label: "Quai nón mỏng", value: "Chinstrap Beard" },
   ],
+  expression: [{ label: "Nhìn vào máy ảnh", value: "Look at camera" }],
 };
