@@ -11,61 +11,61 @@ export const usePromptBuilderStore = defineStore("promptBuilder", () => {
     {
       id: "sub-1",
       refImageIdx: 0,
-      role: "The main subject",
-      gender: "Female",
-      bodyType: "Petite",
-      faceShape: "",
-      skin: "Realistic Skin Details, Natural Skin Texture, Highly Detailed Skin, Pore-level Skin Detail",
-      eyes: "",
-      hairLength: "",
-      hairColor: "",
-      hairStyle: "",
-      makeup: "",
-      clothes: "",
-      pose: "",
-      expression: "Looking at camera",
-      age: "",
-      nose: "",
-      lips: "",
-      freckles: "",
-      iris: "",
-    },
-    {
-      id: "sub-2",
-      refImageIdx: 1,
-      role: "The man",
-      gender: "Male",
-      bodyType: "Fit",
-      faceShape: "",
-      skin: "Realistic Skin Details, Natural Skin Texture, Highly Detailed Skin, Pore-level Skin Detail",
-      eyes: "",
-      hairLength: "",
-      hairColor: "",
-      hairStyle: "",
-      makeup: "",
-      clothes: "",
-      pose: "",
-      expression: "Looking at camera",
-      age: "",
-      nose: "",
-      lips: "",
-      freckles: "",
-      iris: "",
+      subject: {
+        gender: "Female",
+        age: "",
+        ethnicity: "",
+        bodyType: "",
+        skinTone: "",
+      },
+      face: {
+        shape: "",
+        eyes: "",
+        nose: "",
+        lips: "",
+        skinTexture: "",
+        expression: "",
+        makeup: "",
+      },
+      hair: {
+        color: "",
+        style: "",
+        length: "",
+        texture: "",
+      },
+      outfit: {
+        mainClothing: "",
+        fabric: "",
+        fit: "",
+        details: "",
+        accessories: "",
+      },
+      pose: {
+        action: "",
+        posture: "",
+        headAngle: "",
+        hands: "",
+      },
     },
   ]);
 
   const activeSubjectId = ref("sub-1");
 
   const scene = ref<Scene>({
-    interaction:
-      "hardcore sex, Covered in sweat, flirty, sweaty, (Different Sex Positions: The man was touching the girl's vagina while his other hand was squeezing her breasts.)", // e.g. "Holding hands", "Walking together"
-    background: "Keep location as in Image #1",
-    viewpoint: "",
-    lighting: "",
-    camera: "Shot on Sony A7R V, 85mm Lens, f/1.4",
-    film: "",
-    quality:
-      "Photorealistic detail, 8k uhd, high-resolution skin, natural lighting. (breathtaking realistic) , (pale skin) , (huge tits:1.2) , naked tits, huge tits, hard nipples, wet skin, realistic, stunning colorful picture, award-winning photo. best shadows, realistic, wet, huge tits, (hard nipples) , hyperrealistic. High-end beauty retouch, micro-contrast boosted for realistic skin texture, film grain, color grading with cinematic tones",
+    environment: {
+      location: "Keep location as in Image #1",
+      lighting: "",
+      shadows: "",
+      atmosphere: "",
+    },
+    tech: {
+      camera: "Sony A7R V",
+      lens: "85mm Lens f/1.4",
+      filmStock: "",
+      quality: "",
+      viewpoint:
+        "Photorealistic detail, 8k uhd, high-resolution skin, natural lighting. (breathtaking realistic) , (pale skin) , (huge tits:1.2) , naked tits, huge tits, hard nipples, wet skin, realistic, stunning colorful picture, award-winning photo. best shadows, realistic, wet, huge tits, (hard nipples) , hyperrealistic. High-end beauty retouch, micro-contrast boosted for realistic skin texture, film grain, color grading with cinematic tones",
+    },
   });
 
   const addSubject = () => {
@@ -73,24 +73,41 @@ export const usePromptBuilderStore = defineStore("promptBuilder", () => {
     subjects.value.push({
       id: newId,
       refImageIdx: -1,
-      role: subjects.value.length === 0 ? "The woman" : "The man",
-      gender: "Male",
-      age: "",
-      bodyType: "",
-      skin: "Detailed skin texture, pores",
-      faceShape: "",
-      eyes: "",
-      nose: "",
-      lips: "",
-      freckles: "",
-      expression: "Looking at camera",
-      makeup: "",
-      hairColor: "",
-      hairStyle: "",
-      hairLength: "",
-      clothes: "",
-      pose: "",
-      iris: "",
+      subject: {
+        gender: "Female",
+        age: "",
+        ethnicity: "",
+        bodyType: "",
+        skinTone: "",
+      },
+      face: {
+        shape: "",
+        eyes: "",
+        nose: "",
+        lips: "",
+        skinTexture: "",
+        expression: "",
+        makeup: "",
+      },
+      hair: {
+        color: "",
+        style: "",
+        length: "",
+        texture: "",
+      },
+      outfit: {
+        mainClothing: "",
+        fabric: "",
+        fit: "",
+        details: "",
+        accessories: "",
+      },
+      pose: {
+        action: "",
+        posture: "",
+        headAngle: "",
+        hands: "",
+      },
     });
     // Tự động switch sang subject mới tạo
     activeSubjectId.value = newId;
@@ -124,72 +141,118 @@ export const usePromptBuilderStore = defineStore("promptBuilder", () => {
     return subjects.value.find((s) => s.id === activeSubjectId.value);
   });
 
-  const generatedPrompt = computed(() => {
-    if (!scene.value || subjects.value.length === 0) return "";
+  const buildSinglePrompt = (s: Subject, scene: Scene): string => {
+    const p = [];
 
-    // A. Setup Viewpoint
-    let p = `${scene.value.viewpoint || "A shot"} of `;
-
-    // B. List Roles
-    const rolesList = subjects.value
-      .map((s) => {
-        const ageGender = `${s.age || ""} ${s.gender}`.trim();
-        const isNaked = s.clothes === "" ? "nude" : "";
-        const refFace =
-          s.refImageIdx !== -1
-            ? ` (Reference Face: Image #${s.refImageIdx + 1})`
-            : "";
-        return `a ${isNaked} ${ageGender}${refFace}`.trim();
-      })
-      .join(" and ");
-    p += `${rolesList}. `;
-
-    // C. Interaction
-    if (subjects.value.length > 1 && scene.value.interaction) {
-      p += `They are ${scene.value.interaction}. `;
+    // 1. Identity & Body
+    if (s.subject) {
+      const age = s.subject.age ? `${s.subject.age} y.o` : "";
+      p.push(
+        `Subject: A ${age} ${s.subject.ethnicity || ""} ${
+          s.subject.gender || "person"
+        }, ${s.subject.bodyType || ""}, ${s.subject.skinTone || ""} skin.`
+      );
     }
 
-    // D. Loop Details (Logic nối chuỗi của bạn)
-    subjects.value.forEach((s) => {
-      let desc = "";
-      // Body
-      if (s.bodyType) desc += `with ${s.bodyType} body. `;
-      // Face
-      if (s.faceShape) desc += `Face: ${s.faceShape}. `;
-      // Skin (Gộp skin + freckles)
-      const skinParts = [s.skin, s.freckles].filter(Boolean).join(", ");
-      if (skinParts) desc += `Skin: ${skinParts}. `;
-      // Eyes
-      const eyeParts = [s.eyes, s.iris].filter(Boolean).join(", ");
-      if (eyeParts) desc += `Eyes: ${eyeParts}. `;
-      // Hair
-      const hairParts = [s.hairLength, s.hairColor, s.hairStyle]
-        .filter(Boolean)
-        .join(" ");
-      if (hairParts) desc += `Hair: ${hairParts}. `;
+    // 2. Face Features
+    if (s.face) {
+      p.push(
+        `Face: ${s.face.shape || ""} shape, ${
+          s.face.eyes || "detailed"
+        } eyes, ${s.face.lips || ""} lips, ${
+          s.face.expression || "neutral"
+        } expression, ${s.face.makeup || "no makeup"}.`
+      );
+    }
 
-      if (s.makeup) desc += `Makeup: ${s.makeup}. `;
-      if (s.clothes) desc += `Wearing ${s.clothes}. `;
+    // 3. Hair
+    if (s.hair) {
+      p.push(
+        `Hair: ${s.hair.length || ""} ${s.hair.style || ""} ${
+          s.hair.color || ""
+        } hair, ${s.hair.texture || ""}.`
+      );
+    }
 
-      // Pose
-      let poseDesc = s.pose || "";
-      if (s.expression) poseDesc += `, ${s.expression}`;
-      // Clean pose string logic...
-      if (poseDesc) desc += `Pose: ${poseDesc}. `;
+    // 4. Outfit & Pose
+    if (s.outfit)
+      p.push(
+        `Outfit: ${s.outfit.mainClothing || ""} made of ${
+          s.outfit.fabric || ""
+        }, ${s.outfit.accessories || ""}.`
+      );
+    if (s.pose)
+      p.push(`Action: ${s.pose.action || ""}, ${s.pose.posture || ""}.`);
 
-      p += desc;
-    });
+    // 5. Environment & Tech
+    if (scene.environment)
+      p.push(
+        `Environment: ${scene.environment.location || ""}, ${
+          scene.environment.atmosphere || ""
+        }, ${scene.environment.lighting || ""} lighting.`
+      );
+    if (scene.tech)
+      p.push(
+        `Technical: ${scene.tech.viewpoint || ""}, Shot on ${
+          scene.tech.camera || ""
+        }, ${scene.tech.quality || "high quality"}.`
+      );
 
-    // E. Scene & Tech
-    if (scene.value.background) p += `Background: ${scene.value.background}. `;
-    if (scene.value.lighting) p += `Lighting: ${scene.value.lighting}. `;
+    return p.filter(Boolean).join(" ");
+  };
 
-    const tech = [scene.value.camera, scene.value.film, scene.value.quality]
-      .filter(Boolean)
-      .join(", ");
-    if (tech) p += `${tech}.`;
+  const buildMultiPrompt = (subjects: Subject[], scene: Scene): string => {
+    const p = [];
 
-    return p;
+    // 1. Interaction Context (Quan trọng nhất - đặt lên đầu)
+    const interaction = subjects[0]?.pose?.action || "standing together";
+    p.push(`Composition: Two people in a scene, ${interaction}.`);
+
+    // 2. Describe Subject A
+    const s1 = subjects[0];
+    if (s1) {
+      p.push(
+        `[Subject A]: ${s1.subject?.gender || "Person"}, ${
+          s1.hair?.color || ""
+        } hair, wearing ${s1.outfit?.mainClothing || ""}.`
+      );
+    }
+
+    // 3. Describe Subject B
+    const s2 = subjects[1];
+    if (s2) {
+      p.push(
+        `[Subject B]: ${s2.subject?.gender || "Person"}, ${
+          s2.hair?.color || ""
+        } hair, wearing ${s2.outfit?.mainClothing || ""}.`
+      );
+    }
+
+    // 4. Shared Environment & Tech
+    if (scene.environment)
+      p.push(
+        `Background: ${scene.environment.location || ""}, ${
+          scene.environment.lighting || ""
+        } lighting.`
+      );
+    if (scene.tech)
+      p.push(
+        `Style: ${scene.tech.viewpoint || ""}, ${scene.tech.quality || ""}.`
+      );
+
+    return p.filter(Boolean).join(" ");
+  };
+
+  const generatedPrompt = computed(() => {
+    if (subjects.value.length === 0) return "";
+
+    // Nếu chỉ có 1 người -> Dùng hàm chi tiết
+    if (subjects.value.length === 1) {
+      return buildSinglePrompt(subjects.value[0], scene.value);
+    }
+
+    // Nếu có từ 2 người trở lên -> Dùng hàm tương tác
+    return buildMultiPrompt(subjects.value, scene.value);
   });
 
   const applyToWavespeedPayload = () => {

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useImageAnalyzer, useLogger } from "~/composables";
+import { normalizeObject } from "~/utils/normalize";
+import type { AnalyzedData } from "~/types";
 
 const store = usePromptBuilderStore();
 const { currentSubject } = storeToRefs(store);
@@ -10,6 +12,46 @@ const { analyzeImage, isAnalyzing, analyzingMode } = useImageAnalyzer();
 
 const imageStore = useImageStore();
 const { images } = storeToRefs(imageStore);
+
+const mapMagicFillToStore = (data: AnalyzedData) => {
+  // 1. VALIDATION: Kiểm tra xem có Subject nào đang được chọn không
+  if (!store.currentSubject) {
+    setStatus("Please select a subject tab first", "warning");
+    return;
+  }
+
+  // 2. MAPPING CHARACTER DATA (Dành cho nhân vật hiện tại)
+  // Chúng ta sử dụng hàm normalizeObject để dữ liệu đồng bộ với UI
+  if (data.subject) {
+    store.currentSubject.subject = normalizeObject(data.subject);
+  }
+
+  if (data.face) {
+    store.currentSubject.face = normalizeObject(data.face);
+  }
+
+  if (data.hair) {
+    store.currentSubject.hair = normalizeObject(data.hair);
+  }
+
+  if (data.outfit) {
+    store.currentSubject.outfit = normalizeObject(data.outfit);
+  }
+
+  if (data.pose) {
+    store.currentSubject.pose = normalizeObject(data.pose);
+  }
+
+  // 3. MAPPING GLOBAL SCENE (Dữ liệu bối cảnh dùng chung)
+  if (data.environment) {
+    store.scene.environment = normalizeObject(data.environment);
+  }
+
+  if (data.tech) {
+    store.scene.tech = normalizeObject(data.tech);
+  }
+  setStatus("Magic Fill completed successfully!", "success");
+};
 
 const handleMagicFill = async (mode: "fast" | "pro") => {
   // 1. Xác định ảnh cần phân tích (Giữ nguyên logic cũ)
@@ -24,99 +66,11 @@ const handleMagicFill = async (mode: "fast" | "pro") => {
   if (!targetImage) return alert("Please upload an image first!");
 
   // 2. Gọi API
-  const data = await analyzeImage(targetImage.url, mode);
+  const response = await analyzeImage(targetImage.url, mode);
 
-  if (data && currentSub) {
-    // --- A. MAP IDENTITY (SUBJECT) ---
-    if (data.subject) {
-      if (data.subject.gender)
-        currentSub.gender = normalizeGender(data.subject.gender);
-      if (data.subject.age) currentSub.age = data.subject.age;
-      if (data.subject.bodyType) currentSub.bodyType = data.subject.bodyType;
-
-      // Gộp Skin Tone + Skin Texture vào trường Skin
-      const skinParts = [];
-      if (data.subject.skinTone) skinParts.push(data.subject.skinTone);
-      if (data.subject.ethnicity) skinParts.push(data.subject.ethnicity); // Thêm chủng tộc vào skin/body description
-      if (data.face?.skinTexture) skinParts.push(data.face.skinTexture);
-      currentSub.skin = skinParts.join(", ");
-    }
-
-    // --- B. MAP FACE & MAKEUP ---
-    if (data.face) {
-      currentSub.eyes = data.face.eyes || "";
-      currentSub.expression = data.face.expression || "";
-
-      // Gộp Makeup + Lips + Face Shape
-      const faceFeatures = [];
-      if (data.face.shape) faceFeatures.push(`${data.face.shape}`);
-      if (data.face.nose) faceFeatures.push(data.face.nose);
-      if (data.face.lips) faceFeatures.push(data.face.lips);
-      if (data.face.makeup) currentSub.makeup = data.face.makeup;
-      // Gán vào faceReference (hoặc trường nào bạn dùng để tả mặt chi tiết)
-      // currentSub.faceReference = faceFeatures.join(', ')
-    }
-
-    // --- C. MAP HAIR ---
-    if (data.hair) {
-      currentSub.hairColor = data.hair.color || "";
-      currentSub.hairLength = data.hair.length || "";
-      // Gộp Style + Texture
-      const hairStyleParts = [];
-      if (data.hair.style) hairStyleParts.push(data.hair.style);
-      if (data.hair.texture) hairStyleParts.push(data.hair.texture);
-      currentSub.hairStyle = hairStyleParts.join(", ");
-    }
-
-    // --- D. MAP OUTFIT (Quần áo) ---
-    if (data.outfit) {
-      const clothesParts = [];
-      if (data.outfit.mainClothing) clothesParts.push(data.outfit.mainClothing);
-      if (data.outfit.fabric) clothesParts.push(data.outfit.fabric); // Thêm chất liệu (Silk...)
-      if (data.outfit.details) clothesParts.push(data.outfit.details);
-      if (data.outfit.accessories) clothesParts.push(data.outfit.accessories); // Thêm phụ kiện (Hoa...)
-      currentSub.clothes = clothesParts.join(", ");
-    }
-
-    // --- E. MAP POSE ---
-    if (data.pose) {
-      const poseParts = [];
-      if (data.pose.action) poseParts.push(data.pose.action);
-      if (data.pose.posture) poseParts.push(data.pose.posture);
-      if (data.pose.hands) poseParts.push(data.pose.hands); // Quan trọng: Tay cầm hoa
-      if (data.pose.headAngle) poseParts.push(data.pose.headAngle);
-      currentSub.pose = poseParts.join(", ");
-    }
-
-    // --- F. MAP GLOBAL SCENE (Background & Lighting) ---
-    if (data.environment) {
-      // Gộp Location + Atmosphere + Shadows
-      const bgParts = [];
-      if (data.environment.location) bgParts.push(data.environment.location);
-      if (data.environment.atmosphere)
-        bgParts.push(data.environment.atmosphere);
-      if (data.environment.shadows) bgParts.push(data.environment.shadows);
-      store.scene.background = bgParts.join(", ");
-
-      if (data.environment.lighting)
-        store.scene.lighting = data.environment.lighting;
-    }
-
-    // --- G. MAP TECH (Camera & Quality) ---
-    if (data.tech) {
-      const camParts = [];
-      if (data.tech.camera) camParts.push(data.tech.camera);
-      if (data.tech.lens) camParts.push(data.tech.lens);
-      if (data.tech.filmStock) camParts.push(data.tech.filmStock);
-      if (data.tech.viewpoint) camParts.push(data.tech.viewpoint);
-      store.scene.camera = camParts.join(", ");
-
-      // Nếu bạn có trường Quality riêng
-      if (data.tech.quality) store.scene.quality = data.tech.quality;
-    }
-
-    // Thông báo nhỏ (Optional)
-    setStatus("Magic Fill applied successfully!", "success");
+  if (response && currentSub) {
+    // 3. Gọi hàm map để đổ dữ liệu vào Store
+    mapMagicFillToStore(response);
   }
 };
 </script>

@@ -1,9 +1,6 @@
+import type { EnvironmentData, TechData } from "../gemini";
+
 export type Scene = {
-  interaction: string;
-  background: string;
-  viewpoint: string;
-  lighting: string;
-  camera: string;
-  film: string;
-  quality: string;
+  environment?: EnvironmentData;
+  tech?: TechData;
 };

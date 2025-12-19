@@ -16,3 +16,14 @@ export const normalizeGender = (val: string | undefined) => {
   // Nếu không khớp logic trên thì format Title Case bình thường
   return formatTitleCase(val);
 };
+
+export const normalizeObject = <T extends object>(obj: T | undefined): T => {
+  if (!obj) return {} as T;
+  const normalized = { ...obj };
+  for (const key in normalized) {
+    if (typeof normalized[key] === "string") {
+      (normalized as any)[key] = formatTitleCase(normalized[key] as string);
+    }
+  }
+  return normalized;
+};
