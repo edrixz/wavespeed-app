@@ -58,7 +58,7 @@ const handleRemoveSubject = (id: string) => {
     </div>
 
     <div
-      class="flex items-center gap-2 mb-4 overflow-x-auto py-2 custom-scrollbar"
+      class="bg-black/20 p-2 flex items-center gap-2 border-b-2 border-black/20 overflow-x-auto custom-scrollbar"
     >
       <button
         v-for="sub in subjects"
@@ -89,7 +89,7 @@ const handleRemoveSubject = (id: string) => {
       </button>
     </div>
 
-    <div v-if="currentSubject">
+    <div v-if="currentSubject" class="bg-black/20 p-2 rounded-b-md">
       <!-- LINK FACE ID -->
       <div class="mb-5 bg-black/20 p-3 rounded border border-gray-700/50">
         <label
@@ -174,16 +174,7 @@ const handleRemoveSubject = (id: string) => {
         />
       </PartsPromptBuilderSection>
 
-      <PartsPromptBuilderSection
-        title="Scene"
-        color="blue"
-        :is-open="openSection === 'scene'"
-        @toggle="toggle('scene')"
-      >
-        <PartsPromptBuilderSceneForm v-model="scene" />
-      </PartsPromptBuilderSection>
-
-      <!--  -->
+      <!-- Subject Preview -->
       <div class="subject-section">
         <div class="mt-4 p-3 bg-gray-950/50 rounded border border-gray-800">
           <h4 class="text-[10px] text-gray-500 uppercase font-bold mb-2">
@@ -196,6 +187,18 @@ const handleRemoveSubject = (id: string) => {
           </p>
         </div>
       </div>
+    </div>
+
+    <!-- SCENE -->
+    <div class="mt-6">
+      <PartsPromptBuilderSection
+        title="Scene"
+        color="blue"
+        :is-open="openSection === 'scene'"
+        @toggle="toggle('scene')"
+      >
+        <PartsPromptBuilderSceneForm v-model="scene" />
+      </PartsPromptBuilderSection>
     </div>
 
     <div

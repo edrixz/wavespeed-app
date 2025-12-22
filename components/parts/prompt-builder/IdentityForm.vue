@@ -43,6 +43,19 @@ const props = defineProps<{ modelValue?: SubjectData }>();
       </div>
     </div>
 
+    <!-- Ethnicity -->
+    <div class="col-span-12">
+      <label class="lbl">Ethnicity</label>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.ethnicity"
+        type="subject"
+        field="ethnicity"
+        :options="skinToneListItem"
+        mode="single"
+        active-class="active-blue"
+      />
+    </div>
+
     <div class="col-span-12">
       <label class="lbl">Body Type</label>
       <PartsPromptBuilderTagSelector

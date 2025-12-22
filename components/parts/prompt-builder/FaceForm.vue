@@ -8,25 +8,12 @@ const props = defineProps<{ modelValue?: FaceData }>();
   <div class="space-y-5">
     <!-- Shape -->
     <div>
-      <h5 class="category-title border-purple-600">Shape</h5>
+      <h5 class="category-title border-purple-600">Structure</h5>
       <PartsPromptBuilderTagSelector
-        v-model="modelValue!.shape"
+        v-model="modelValue!.structure"
         type="face"
-        field="shape"
+        field="structure"
         :options="faceDetailListItem.shapes"
-        mode="single"
-        active-class="active-purple"
-      />
-    </div>
-
-    <!-- Expression -->
-    <div>
-      <h5 class="category-title border-purple-600">Expression</h5>
-      <PartsPromptBuilderTagSelector
-        v-model="modelValue!.expression"
-        type="face"
-        field="expression"
-        :options="faceDetailListItem.expression"
         mode="single"
         active-class="active-purple"
       />
@@ -42,6 +29,71 @@ const props = defineProps<{ modelValue?: FaceData }>();
         :options="faceDetailListItem.eyes"
         mode="multi"
         active-class="active-blue"
+      />
+    </div>
+
+    <!-- Eyebrows -->
+    <div>
+      <h5 class="category-title border-purple-600">Eyebrows</h5>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.eyebrows"
+        type="face"
+        field="eyebrows"
+        :options="faceDetailListItem.eyes"
+        mode="multi"
+        active-class="active-blue"
+      />
+    </div>
+
+    <!-- Nose -->
+    <div>
+      <h5 class="category-title border-purple-600">Nose</h5>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.nose"
+        type="face"
+        field="nose"
+        :options="faceDetailListItem.eyes"
+        mode="multi"
+        active-class="active-blue"
+      />
+    </div>
+
+    <!-- Lips -->
+    <div>
+      <h5 class="category-title border-purple-600">Lips</h5>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.lips"
+        type="face"
+        field="lips"
+        :options="faceDetailListItem.eyes"
+        mode="multi"
+        active-class="active-blue"
+      />
+    </div>
+
+    <!-- Skin Texture -->
+    <div>
+      <h5 class="category-title border-purple-600">Skin Texture</h5>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.skinTexture"
+        type="face"
+        field="skinTexture"
+        :options="faceDetailListItem.eyes"
+        mode="multi"
+        active-class="active-blue"
+      />
+    </div>
+
+    <!-- Expression -->
+    <div>
+      <h5 class="category-title border-purple-600">Expression</h5>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.expression"
+        type="face"
+        field="expression"
+        :options="faceDetailListItem.expression"
+        mode="single"
+        active-class="active-purple"
       />
     </div>
 

@@ -6,8 +6,35 @@ const props = defineProps<{ modelValue?: HairData }>();
 
 <template>
   <div class="space-y-5">
+    <!-- Description -->
     <div>
-      <h5 class="category-title border-amber-600">Length & Color</h5>
+      <h5 class="category-title border-amber-600">Description</h5>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.description"
+        type="hair"
+        field="description"
+        :options="hairDetailListItem.styleGroups"
+        mode="multi"
+        active-class="active-amber"
+      />
+    </div>
+
+    <!-- Color -->
+    <div>
+      <h5 class="category-title border-amber-600">Color</h5>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.color"
+        type="hair"
+        field="color"
+        :options="hairDetailListItem.styleGroups"
+        mode="multi"
+        active-class="active-amber"
+      />
+    </div>
+
+    <!-- Length -->
+    <div>
+      <h5 class="category-title border-amber-600">Length</h5>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.length"
         type="hair"
@@ -18,12 +45,13 @@ const props = defineProps<{ modelValue?: HairData }>();
       />
     </div>
 
+    <!-- Texture -->
     <div>
-      <h5 class="category-title border-amber-600">Style</h5>
+      <h5 class="category-title border-amber-600">Texture</h5>
       <PartsPromptBuilderTagSelector
-        v-model="modelValue!.style"
+        v-model="modelValue!.texture"
         type="hair"
-        field="style"
+        field="texture"
         :options="hairDetailListItem.styleGroups"
         mode="multi"
         active-class="active-amber"
