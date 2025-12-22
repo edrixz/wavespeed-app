@@ -88,7 +88,7 @@ const onToggle = (val: string) => {
           <button
             v-for="(val, index) in aiSuggestions"
             :key="val"
-            @click="handleToggle(val)"
+            @click="onToggle(val)"
             class="btn-chip ai-magic-chip"
             :class="isSelected(val) ? aiActiveClass : 'ai-inactive'"
             :style="{ '--delay': `${index * 0.1}s` }"
