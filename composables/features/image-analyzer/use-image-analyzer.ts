@@ -62,16 +62,59 @@ export const useImageAnalyzer = () => {
 
       return result;
     } catch (err: any) {
-      // KIỂM TRA NẾU LÀ LỖI HỦY BỎ
+      // 1. Kiểm tra nếu là hành động CANCEL từ người dùng
       if (err.name === "AbortError" || err.message?.includes("aborted")) {
-        console.log("User cancelled the request");
-        // Hiển thị thông báo nhẹ nhàng thay vì báo lỗi đỏ
-        setStatus("Analysis cancelled by user.", "info");
-      } else {
-        // ĐÂY MỚI LÀ LỖI THỰC SỰ (Network, Server, Gemini...)
-        console.error("Actual error:", err);
-        setStatus("Gemini analysis failed. Please try again.", "error");
+        setStatus("Analysis cancelled.", "info");
+        return null;
       }
+
+      // 2. BẮT LỖI 429 TỪ TRONG MESSAGE
+      let friendlyMessage = "Gemini is busy. Please try again later.";
+      let isQuotaError = false;
+
+      try {
+        // Vì err.message là một chuỗi JSON (như bạn đã show)
+        const errorBody = JSON.parse(err.data.message);
+
+        // Kiểm tra mã code 429 nằm bên trong object error
+        if (
+          errorBody.error?.code === 429 ||
+          errorBody.error?.status === "RESOURCE_EXHAUSTED"
+        ) {
+          isQuotaError = true;
+
+          // Tìm thời gian chờ (retryDelay) trong details
+          const retryInfo = errorBody.error?.details?.find((d: any) =>
+            d["@type"]?.includes("RetryInfo")
+          );
+
+          if (retryInfo?.retryDelay) {
+            friendlyMessage = `Quota reached. Please retry in ${retryInfo.retryDelay}.`;
+          } else {
+            friendlyMessage =
+              "Pro quota exceeded. Please wait a moment or use Magic Fill.";
+          }
+        }
+      } catch (parseErr) {
+        // Nếu message không phải JSON hoặc parse lỗi, ta dùng regex quét chuỗi thô
+        if (err.message?.includes("429") || err.message?.includes("quota")) {
+          isQuotaError = true;
+          const match = err.message.match(/retry in ([\d\.]+s)/);
+          friendlyMessage = match
+            ? `Quota reached. Retry in ${match[1]}.`
+            : "Pro limit reached. Please try again later.";
+        }
+      }
+
+      // 3. Hiển thị thông báo
+      setStatus(friendlyMessage, "error");
+
+      if (isQuotaError) {
+        console.warn("Gemini Rate Limit:", friendlyMessage);
+      } else {
+        console.error("Actual Server Error:", err);
+      }
+
       return null;
     } finally {
       aiStore.setAnalyzing(subjectId, false);

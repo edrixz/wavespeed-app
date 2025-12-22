@@ -83,9 +83,10 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     console.error("Gemini SDK Error:", error);
     throw createError({
-      statusCode: 500,
-      message: error.message || "Failed to analyze image",
-      data: error,
+      statusCode: error.response?.status || 500,
+      statusMessage: "Gemini API Error",
+      message: error.response?._data?.error?.message || error.message,
+      data: error.response?._data,
     });
   }
 });
