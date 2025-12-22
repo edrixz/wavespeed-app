@@ -24,7 +24,9 @@ const props = defineProps<{ outfit?: OutfitData; pose?: PoseData }>();
       <h5 class="category-title border-emerald-600">{{ group.name }}</h5>
       <PartsPromptBuilderTagSelector
         v-model="pose!.action"
-        :options="group.items.map((i) => i.value)"
+        type="pose"
+        field="action"
+        :options="group.items"
         mode="multi"
         active-class="active-emerald"
       />

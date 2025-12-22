@@ -1,57 +1,14 @@
 <script setup lang="ts">
-import { useImageAnalyzer, useLogger } from "~/composables";
-import { normalizeObject } from "~/utils/normalize";
-import type { AnalyzedData } from "~/types";
+import { useImageAnalyzer } from "~/composables";
 
 const store = usePromptBuilderStore();
 const { currentSubject } = storeToRefs(store);
 
 // --- GEMINI INTEGRATION ---
-const { setStatus } = useLogger();
 const { analyzeImage, isAnalyzing, analyzingMode } = useImageAnalyzer();
 
 const imageStore = useImageStore();
 const { images } = storeToRefs(imageStore);
-
-const mapMagicFillToStore = (data: AnalyzedData) => {
-  // 1. VALIDATION: Kiểm tra xem có Subject nào đang được chọn không
-  if (!store.currentSubject) {
-    setStatus("Please select a subject tab first", "warning");
-    return;
-  }
-
-  // 2. MAPPING CHARACTER DATA (Dành cho nhân vật hiện tại)
-  // Chúng ta sử dụng hàm normalizeObject để dữ liệu đồng bộ với UI
-  if (data.subject) {
-    store.currentSubject.subject = normalizeObject(data.subject);
-  }
-
-  if (data.face) {
-    store.currentSubject.face = normalizeObject(data.face);
-  }
-
-  if (data.hair) {
-    store.currentSubject.hair = normalizeObject(data.hair);
-  }
-
-  if (data.outfit) {
-    store.currentSubject.outfit = normalizeObject(data.outfit);
-  }
-
-  if (data.pose) {
-    store.currentSubject.pose = normalizeObject(data.pose);
-  }
-
-  // 3. MAPPING GLOBAL SCENE (Dữ liệu bối cảnh dùng chung)
-  if (data.environment) {
-    store.scene.environment = normalizeObject(data.environment);
-  }
-
-  if (data.tech) {
-    store.scene.tech = normalizeObject(data.tech);
-  }
-  setStatus("Magic Fill completed successfully!", "success");
-};
 
 const handleMagicFill = async (mode: "fast" | "pro") => {
   // 1. Xác định ảnh cần phân tích (Giữ nguyên logic cũ)

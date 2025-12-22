@@ -3,6 +3,8 @@ import { usePromptBuilderStore } from "~/stores/prompt-builder-store";
 const imageStore = useImageStore();
 const { images } = storeToRefs(imageStore);
 
+const { clearAiData } = useAiGeneratedPromptStore();
+
 const promptStore = usePromptBuilderStore();
 const { addSubject, removeSubject } = promptStore;
 const { subjects, currentSubject, activeSubjectId, scene, generatedPrompt } =
@@ -17,6 +19,14 @@ const toggleRefImage = (subjectId: string, imgIdx: number) => {
     targetSubject.refImageIdx =
       targetSubject.refImageIdx === imgIdx ? -1 : imgIdx;
   }
+};
+
+const handleRemoveSubject = (id: string) => {
+  // 1. Xóa dữ liệu AI trước
+  clearAiData(id);
+
+  // 2. Sau đó mới xóa Subject trong promptStore
+  promptStore.removeSubject(id);
 };
 </script>
 
@@ -57,7 +67,7 @@ const toggleRefImage = (subjectId: string, imgIdx: number) => {
         {{ sub.subject?.gender || `Subject ${sub.id + 1}` }}
         <span
           v-if="subjects.length > 1"
-          @click.stop="removeSubject(sub.id)"
+          @click.stop="handleRemoveSubject(sub.id)"
           class="ml-1 text-gray-600 hover:text-red-400 p-0.5 rounded-full hover:bg-gray-700"
           >✕</span
         >

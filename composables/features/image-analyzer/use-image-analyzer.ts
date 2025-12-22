@@ -35,6 +35,7 @@ export const useImageAnalyzer = () => {
     isAnalyzing.value = true;
     analyzingMode.value = mode;
 
+    setStatus("Gemini AI is analyzing...", "loading");
     try {
       let finalBase64 = imageInput;
 

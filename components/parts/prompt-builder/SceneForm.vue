@@ -10,7 +10,9 @@ const props = defineProps<{ modelValue?: Scene }>();
       <h5 class="category-title border-indigo-600">Environment</h5>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.environment!.location"
-        :options="sceneData.backgrounds[0].items.map((i) => i.value)"
+        type="environment"
+        field="location"
+        :options="sceneData.backgrounds[0].items"
         mode="multi"
         active-class="active-indigo"
       />
@@ -30,7 +32,9 @@ const props = defineProps<{ modelValue?: Scene }>();
       <h5 class="category-title border-indigo-600">Camera & Viewpoint</h5>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.tech!.viewpoint"
-        :options="sceneData.viewpoints.map((i) => i.value)"
+        type="tech"
+        field="viewpoint"
+        :options="sceneData.viewpoints"
         mode="multi"
         active-class="active-indigo"
       />

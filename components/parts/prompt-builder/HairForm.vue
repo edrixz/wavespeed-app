@@ -10,7 +10,9 @@ const props = defineProps<{ modelValue?: HairData }>();
       <h5 class="category-title border-amber-600">Length & Color</h5>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.length"
-        :options="hairDetailListItem.lengths.map((i) => i.value)"
+        type="hair"
+        field="length"
+        :options="hairDetailListItem.lengths"
         mode="single"
         active-class="active-amber"
       />
@@ -20,7 +22,9 @@ const props = defineProps<{ modelValue?: HairData }>();
       <h5 class="category-title border-amber-600">Style</h5>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.style"
-        :options="hairDetailListItem.styleGroups.map((i) => i.value)"
+        type="hair"
+        field="style"
+        :options="hairDetailListItem.styleGroups"
         mode="multi"
         active-class="active-amber"
       />

@@ -11,7 +11,9 @@ const props = defineProps<{ modelValue?: FaceData }>();
       <h5 class="category-title border-purple-600">Shape</h5>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.shape"
-        :options="faceDetailListItem.shapes.map((i) => i.value)"
+        type="face"
+        field="shape"
+        :options="faceDetailListItem.shapes"
         mode="single"
         active-class="active-purple"
       />
@@ -22,7 +24,9 @@ const props = defineProps<{ modelValue?: FaceData }>();
       <h5 class="category-title border-purple-600">Expression</h5>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.expression"
-        :options="faceDetailListItem.expression.map((i) => i.value)"
+        type="face"
+        field="expression"
+        :options="faceDetailListItem.expression"
         mode="single"
         active-class="active-purple"
       />
@@ -33,7 +37,9 @@ const props = defineProps<{ modelValue?: FaceData }>();
       <h5 class="category-title border-purple-600">Eyes</h5>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.eyes"
-        :options="faceDetailListItem.eyes.map((i) => i.value)"
+        type="face"
+        field="eyes"
+        :options="faceDetailListItem.eyes"
         mode="multi"
         active-class="active-blue"
       />
@@ -44,7 +50,9 @@ const props = defineProps<{ modelValue?: FaceData }>();
       <h5 class="category-title border-purple-600">Makeup</h5>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.makeup"
-        :options="faceDetailListItem.makeup.map((i) => i.value)"
+        type="face"
+        field="makeup"
+        :options="faceDetailListItem.makeup"
         mode="multi"
         active-class="active-pink"
       />

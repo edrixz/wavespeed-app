@@ -47,7 +47,9 @@ const props = defineProps<{ modelValue?: SubjectData }>();
       <label class="lbl">Body Type & Skin Tone</label>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.bodyType"
-        :options="bodyTypeListItem.map((i) => i.value)"
+        type="subject"
+        field="bodyType"
+        :options="bodyTypeListItem"
         mode="single"
         active-class="active-blue"
       />
