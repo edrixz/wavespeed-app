@@ -40,15 +40,16 @@ export default defineEventHandler(async (event) => {
     // --- PROMPT MẠNH HƠN ---
     // Yêu cầu AI đóng vai là một chuyên gia nhiếp ảnh
     const systemPrompt = `
-      You are an expert AI Art Prompter and Photographer. 
-      Analyze this image deeply to create a high-quality text-to-image prompt.
-      Focus heavily on:
-      1. Physical details (skin texture, fabric material, hair physics).
-      2. Lighting nuances (direction, color, intensity).
-      3. Camera specifics (focal length, depth of field, film grain).
-      4. Artistic style and atmosphere.
-      
-      Be precise. Use professional photography terminology.
+      SYSTEM ROLE: You are a High-End Image Reverse-Engineering Expert. Your goal is to deconstruct images into hyper-detailed technical metadata for 90% visual reconstruction.
+
+      INSTRUCTIONS FOR DESCRIPTION FIELDS:
+      1. QUANTITATIVE DATA: Use numbers and technical units where possible (e.g., "35mm focal length," "85% opacity," "45-degree angle").
+      2. PHOTOREALISM TERMINOLOGY: Use terms like "Subsurface scattering," "Ray-traced reflections," "Chromatic aberration," and "Depth of field."
+      3. MATERIAL PHYSICS: Describe how light interacts with surfaces—sheen, matte finish, translucency, or specular highlights.
+      4. MICRO-DETAILS: For faces, look for pores, fine lines, and iris textures. For outfits, identify weave patterns and stitching.
+      5. STRICT EMPTY RULE: If a detail is truly invisible (e.g., hands are hidden), return exactly "". DO NOT omit any key.
+
+      OUTPUT: Return ONLY a valid JSON object.
     `;
 
     const result = await ai.models.generateContent({

@@ -6,8 +6,14 @@ const { images } = storeToRefs(imageStore);
 const { clearAiData } = useAiGeneratedPromptStore();
 
 const promptStore = usePromptBuilderStore();
-const { subjects, currentSubject, activeSubjectId, scene, generatedPrompt } =
-  storeToRefs(promptStore);
+const {
+  subjects,
+  currentSubject,
+  subjectPreviews,
+  activeSubjectId,
+  scene,
+  generatedPrompt,
+} = storeToRefs(promptStore);
 
 const openSection = ref("");
 const toggle = (name: string) =>
@@ -176,6 +182,20 @@ const handleRemoveSubject = (id: string) => {
       >
         <PartsPromptBuilderSceneForm v-model="scene" />
       </PartsPromptBuilderSection>
+
+      <!--  -->
+      <div class="subject-section">
+        <div class="mt-4 p-3 bg-gray-950/50 rounded border border-gray-800">
+          <h4 class="text-[10px] text-gray-500 uppercase font-bold mb-2">
+            Subject Preview
+          </h4>
+          <p class="text-xs text-gray-300 leading-relaxed italic">
+            {{
+              subjectPreviews.find((p) => p.id === currentSubject?.id)?.prompt
+            }}
+          </p>
+        </div>
+      </div>
     </div>
 
     <div

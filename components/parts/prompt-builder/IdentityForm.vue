@@ -66,6 +66,19 @@ const props = defineProps<{ modelValue?: SubjectData }>();
         active-class="active-blue"
       />
     </div>
+
+    <!-- Skin Details -->
+    <div class="col-span-12">
+      <label class="lbl">Skin Details</label>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.skinDetails"
+        type="subject"
+        field="skinDetails"
+        :options="skinToneListItem"
+        mode="single"
+        active-class="active-blue"
+      />
+    </div>
   </div>
 </template>
 
