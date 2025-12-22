@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { bodyTypeListItem } from "~/consts";
+import { bodyTypeListItem, skinToneListItem } from "~/consts";
 import type { SubjectData } from "~/types";
 const props = defineProps<{ modelValue?: SubjectData }>();
 </script>
@@ -44,12 +44,24 @@ const props = defineProps<{ modelValue?: SubjectData }>();
     </div>
 
     <div class="col-span-12">
-      <label class="lbl">Body Type & Skin Tone</label>
+      <label class="lbl">Body Type</label>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.bodyType"
         type="subject"
         field="bodyType"
         :options="bodyTypeListItem"
+        mode="single"
+        active-class="active-blue"
+      />
+    </div>
+
+    <div class="col-span-12">
+      <label class="lbl">Skin Tone</label>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.skinTone"
+        type="subject"
+        field="skinTone"
+        :options="skinToneListItem"
         mode="single"
         active-class="active-blue"
       />

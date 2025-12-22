@@ -6,6 +6,38 @@ export const useAiGeneratedPromptStore = defineStore("aiPrompt", () => {
   // Lưu trữ dữ liệu AI theo ID của Subject để không bị nhầm lẫn khi đổi Tab
   const aiDataMap = ref<Record<string, AnalyzedData>>({});
 
+  // Quản lý các Subject đang được phân tích
+  const analyzingSubjects = ref<Set<string>>(new Set());
+
+  // Lưu trữ các bộ điều khiển hủy bỏ yêu cầu
+  const abortControllers = ref<Map<string, AbortController>>(new Map());
+
+  const setAnalyzing = (
+    subjectId: string,
+    isAnalyzing: boolean,
+    controller?: AbortController
+  ) => {
+    if (isAnalyzing) {
+      analyzingSubjects.value.add(subjectId);
+      if (controller) abortControllers.value.set(subjectId, controller);
+    } else {
+      analyzingSubjects.value.delete(subjectId);
+      abortControllers.value.delete(subjectId);
+    }
+  };
+
+  const cancelAnalysis = (subjectId: string) => {
+    const controller = abortControllers.value.get(subjectId);
+    if (controller) {
+      controller.abort(); // Dừng yêu cầu HTTP ngay lập tức
+      setAnalyzing(subjectId, false);
+    }
+  };
+
+  const isSubjectAnalyzing = (subjectId: string) => {
+    return analyzingSubjects.value.has(subjectId);
+  };
+
   const setAiGeneratedData = (subjectId: string, data: AnalyzedData) => {
     aiDataMap.value[subjectId] = data;
   };
@@ -31,6 +63,9 @@ export const useAiGeneratedPromptStore = defineStore("aiPrompt", () => {
 
   return {
     aiDataMap,
+    setAnalyzing,
+    cancelAnalysis,
+    isSubjectAnalyzing,
     setAiGeneratedData,
     getAiGeneratedDataBySubjectId,
     clearAiData,

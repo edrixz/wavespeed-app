@@ -20,14 +20,22 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(["update:modelValue"]);
 
-const { aiSuggestions, sortedOptions, isSelected, handleToggle, handleReset } =
-  useTagSelector(
-    computed(() => props.modelValue!),
-    computed(() => props.mode),
-    computed(() => props.options),
-    computed(() => props.type),
-    computed(() => props.field)
-  );
+const {
+  isLoading,
+  aiSuggestions,
+  sortedOptions,
+  isSelected,
+  handleToggle,
+  handleReset,
+  isAiRecommended,
+} = useTagSelector(
+  computed(() => props.modelValue!),
+  computed(() => props.mode),
+  computed(() => props.options),
+  computed(() => props.type),
+  computed(() => props.field),
+  (val) => emit("update:modelValue", val)
+);
 
 const onToggle = (val: string) => {
   const newValue = handleToggle(val);
@@ -43,26 +51,50 @@ const onToggle = (val: string) => {
           v-for="opt in sortedOptions"
           :key="opt.value"
           @click="onToggle(opt.value)"
-          class="btn-chip"
-          :class="isSelected(opt.value) ? activeClass : 'inactive'"
+          class="btn-chip transition-all duration-300"
+          :class="[
+            isSelected(opt.value)
+              ? isAiRecommended(opt.value)
+                ? aiActiveClass
+                : activeClass
+              : 'inactive',
+          ]"
         >
+          <span v-if="isAiRecommended(opt.value)" class="ai-star">✨</span>
           {{ opt.label }}
         </button>
       </TransitionGroup>
     </div>
 
-    <!-- AI suggestion -->
     <div
-      v-if="aiSuggestions.length > 0"
+      v-if="isLoading || aiSuggestions.length > 0"
       class="pt-3 border-t border-gray-800/50 animate-container"
     >
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
-          <span class="ai-label-neon">✨ AI Magic Insights</span>
-          <div class="h-px w-8 bg-green-500/30"></div>
+          <span
+            :class="
+              isLoading
+                ? 'text-gray-500 text-[9px] font-black uppercase tracking-widest'
+                : 'ai-label-neon'
+            "
+          >
+            {{
+              isLoading
+                ? "AI is analyzing " + field + "..."
+                : "✨ AI Magic Insights"
+            }}
+          </span>
+          <div
+            :class="[
+              'h-px w-8 transition-colors',
+              isLoading ? 'bg-gray-700' : 'bg-green-500/30',
+            ]"
+          ></div>
         </div>
 
         <button
+          v-if="!isLoading && aiSuggestions.length > 0"
           @click="handleReset"
           class="reset-ai-btn"
           title="Clear AI Suggestions for this section"
@@ -83,20 +115,33 @@ const onToggle = (val: string) => {
         </button>
       </div>
 
-      <div class="flex flex-wrap gap-2">
-        <TransitionGroup name="staggered-fade">
-          <button
-            v-for="(val, index) in aiSuggestions"
-            :key="val"
-            @click="onToggle(val)"
-            class="btn-chip ai-magic-chip"
-            :class="isSelected(val) ? aiActiveClass : 'ai-inactive'"
-            :style="{ '--delay': `${index * 0.1}s` }"
-          >
-            <span v-if="!isSelected(val)" class="ai-star">✨</span>
-            <span class="ai-label-neon">{{ val }}</span>
-          </button>
-        </TransitionGroup>
+      <div class="mt-2">
+        <div v-if="isLoading" class="flex flex-wrap gap-2">
+          <div
+            v-for="i in 3"
+            :key="i"
+            class="skeleton-item shimmer-loading"
+            :style="{
+              width: `${Math.floor(Math.random() * (100 - 50 + 1) + 50)}px`,
+            }"
+          ></div>
+        </div>
+
+        <div v-else class="flex flex-wrap gap-2">
+          <TransitionGroup name="staggered-fade">
+            <button
+              v-for="(val, index) in aiSuggestions"
+              :key="val"
+              @click="onToggle(val)"
+              class="btn-chip ai-magic-chip"
+              :class="isSelected(val) ? aiActiveClass : 'ai-inactive'"
+              :style="{ '--delay': `${index * 0.05}s` }"
+            >
+              <span v-if="!isSelected(val)" class="ai-star">✨</span>
+              {{ val }}
+            </button>
+          </TransitionGroup>
+        </div>
       </div>
     </div>
   </div>
@@ -109,6 +154,43 @@ const onToggle = (val: string) => {
 /* Đảm bảo layout không bị giật khi tag di chuyển */
 .tag-move-item {
   display: inline-block;
+}
+
+/* --- HIỆU ỨNG MAGIC SHIMMER (GREEN TONE) --- */
+.shimmer-loading {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(31, 41, 55, 0.7); /* gray-800 mờ một chút */
+  border: 1px dashed rgba(34, 197, 94, 0.2); /* Viền xanh rất mờ */
+}
+
+.shimmer-loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  /* Tông màu xanh Magic: mờ ở hai đầu và sáng xanh ở giữa */
+  background: linear-gradient(
+    90deg,
+    rgba(34, 197, 94, 0) 0%,
+    rgba(34, 197, 94, 0.05) 20%,
+    rgba(34, 197, 94, 0.2) 60%,
+    rgba(34, 197, 94, 0) 100%
+  );
+  animation: magic-shimmer 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes magic-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-item {
+  @apply h-7 rounded-md transition-all duration-500;
 }
 
 /* --- STYLE NÚT RESET --- */

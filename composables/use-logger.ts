@@ -30,7 +30,7 @@ export const useLogger = () => {
     // 3. Nếu không phải là trạng thái 'loading', tự động xóa sau 15s
     // (Thường loading sẽ chờ xử lý xong mới gọi setStatus khác nên không nên tự xóa)
     if (type !== "loading") {
-      const duration = 10000; // 15 giây
+      const duration = type === "error" ? 10000 : 5000; // error: 10 giây, other: 5 giây
       const intervalStep = 100; // Cập nhật mỗi 100ms
       const decrement = 100 / (duration / intervalStep);
 

@@ -6,7 +6,6 @@ const { images } = storeToRefs(imageStore);
 const { clearAiData } = useAiGeneratedPromptStore();
 
 const promptStore = usePromptBuilderStore();
-const { addSubject, removeSubject } = promptStore;
 const { subjects, currentSubject, activeSubjectId, scene, generatedPrompt } =
   storeToRefs(promptStore);
 
@@ -35,18 +34,20 @@ const handleRemoveSubject = (id: string) => {
     <div
       class="flex flex-col gap-2 justify-between items-center border-b border-gray-700 pb-4"
     >
-      <div class="w-full flex items-center gap-2">
-        <span class="text-lg">🛠️</span>
-        <h3 class="text-sm font-bold text-gray-200 uppercase tracking-wider">
-          Prompt Builder
-        </h3>
+      <div class="w-full flex items-center gap-2 justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🛠️</span>
+          <h3 class="text-sm font-bold text-gray-200 uppercase tracking-wider">
+            Prompt Builder
+          </h3>
+        </div>
+
+        <!-- Copy Button -->
+        <PartsButtonCopy />
       </div>
 
       <div class="flex w-full justify-between">
         <PartsImageAnalyzer />
-
-        <!-- Copy Button -->
-        <PartsButtonCopy />
       </div>
     </div>
 
@@ -74,7 +75,7 @@ const handleRemoveSubject = (id: string) => {
       </button>
 
       <button
-        @click="addSubject"
+        @click="promptStore.addSubject"
         class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg transition-transform hover:scale-105 ml-1"
         title="Add Subject"
       >

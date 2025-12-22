@@ -3,8 +3,9 @@ import type { AnalyzedData, AnalyzeResponse } from "~/types";
 
 export const useImageAnalyzer = () => {
   const { setStatus } = useLogger();
+  const aiStore = useAiGeneratedPromptStore();
+  const promptStore = usePromptBuilderStore();
 
-  const isAnalyzing = ref(false);
   const analyzingMode = ref<"fast" | "pro" | null>(null); // Để hiển thị loading spinner riêng
 
   // --- HELPER: CHUYỂN BLOB URL -> BASE64 ---
@@ -31,46 +32,58 @@ export const useImageAnalyzer = () => {
   const analyzeImage = async (
     imageInput: string,
     mode: "fast" | "pro" = "fast"
-  ): Promise<AnalyzedData | null> => {
-    isAnalyzing.value = true;
-    analyzingMode.value = mode;
+  ) => {
+    const subjectId = promptStore.activeSubjectId;
+    if (!subjectId) return null;
 
+    // Nếu đang có một yêu cầu khác chạy cho Subject này, hãy hủy nó trước
+    aiStore.cancelAnalysis(subjectId);
+
+    // 1. Khởi tạo Controller mới
+    const controller = new AbortController();
+    aiStore.setAnalyzing(subjectId, true, controller);
     setStatus("Gemini AI is analyzing...", "loading");
+
     try {
       let finalBase64 = imageInput;
-
-      // --- CHECK VÀ CHUYỂN ĐỔI ---
-      // Nếu input là Blob URL (ví dụ: blob:http://localhost...) -> Convert sang Base64
       if (imageInput.startsWith("blob:")) {
-        console.log("Converting Blob URL to Base64...");
         finalBase64 = await blobToBase64(imageInput);
-        if (!finalBase64) throw new Error("Failed to convert blob to base64");
       }
 
-      // Gửi Base64 chuẩn lên Server
-      const { data, error } = await useFetch<AnalyzeResponse>(
-        "/api/analyze-image",
-        {
-          method: "POST",
-          body: {
-            imageBase64: finalBase64,
-            mode: mode,
-          },
-        }
-      );
+      // 2. Truyền signal vào $fetch
+      const response = await $fetch<AnalyzeResponse>("/api/analyze-image", {
+        method: "POST",
+        signal: controller.signal, // Gắn "ngòi nổ" hủy bỏ tại đây
+        body: { imageBase64: finalBase64, mode, subjectId },
+      });
 
-      if (error.value) throw new Error(error.value.message);
+      const result = (response as any)?.result as AnalyzedData;
+      if (result) mapMagicFillToStore(result);
 
-      return (data.value as any)?.result as AnalyzedData;
-    } catch (err) {
-      console.error(err);
-      setStatus("Gemini analysis failed. Please try again.", "error");
+      return result;
+    } catch (err: any) {
+      // KIỂM TRA NẾU LÀ LỖI HỦY BỎ
+      if (err.name === "AbortError" || err.message?.includes("aborted")) {
+        console.log("User cancelled the request");
+        // Hiển thị thông báo nhẹ nhàng thay vì báo lỗi đỏ
+        setStatus("Analysis cancelled by user.", "info");
+      } else {
+        // ĐÂY MỚI LÀ LỖI THỰC SỰ (Network, Server, Gemini...)
+        console.error("Actual error:", err);
+        setStatus("Gemini analysis failed. Please try again.", "error");
+      }
       return null;
     } finally {
-      isAnalyzing.value = false;
-      analyzingMode.value = null;
+      aiStore.setAnalyzing(subjectId, false);
     }
   };
 
-  return { isAnalyzing, analyzingMode, analyzeImage };
+  return {
+    isAnalyzing: computed(() =>
+      aiStore.isSubjectAnalyzing(promptStore.activeSubjectId || "")
+    ),
+    analyzingMode,
+    analyzeImage,
+    cancelAnalysis: aiStore.cancelAnalysis,
+  };
 };
