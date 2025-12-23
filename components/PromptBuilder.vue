@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { usePromptBuilderStore } from "~/stores/prompt-builder-store";
+import PromptPreview from "./parts/prompt-builder/PromptPreview.vue";
 const imageStore = useImageStore();
 const { images } = storeToRefs(imageStore);
 
@@ -71,7 +72,7 @@ const handleRemoveSubject = (id: string) => {
             : 'bg-transparent text-gray-500 border-transparent hover:text-gray-300 hover:bg-gray-800/50'
         "
       >
-        {{ sub.subject?.gender || `Subject ${sub.id + 1}` }}
+        {{ sub.subject?.gender?.value || `Subject ${sub.id + 1}` }}
         <span
           v-if="subjects.length > 1"
           @click.stop="handleRemoveSubject(sub.id)"
@@ -207,22 +208,7 @@ const handleRemoveSubject = (id: string) => {
       </PartsPromptBuilderSection>
     </div>
 
-    <div
-      class="mt-6 p-4 bg-black/40 rounded-2xl border border-gray-700/50 relative group overflow-hidden"
-    >
-      <div class="flex justify-between items-center mb-3">
-        <span
-          class="text-[9px] text-gray-500 font-black uppercase tracking-widest"
-          >Final Prompt Preview</span
-        >
-        <PartsButtonCopy />
-      </div>
-      <div class="max-h-32 overflow-y-auto custom-scrollbar">
-        <p class="text-[11px] text-gray-400 font-mono leading-relaxed">
-          {{ generatedPrompt }}
-        </p>
-      </div>
-    </div>
+    <PartsPromptBuilderPromptPreview />
   </div>
 </template>
 

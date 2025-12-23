@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  genderOptions,
   bodyTypeListItem,
   skinToneListItem,
   ethnicityListItem,
@@ -9,8 +10,54 @@ import {
   pubicHairListItem,
   genitalDetailListItem,
 } from "~/consts";
-import type { SubjectData } from "~/types";
+import type { ListItem, SubjectData } from "~/types";
 const props = defineProps<{ modelValue?: SubjectData }>();
+const emit = defineEmits(["update:modelValue"]);
+
+/**
+ * HÀM CẬP NHẬT GENERIC (Dùng cho tất cả các trường chọn đơn)
+ * @param field Tên trường trong SubjectData (gender, bodyType...)
+ * @param valEn Giá trị tiếng Anh được chọn
+ * @param optionsList Danh sách options tương ứng để tìm label_vi
+ */
+const updateField = (
+  field: keyof SubjectData,
+  valEn: string,
+  optionsList: ListItem[]
+) => {
+  // 1. Tìm bản dịch tiếng Việt tương ứng từ danh sách options
+  const found = optionsList.find((opt) => opt.value === valEn);
+  const valVi = found?.label_vi || found?.label || valEn;
+
+  // 2. Tạo bản sao mới của modelValue để tránh mutate trực tiếp props
+  const newModelValue = {
+    ...(props.modelValue || {}),
+    [field]: {
+      value: valEn,
+      label_vi: valVi,
+    },
+  };
+
+  emit("update:modelValue", newModelValue);
+};
+
+const handleAgeUpdate = (val: string) => {
+  if (!val) {
+    emit("update:modelValue", {
+      ...props.modelValue,
+      age: { value: "", label_vi: "" },
+    });
+    return;
+  }
+
+  emit("update:modelValue", {
+    ...props.modelValue,
+    age: {
+      value: val, // Ví dụ: "20"
+      label_vi: `${val} tuổi`, // Tự động tạo nhãn tiếng Việt sát nghĩa
+    },
+  });
+};
 </script>
 
 <template>
@@ -19,19 +66,19 @@ const props = defineProps<{ modelValue?: SubjectData }>();
       <label class="lbl">Gender</label>
       <div class="flex bg-gray-800 border border-gray-600 rounded p-1 h-[34px]">
         <div
-          v-for="g in ['Female', 'Male']"
-          :key="g"
-          @click="modelValue!.gender = g"
+          v-for="opt in genderOptions"
+          :key="opt.value"
+          @click="updateField('gender', opt.value, genderOptions)"
           class="flex-1 flex items-center justify-center rounded cursor-pointer transition-all text-[10px] font-bold uppercase"
           :class="
-            modelValue!.gender === g
-              ? g === 'Female'
+            modelValue!.gender?.value === opt.value
+              ? opt.value === 'Female'
                 ? 'bg-pink-600 text-white'
                 : 'bg-blue-600 text-white'
               : 'text-gray-500 hover:bg-gray-700'
           "
         >
-          {{ g }}
+          {{ opt.value }}
         </div>
       </div>
     </div>
@@ -40,7 +87,8 @@ const props = defineProps<{ modelValue?: SubjectData }>();
       <label class="lbl">Age</label>
       <div class="relative">
         <input
-          v-model="modelValue!.age"
+          :value="modelValue?.age?.value"
+          @input="handleAgeUpdate(($event.target as HTMLInputElement).value)"
           type="number"
           class="inp"
           placeholder="20"

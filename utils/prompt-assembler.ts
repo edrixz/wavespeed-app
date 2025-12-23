@@ -32,32 +32,32 @@ export const getSubjectBlock = (s: Subject) => {
   // 1. Nhận diện danh tính
   const identity = joinValid(
     ", ",
-    sub?.gender,
-    sub?.age,
-    sub?.ethnicity,
-    sub?.bodyType,
-    sub?.skinTone,
-    sub?.skinDetails
+    sub?.gender?.value,
+    sub?.age?.value ? `${sub?.age?.value} year old` : "",
+    sub?.ethnicity?.value,
+    sub?.bodyType?.value,
+    sub?.skinTone?.value,
+    sub?.skinDetails?.value
   );
 
   // 2. Kiểm tra sự hiện diện của Anatomy và Clothing
   const anatomyTags = joinValid(
     ", ",
-    sub?.breast,
-    sub?.nipple,
-    sub?.genitals,
-    sub?.pubicHair
+    sub?.breast?.value,
+    sub?.nipple?.value,
+    sub?.genitals?.value,
+    sub?.pubicHair?.value
   );
   const clothingTags = joinValid(
     ", ",
-    outfit?.description,
-    outfit?.materials,
-    outfit?.layering,
-    outfit?.fit,
-    outfit?.details,
-    outfit?.accessories
+    outfit?.description?.value,
+    outfit?.materials?.value,
+    outfit?.layering?.value,
+    outfit?.fit?.value,
+    outfit?.details?.value,
+    outfit?.accessories?.value
   );
-  const interactionTags = outfit?.fabricInteraction || "";
+  const interactionTags = outfit?.fabricInteraction?.value || "";
 
   // 3. Logic xử lý Khối Cơ thể & Trang phục (Interaction Logic)
   let bodyAndClothingStr = "";
@@ -85,33 +85,33 @@ export const getSubjectBlock = (s: Subject) => {
   // 4. Khối gương mặt & Tóc
   const facial = joinValid(
     ", ",
-    face?.structure,
-    face?.eyes,
-    face?.eyebrows,
-    face?.nose,
-    face?.lips,
-    face?.skinTexture,
-    face?.expression,
-    face?.makeup
+    face?.structure?.value,
+    face?.eyes?.value,
+    face?.eyebrows?.value,
+    face?.nose?.value,
+    face?.lips?.value,
+    face?.skinTexture?.value,
+    face?.expression?.value,
+    face?.makeup?.value
   );
 
   const hairStyle = joinValid(
     ", ",
-    hair?.description,
-    hair?.color,
-    hair?.length,
-    hair?.texture
+    hair?.description?.value,
+    hair?.color?.value,
+    hair?.length?.value,
+    hair?.texture?.value
   );
 
   // 5. Khối tư thế
   const poseBase = joinValid(
     ", ",
-    pose?.action,
-    pose?.posture,
-    pose?.headAngle,
-    pose?.hands
+    pose?.action?.value,
+    pose?.posture?.value,
+    pose?.headAngle?.value,
+    pose?.hands?.value
   );
-  const poseInteraction = pose?.interaction || "";
+  const poseInteraction = pose?.interaction?.value || "";
   // Tạo câu văn tự nhiên: [Tư thế] trong khi [Hành động]
   let posePart = "";
   if (poseBase && poseInteraction) {
@@ -139,21 +139,21 @@ export const getSceneBlock = (sc: Scene) => {
 
   const environment = joinValid(
     ", ",
-    env?.location,
-    env?.lighting,
-    env?.lightColor,
-    env?.shadows,
-    env?.atmosphere,
-    env?.colorPalette
+    env?.location?.value,
+    env?.lighting?.value,
+    env?.lightColor?.value,
+    env?.shadows?.value,
+    env?.atmosphere?.value,
+    env?.colorPalette?.value
   );
   const technical = joinValid(
     ", ",
-    tech?.artStyle,
-    tech?.camera,
-    tech?.lensSettings,
-    tech?.filmEffect,
-    tech?.postProcessing,
-    tech?.viewpoint
+    tech?.artStyle?.value,
+    tech?.camera?.value,
+    tech?.lensSettings?.value,
+    tech?.filmEffect?.value,
+    tech?.postProcessing?.value,
+    tech?.viewpoint?.value
   );
 
   return { environment, technical };
@@ -166,9 +166,13 @@ export const assemblePrompt = (s: Subject, sc: Scene): string => {
   const subjectPart = getSubjectBlock(s);
   const { environment, technical } = getSceneBlock(sc);
 
-  const framing = joinValid(", ", s.pose?.framing, s.pose?.perspective);
+  const framing = joinValid(
+    ", ",
+    s.pose?.framing?.value,
+    s.pose?.perspective?.value
+  );
   const ar = s.pose?.aspectRatio
-    ? `--ar ${s.pose.aspectRatio.replace(":", "/")}`
+    ? `--ar ${s.pose.aspectRatio.value.replace(":", "/")}`
     : "";
 
   const framingTag = framing ? `Framing: ${framing}.` : "";
@@ -187,7 +191,7 @@ export const assembleNegativePrompt = (data: AnalyzedData): string => {
   ];
 
   // 1. Loại trừ phong cách nghệ thuật nếu là ảnh chụp (Sửa lỗi image_1559d0.png)
-  if (data.tech?.artStyle?.toLowerCase().includes("photo")) {
+  if (data.tech?.artStyle?.value.toLowerCase().includes("photo")) {
     negatives.push(
       "cartoon, anime, 3d render, illustration, painting, drawing, sketch, oil painting, semi-realistic, cgi, unreal engine, octane render"
     );
@@ -195,8 +199,8 @@ export const assembleNegativePrompt = (data: AnalyzedData): string => {
 
   // 2. Loại trừ nhiễu hạt nếu tech.filmEffect là sạch (Dựa trên dữ liệu mẫu của bạn)
   if (
-    data.tech?.filmEffect?.toLowerCase().includes("minimal") ||
-    data.tech?.filmEffect?.includes("no film effect")
+    data.tech?.filmEffect?.value.toLowerCase().includes("minimal") ||
+    data.tech?.filmEffect?.value.includes("no film effect")
   ) {
     negatives.push(
       "film grain, dust, scratches, chromatic aberration, light leaks, vintage effect, sepia, vignette"
@@ -205,8 +209,8 @@ export const assembleNegativePrompt = (data: AnalyzedData): string => {
 
   // 3. Loại trừ khuyết điểm da nếu face.skinTexture là mịn (Dựa trên dữ liệu mẫu của bạn)
   if (
-    data.face?.skinTexture?.toLowerCase().includes("smooth") ||
-    data.face?.skinTexture?.includes("no visible wrinkles")
+    data.face?.skinTexture?.value.toLowerCase().includes("smooth") ||
+    data.face?.skinTexture?.value.includes("no visible wrinkles")
   ) {
     negatives.push(
       "acne, skin blemishes, wrinkles, moles, scars, age spots, skin spots, large pores"

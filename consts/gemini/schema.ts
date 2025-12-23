@@ -1,40 +1,57 @@
 // consts/schema.ts
+
+/**
+ * Helper để tạo cấu trúc song ngữ cho Schema nhằm đảm bảo tính nhất quán
+ */
+const bilingualField = (descEn: string) => ({
+  type: "OBJECT",
+  properties: {
+    value: {
+      type: "STRING",
+      description: `${descEn} (Hyper-detailed English for AI generation).`,
+    },
+    label_vi: {
+      type: "STRING",
+      description: `Vietnamese translation of the value. Use professional photography/anatomy terms.`,
+    },
+  },
+  required: ["value", "label_vi"],
+});
+
 export const schema = {
   type: "OBJECT",
   properties: {
     subject: {
       type: "OBJECT",
       properties: {
-        gender: {
-          type: "STRING",
-          description:
-            "Identify gender and specific character archetype (e.g., Nordic warrior, High-fashion model).",
-        },
-        age: {
-          type: "STRING",
-          description:
-            "Visual age with biological markers like skin elasticity, collagen levels, or fine wrinkles.",
-        },
-        ethnicity: {
-          type: "STRING",
-          description:
-            "Specific ethnic traits, heritage indicators, and geographic origin look.",
-        },
-        bodyType: {
-          type: "STRING",
-          description:
-            "Anatomical breakdown: skeletal frame, muscle definition (hyper-toned vs. soft), and body fat percentage look.",
-        },
-        skinTone: {
-          type: "STRING",
-          description:
-            "Exact Fitzpatrick scale type or hex-related color description (e.g., Olive with golden undertones).",
-        },
-        skinDetails: {
-          type: "STRING",
-          description:
-            "Micro-texture: pore visibility, freckle density, moles, tattoos, scars, or sweat/oiliness (subsurface scattering).",
-        },
+        gender: bilingualField(
+          "Identify gender and specific character archetype."
+        ),
+        age: bilingualField(
+          "Visual age with biological markers like skin elasticity."
+        ),
+        ethnicity: bilingualField(
+          "Specific ethnic traits and heritage indicators."
+        ),
+        bodyType: bilingualField(
+          "Anatomical breakdown: skeletal frame, muscle definition, and body fat."
+        ),
+        skinTone: bilingualField(
+          "Exact Fitzpatrick scale type or hex-related color description."
+        ),
+        skinDetails: bilingualField(
+          "Micro-texture: pores, freckles, sweat/oiliness (subsurface scattering)."
+        ),
+        // Anatomy Nâng cao
+        chest: bilingualField(
+          "Detailed breast/chest anatomy: shape, volume, and nipple/areola texture."
+        ),
+        genitals: bilingualField(
+          "Anatomical detail of genitals: labia structure, mucosal textures, and moisture."
+        ),
+        pubicHair: bilingualField(
+          "Grooming style, hair density, and distribution patterns."
+        ),
       },
       required: [
         "gender",
@@ -43,51 +60,38 @@ export const schema = {
         "bodyType",
         "skinTone",
         "skinDetails",
+        "chest",
+        "genitals",
+        "pubicHair",
       ],
     },
     face: {
       type: "OBJECT",
       properties: {
-        structure: {
-          type: "STRING",
-          description:
-            "Bone structure: prominence of cheekbones, jawline sharpness (mandible), and forehead projection.",
-        },
-        eyes: {
-          type: "STRING",
-          description:
-            "Iris intricate patterns, limbal ring visibility, sclera clarity, and upper/lower lash density/length.",
-        },
-        eyebrows: {
-          type: "STRING",
-          description:
-            "Grooming style, hair stroke density, arch height, and relationship to the brow bone.",
-        },
-        nose: {
-          type: "STRING",
-          description:
-            "Bridge profile (straight, Roman, upturned), nostril width, and alar base details.",
-        },
-        lips: {
-          type: "STRING",
-          description:
-            "Cupid's bow definition, vermillion border clarity, lip texture (cracked, glossy, matte), and precise color.",
-        },
-        skinTexture: {
-          type: "STRING",
-          description:
-            "Surface condition: fine lines, nasolabial folds, acne scars, or peach fuzz (vellus hair).",
-        },
-        expression: {
-          type: "STRING",
-          description:
-            "Micro-expression analysis: eye squinting (duchenne smile), tension in the jaw, or brow furrowing.",
-        },
-        makeup: {
-          type: "STRING",
-          description:
-            "Cosmetic layer analysis: blended eyeshadow gradients, eyeliner wing type, foundation finish, and contouring areas.",
-        },
+        structure: bilingualField(
+          "Bone structure: cheekbones, jawline (mandible), and forehead."
+        ),
+        eyes: bilingualField(
+          "Iris patterns, limbal ring, sclera clarity, and lash density."
+        ),
+        eyebrows: bilingualField(
+          "Grooming style, hair stroke density, and arch height."
+        ),
+        nose: bilingualField(
+          "Bridge profile, nostril width, and alar base details."
+        ),
+        lips: bilingualField(
+          "Cupid's bow definition, vermillion border, and lip texture."
+        ),
+        skinTexture: bilingualField(
+          "Surface condition: fine lines, nasolabial folds, or vellus hair."
+        ),
+        expression: bilingualField(
+          "Micro-expression analysis: muscle tension and emotional nuances."
+        ),
+        makeup: bilingualField(
+          "Cosmetic layers: eyeshadow gradients, foundation finish, and contouring."
+        ),
       },
       required: [
         "structure",
@@ -103,62 +107,44 @@ export const schema = {
     hair: {
       type: "OBJECT",
       properties: {
-        description: {
-          type: "STRING",
-          description:
-            "Comprehensive hairstyle geometry: parting line, flyaway hairs, volume, and how it drapes over shoulders/ears.",
-        },
-        color: {
-          type: "STRING",
-          description:
-            "Chromatographic breakdown: root regrowth, highlights, lowlights, and metallic sheen under light.",
-        },
-        length: {
-          type: "STRING",
-          description:
-            "Measurement relative to anatomical landmarks (e.g., mid-back length, chin-length).",
-        },
-        texture: {
-          type: "STRING",
-          description:
-            "Physical state: coarse, fine, frizzy, silky, or clumped together (wet look).",
-        },
+        description: bilingualField(
+          "Hairstyle geometry: parting line, flyaways, and volume."
+        ),
+        color: bilingualField(
+          "Chromatographic breakdown: root regrowth and highlights."
+        ),
+        length: bilingualField("Measurement relative to anatomical landmarks."),
+        texture: bilingualField(
+          "Physical state: coarse, fine, silky, or wet look."
+        ),
       },
       required: ["description", "color", "length", "texture"],
     },
     outfit: {
       type: "OBJECT",
       properties: {
-        description: {
-          type: "STRING",
-          description:
-            "Technical breakdown of all garments: cut, silhouette, and how they are layered (inner vs. outer).",
-        },
-        materials: {
-          type: "STRING",
-          description:
-            "Material science: light refraction on satin, absorbency of cotton, or the rigid grain of leather.",
-        },
-        layering: {
-          type: "STRING",
-          description:
-            "Structural hierarchy: what is tucked, what is draped, and the interaction between different fabrics.",
-        },
-        fit: {
-          type: "STRING",
-          description:
-            "Draping physics: tension lines, baggy folds, or skin-tight compression.",
-        },
-        details: {
-          type: "STRING",
-          description:
-            "Hardware and trimmings: stitching type, button material, zipper placement, and fabric patterns (weave).",
-        },
-        accessories: {
-          type: "STRING",
-          description:
-            "Material and placement of jewelry (carat look), eyewear (frame thickness), or headgear.",
-        },
+        description: bilingualField(
+          "Technical breakdown: cut, silhouette, and layering."
+        ),
+        materials: bilingualField(
+          "Material science: light refraction on fabric (satin, leather, etc)."
+        ),
+        layering: bilingualField(
+          "Structural hierarchy and fabric interaction."
+        ),
+        fit: bilingualField(
+          "Draping physics: tension lines or skin-tight compression."
+        ),
+        details: bilingualField(
+          "Hardware: stitching, buttons, and weave patterns."
+        ),
+        accessories: bilingualField(
+          "Material and placement of jewelry and eyewear."
+        ),
+        // Tương tác vải
+        fabricInteraction: bilingualField(
+          "Physical interaction: fabric clinging to wet skin, sheer transparency, or pressure folds."
+        ),
       },
       required: [
         "description",
@@ -167,49 +153,36 @@ export const schema = {
         "fit",
         "details",
         "accessories",
+        "fabricInteraction",
       ],
     },
     pose: {
       type: "OBJECT",
       properties: {
-        action: {
-          type: "STRING",
-          description:
-            "Dynamic state: kinetic energy, movement blur, or specific interaction with objects.",
-        },
-        posture: {
-          type: "STRING",
-          description:
-            "Weight distribution: which leg is load-bearing, spinal curvature, and shoulder tension.",
-        },
-        headAngle: {
-          type: "STRING",
-          description:
-            "Rotation and tilt in degrees (e.g., 3/4 view, tilted 15 degrees downward).",
-        },
-        hands: {
-          type: "STRING",
-          description:
-            "Finger articulation and hand placement (e.g., relaxed grip, fingers splayed, hand on hip).",
-        },
-        framing: {
-          type: "STRING",
-          description:
-            "Cinematography shot type: ECU, Close-up, Medium-Full, Cowboy, or Wide Shot.",
-        },
-        perspective: {
-          type: "STRING",
-          description:
-            "Camera height and pitch: Low-angle (heroic), High-angle (diminishing), or Eye-level.",
-        },
-        aspectRatio: {
-          type: "STRING",
-          description:
-            "The estimated frame ratio (e.g., 1:1 square, 9:16 vertical, 21:9 cinematic).",
-        },
+        action: bilingualField("Dynamic state and kinetic energy."),
+        interaction: bilingualField(
+          "Body-to-garment or body-to-body interaction: undressing, covering chest, or skin pressure."
+        ),
+        posture: bilingualField(
+          "Weight distribution, spinal curvature, and shoulder tension."
+        ),
+        headAngle: bilingualField(
+          "Rotation and tilt in degrees (e.g., 3/4 view)."
+        ),
+        hands: bilingualField("Finger articulation and hand placement."),
+        framing: bilingualField(
+          "Cinematography shot type (ECU, Medium, Wide)."
+        ),
+        perspective: bilingualField(
+          "Camera height and pitch (Low-angle, Eye-level)."
+        ),
+        aspectRatio: bilingualField(
+          "The estimated frame ratio (e.g., 2:3, 16:9)."
+        ),
       },
       required: [
         "action",
+        "interaction",
         "posture",
         "headAngle",
         "hands",
@@ -221,36 +194,20 @@ export const schema = {
     environment: {
       type: "OBJECT",
       properties: {
-        location: {
-          type: "STRING",
-          description:
-            "3D space analysis: background elements, their distance (depth), and architectural style.",
-        },
-        lighting: {
-          type: "STRING",
-          description:
-            "Lighting rig setup: Key light direction, Rim light intensity, and Fill light placement.",
-        },
-        lightColor: {
-          type: "STRING",
-          description:
-            "Color temperature in Kelvin or descriptive palette (e.g., 3000K Amber vs. 6000K Daylight).",
-        },
-        shadows: {
-          type: "STRING",
-          description:
-            "Shadow quality: penumbra width, hard vs. soft edges, and shadow color (cool vs. warm).",
-        },
-        atmosphere: {
-          type: "STRING",
-          description:
-            "Environmental particles: volumetric fog, dust motes, rain density, or heat haze.",
-        },
-        colorPalette: {
-          type: "STRING",
-          description:
-            "Global color harmony: Teal/Orange, Monochromatic, Pastel, or High-contrast vibrant.",
-        },
+        location: bilingualField("3D space analysis and architectural style."),
+        lighting: bilingualField(
+          "Lighting rig setup: Key, Rim, and Fill light properties."
+        ),
+        lightColor: bilingualField(
+          "Color temperature (Kelvin) or descriptive palette."
+        ),
+        shadows: bilingualField(
+          "Shadow quality: penumbra width and color temperature."
+        ),
+        atmosphere: bilingualField(
+          "Volumetric fog, dust motes, or rain density."
+        ),
+        colorPalette: bilingualField("Global color harmony and grading."),
       },
       required: [
         "location",
@@ -264,35 +221,22 @@ export const schema = {
     tech: {
       type: "OBJECT",
       properties: {
-        camera: {
-          type: "STRING",
-          description:
-            "Sensor type vibe: Large format film, Full-frame digital, or vintage lo-fi analog.",
-        },
-        lensSettings: {
-          type: "STRING",
-          description:
-            "Optical properties: Focal length (mm), Aperture (f-stop for bokeh), and lens flares.",
-        },
-        filmEffect: {
-          type: "STRING",
-          description:
-            "Chemical/Digital finish: ISO grain, color fringing, halation, or light leaks.",
-        },
-        artStyle: {
-          type: "STRING",
-          description:
-            "Rendering method: Hyper-realistic photo, Unreal Engine 5 render, or oil painting.",
-        },
-        postProcessing: {
-          type: "STRING",
-          description:
-            "Color grading style: Desaturated, high-dynamic-range (HDR), or cross-processed film look.",
-        },
-        viewpoint: {
-          type: "STRING",
-          description: "Subject-to-camera distance and spatial relationship.",
-        },
+        camera: bilingualField(
+          "Sensor vibe: Large format film or full-frame digital."
+        ),
+        lensSettings: bilingualField(
+          "Focal length, Aperture (f-stop), and bokeh quality."
+        ),
+        filmEffect: bilingualField("ISO grain, halation, or light leaks."),
+        artStyle: bilingualField(
+          "Rendering method: Hyper-realistic photo vs Fine Art."
+        ),
+        postProcessing: bilingualField(
+          "Color grading style and dynamic range (HDR)."
+        ),
+        viewpoint: bilingualField(
+          "Subject-to-camera distance and spatial relationship."
+        ),
       },
       required: [
         "camera",

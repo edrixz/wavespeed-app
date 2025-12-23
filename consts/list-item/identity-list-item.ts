@@ -1,3 +1,8 @@
+export const genderOptions = [
+  { label: "Male", label_vi: "người đàn ông", value: "Male" },
+  { label: "Female", label_vi: "người phụ nữ", value: "Female" },
+];
+
 export const ethnicityListItem = [
   { label: "Đông Á", value: "East Asia" },
   { label: "Đông Nam Á", value: "Southeast Asia" },

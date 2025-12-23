@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { AnalyzedData, ListItem } from "~/types";
+import type { AiValue, AnalyzedData, ListItem } from "~/types";
 
 interface Props {
-  modelValue: string | undefined; // Dữ liệu từ promptStore
+  modelValue: AiValue | undefined; // Dữ liệu từ promptStore
   type: keyof AnalyzedData; // 'face', 'hair'...
   field: string; // 'shape', 'color'...
   options: ListItem[];
@@ -37,9 +37,23 @@ const {
   (val) => emit("update:modelValue", val)
 );
 
-const onToggle = (val: string, isAiSuggestion: boolean = false) => {
-  // Gọi handleToggle với cờ isAiSuggestion
-  const newValue = handleToggle(val, isAiSuggestion);
+const onToggle = (item: string | AiValue, isAiSuggestion: boolean = false) => {
+  let valEn: string;
+  let valVi: string;
+
+  if (typeof item === "string") {
+    // Trường hợp bấm vào Base Tag (chỉ có string value EN)
+    valEn = item;
+    const found = props.options.find((opt) => opt.value === item);
+    valVi = found?.label_vi || found?.label || item; // Lấy nhãn VI tương ứng
+  } else {
+    // Trường hợp bấm vào AI Suggestion (đã có sẵn cặp {value, label_vi})
+    valEn = item.value;
+    valVi = item.label_vi;
+  }
+
+  // Composable xử lý logic dựa trên valEn và trả về object AiValue mới
+  const newValue = handleToggle(valEn, valVi, isAiSuggestion);
   emit("update:modelValue", newValue);
 };
 </script>
@@ -137,14 +151,14 @@ const onToggle = (val: string, isAiSuggestion: boolean = false) => {
           <TransitionGroup name="staggered-fade">
             <button
               v-for="(val, index) in aiSuggestions"
-              :key="val"
+              :key="val.value"
               @click="onToggle(val, true)"
               class="btn-chip ai-magic-chip"
-              :class="isSelected(val) ? aiActiveClass : 'ai-inactive'"
+              :class="isSelected(val.value) ? aiActiveClass : 'ai-inactive'"
               :style="{ '--delay': `${index * 0.05}s` }"
             >
-              <span v-if="!isSelected(val)" class="ai-star">✨</span>
-              {{ val }}
+              <span v-if="!isSelected(val.value)" class="ai-star">✨</span>
+              {{ val.label_vi }}
             </button>
           </TransitionGroup>
         </div>
