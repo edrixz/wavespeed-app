@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   poseActionListItem,
+  poseInteractionListItem,
   postureListItem,
   headAngleListItem,
   handsListItem,
@@ -23,6 +24,19 @@ const props = defineProps<{ modelValue?: PoseData }>();
         type="pose"
         field="action"
         :options="poseActionListItem"
+        mode="multi"
+        active-class="active-blue"
+      />
+    </div>
+
+    <!-- Interaction -->
+    <div>
+      <h5 class="category-title border-purple-600">Interaction</h5>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.interaction"
+        type="pose"
+        field="interaction"
+        :options="poseInteractionListItem"
         mode="multi"
         active-class="active-blue"
       />

@@ -131,12 +131,16 @@ const createDefaultSubject = (id: string, refIdx: number = -1): Subject => ({
     ethnicity: "",
     bodyType: "",
     skinTone: "",
-    skinDetails: "", // New
+    skinDetails: "",
+    breast: "",
+    nipple: "",
+    pubicHair: "",
+    genitals: "",
   },
   face: {
-    structure: "", // New
+    structure: "",
     eyes: "",
-    eyebrows: "", // New
+    eyebrows: "",
     nose: "",
     lips: "",
     skinTexture: "",
@@ -144,27 +148,29 @@ const createDefaultSubject = (id: string, refIdx: number = -1): Subject => ({
     makeup: "",
   },
   hair: {
-    description: "", // New
+    description: "",
     color: "",
     length: "",
     texture: "",
   },
   outfit: {
     description: "",
-    materials: "", // New
-    layering: "", // New
+    materials: "",
+    layering: "",
     fit: "",
     details: "",
     accessories: "",
+    fabricInteraction: "",
   },
   pose: {
     action: "",
     posture: "",
     headAngle: "",
     hands: "",
-    framing: "", // New
-    perspective: "", // New
-    aspectRatio: "", // New
+    interaction: "",
+    framing: "",
+    perspective: "",
+    aspectRatio: "",
   },
 });
 
@@ -178,12 +184,11 @@ const createDefaultScene = (): Scene => ({
     colorPalette: "",
   },
   tech: {
-    camera: "Sony A7R V",
-    lensSettings: "85mm Lens f/1.4",
+    camera: "Hasselblad H6D-100c medium format digital camera",
+    lensSettings: "eighty-five millimeter prime lens at f1.4 for creamy bokeh",
     filmEffect: "",
     artStyle: "",
     postProcessing: "",
-    viewpoint:
-      "Photorealistic detail, 8k uhd, high-resolution skin, natural lighting. (breathtaking realistic) , (pale skin) , (huge tits:1.2) , naked tits, huge tits, hard nipples, wet skin, realistic, stunning colorful picture, award-winning photo. best shadows, realistic, wet, huge tits, (hard nipples) , hyperrealistic. High-end beauty retouch, micro-contrast boosted for realistic skin texture, film grain, color grading with cinematic tones",
+    viewpoint: "",
   },
 });

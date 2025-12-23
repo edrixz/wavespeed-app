@@ -25,6 +25,107 @@ export const poseActionListItem = [
   },
 ];
 
+export const poseInteractionListItem = [
+  // --- HÀNH ĐỘNG CỞI ĐỒ (UNDRESSING) ---
+  {
+    label: "Đang tuột quai áo",
+    value: "slowly sliding a thin shoulder strap down to reveal the shoulder",
+  },
+  {
+    label: "Đang cởi cúc áo",
+    value: "fingers delicately unbuttoning a shirt to expose the chest anatomy",
+  },
+  {
+    label: "Kéo vạt áo",
+    value: "hands pulling the hem of the garment upward in a playful motion",
+  },
+  {
+    label: "Đang cởi blazer",
+    value: "shrugging off a blazer to let it hang loosely on the elbows",
+  },
+  {
+    label: "Cởi tất/giày",
+    value:
+      "bending forward to slowly remove a stocking with graceful hand movement",
+  },
+
+  // --- HÀNH ĐỘNG TỰ CHE CHẮN (MODESTY & COVERING) ---
+  {
+    label: "Lấy tay ôm ngực",
+    value:
+      "arms crossed over the chest in an artistic modest pose with fingers splayed",
+  },
+  {
+    label: "Tay che nhũ hoa",
+    value: "one hand gently cupping the breast to partially obscure the nipple",
+  },
+  {
+    label: "Ôm gối (Co người)",
+    value: "legs tucked towards the chest with arms wrapped around the shins",
+  },
+  {
+    label: "Dùng tóc che ngực",
+    value: "long hair draped forward to artfully cover the bust area",
+  },
+  {
+    label: "Tay che vùng kín",
+    value:
+      "hands placed strategically over the pubic area in a classic nude pose",
+  },
+
+  // --- TƯƠNG TÁC VỚI DA THỊT (SKIN INTERACTION) ---
+  {
+    label: "Ngón tay lướt trên da",
+    value: "fingers tracing the collarbone and neck with a delicate touch",
+  },
+  {
+    label: "Bóp nhẹ vùng hông",
+    value:
+      "hands firmly gripping the waist creating realistic skin indentations",
+  },
+  {
+    label: "Tay vuốt tóc",
+    value: "running fingers through voluminous hair while arching the back",
+  },
+  {
+    label: "Chạm môi",
+    value:
+      "one finger resting softly on the lower lip with a pensive expression",
+  },
+
+  // --- HÀNH ĐỘNG VỚI MÔI TRƯỜNG ---
+  {
+    label: "Tựa vào gương",
+    value:
+      "leaning against a large mirror with a clear body reflection visible",
+  },
+  {
+    label: "Nằm trên vải voan",
+    value:
+      "lying gracefully on a bed of sheer fabric with skin visible through layers",
+  },
+  {
+    label: "Chạm vào mặt nước",
+    value:
+      "sitting by a pool with fingers creating ripples on the water surface",
+  },
+  {
+    label: "Tay kéo dãn vải",
+    value:
+      "fingers pulling the elastic fabric away from the skin to create tension",
+  },
+  {
+    label: "Che mặt thẹn thùng",
+    value:
+      "covering the face with one hand while revealing the body silhouette",
+  },
+  {
+    label: "Dựa lưng vào vải voan",
+    value:
+      "pressing the back against a hanging sheer curtain creating body imprints",
+  },
+];
+
 export const postureListItem = [
   {
     label: "Thẳng lưng",

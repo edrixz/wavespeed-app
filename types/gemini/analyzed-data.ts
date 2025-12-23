@@ -5,6 +5,10 @@ export type SubjectData = {
   bodyType?: string;
   skinTone?: string;
   skinDetails?: string;
+  breast?: string;
+  nipple?: string;
+  pubicHair?: string;
+  genitals?: string;
 };
 
 export type FaceData = {
@@ -32,6 +36,7 @@ export type OutfitData = {
   fit?: string; // Độ rủ, độ ôm của vải
   details?: string; // Họa tiết, khóa kéo, phụ liệu
   accessories?: string; // Trang sức, kính, mũ
+  fabricInteraction?: string; // Trường mới
 };
 
 export type PoseData = {
@@ -39,7 +44,7 @@ export type PoseData = {
   posture?: string;
   headAngle?: string; // Góc nghiêng đầu (tilt/rotation)
   hands?: string; // Vị trí và trạng thái bàn tay
-  // Bổ sung các trường quan trọng cho Composition (Bố cục)
+  interaction?: string; // Hành động tương tác
   framing?: string; // Kiểu khung hình (Close-up, Full body, Cowboy shot)
   perspective?: string; // Góc máy (Low angle, Eye level, High angle)
   aspectRatio?: string; // Tỷ lệ khung hình ước tính (16:9, 4:5, 1:1)

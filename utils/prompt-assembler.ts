@@ -3,7 +3,6 @@ import type { Subject, Scene, AnalyzedData } from "~/types";
 
 /**
  * Nối các thành phần với dấu câu thông minh.
- * Nếu là câu hoàn chỉnh (kết thúc bằng dấu chấm), nó sẽ giữ nguyên.
  */
 export const joinValid = (separator: string, ...fields: any[]) => {
   return fields
@@ -21,7 +20,7 @@ export const joinValid = (separator: string, ...fields: any[]) => {
 };
 
 /**
- * Bóc tách chi tiết nhân vật (Subject + Face + Hair + Outfit + Pose)
+ * Bóc tách chi tiết nhân vật (Subject + Anatomy + Face + Hair + Outfit + Pose)
  */
 export const getSubjectBlock = (s: Subject) => {
   const sub = s.subject;
@@ -30,7 +29,7 @@ export const getSubjectBlock = (s: Subject) => {
   const outfit = s.outfit;
   const pose = s.pose;
 
-  // Khối nhận dạng & Đặc điểm cơ thể
+  // 1. Nhận diện danh tính
   const identity = joinValid(
     ", ",
     sub?.gender,
@@ -41,7 +40,49 @@ export const getSubjectBlock = (s: Subject) => {
     sub?.skinDetails
   );
 
-  // Khối gương mặt & Tóc
+  // 2. Kiểm tra sự hiện diện của Anatomy và Clothing
+  const anatomyTags = joinValid(
+    ", ",
+    sub?.breast,
+    sub?.nipple,
+    sub?.genitals,
+    sub?.pubicHair
+  );
+  const clothingTags = joinValid(
+    ", ",
+    outfit?.description,
+    outfit?.materials,
+    outfit?.layering,
+    outfit?.fit,
+    outfit?.details,
+    outfit?.accessories
+  );
+  const interactionTags = outfit?.fabricInteraction || "";
+
+  // 3. Logic xử lý Khối Cơ thể & Trang phục (Interaction Logic)
+  let bodyAndClothingStr = "";
+
+  if (anatomyTags && clothingTags) {
+    // Trường hợp: Mặc đồ nhưng để lộ (Revealing / Editorial)
+    // Nếu có cả hai: Tập trung vào sự va chạm vật lý giữa vải và da
+    const interactionPrefix = interactionTags
+      ? `${interactionTags}:`
+      : "artfully revealing";
+    bodyAndClothingStr = `Wearing ${clothingTags}, ${interactionPrefix}, can see body details including ${anatomyTags}.`;
+  } else if (anatomyTags) {
+    // Trường hợp: Khỏa thân hoàn toàn (Fine Art Nude)
+    bodyAndClothingStr = `Fine art nude photography: showcasing detailed of ${anatomyTags}.`;
+  } else if (clothingTags) {
+    // Trường hợp: Thời trang tiêu chuẩn
+    bodyAndClothingStr = `Wearing ${clothingTags}${
+      interactionTags ? ` with ${interactionTags}` : ""
+    }.`;
+  } else {
+    // Fallback: Nếu không chọn gì
+    bodyAndClothingStr = "";
+  }
+
+  // 4. Khối gương mặt & Tóc
   const facial = joinValid(
     ", ",
     face?.structure,
@@ -53,6 +94,7 @@ export const getSubjectBlock = (s: Subject) => {
     face?.expression,
     face?.makeup
   );
+
   const hairStyle = joinValid(
     ", ",
     hair?.description,
@@ -61,28 +103,31 @@ export const getSubjectBlock = (s: Subject) => {
     hair?.texture
   );
 
-  // Khối trang phục
-  const clothing = joinValid(
-    ", ",
-    outfit?.description,
-    outfit?.materials,
-    outfit?.layering,
-    outfit?.fit,
-    outfit?.details,
-    outfit?.accessories
-  );
-
-  // Khối tư thế
-  const action = joinValid(
+  // 5. Khối tư thế
+  const poseBase = joinValid(
     ", ",
     pose?.action,
     pose?.posture,
     pose?.headAngle,
     pose?.hands
   );
+  const poseInteraction = pose?.interaction || "";
+  // Tạo câu văn tự nhiên: [Tư thế] trong khi [Hành động]
+  let posePart = "";
+  if (poseBase && poseInteraction) {
+    posePart = `Pose: ${poseBase}, while ${poseInteraction}.`;
+  } else if (poseInteraction) {
+    posePart = `Pose: performing ${poseInteraction}.`;
+  } else {
+    posePart = `Pose: ${poseBase}.`;
+  }
 
-  // Kết hợp thành một đoạn văn mô tả nhân vật mượt mà
-  return `A ${identity}. Face features: ${facial}. Hairstyle: ${hairStyle}. Wearing: ${clothing}. Pose: ${action}.`;
+  const faceTag = facial ? `Face features: ${facial}.` : "";
+  const hairStyleTag = hairStyle ? `Hairstyle: ${hairStyle}.` : "";
+  const poseTag =
+    poseBase === "" && poseInteraction === "" ? "" : `${posePart}`;
+
+  return `A ${identity}. ${bodyAndClothingStr} ${faceTag} ${hairStyleTag} ${poseTag}`;
 };
 
 /**
@@ -126,8 +171,11 @@ export const assemblePrompt = (s: Subject, sc: Scene): string => {
     ? `--ar ${s.pose.aspectRatio.replace(":", "/")}`
     : "";
 
-  // Cấu trúc: [Chủ thể] [Bố cục] [Môi trường] [Kỹ thuật] [Tham số]
-  return `${subjectPart} Framing: ${framing}. Environment: ${environment}. Technical style: ${technical}. ${ar}`.trim();
+  const framingTag = framing ? `Framing: ${framing}.` : "";
+  const environmentTag = environment ? `Environment: ${environment}.` : "";
+  const technicalTag = technical ? `Technical style: ${technical}.` : "";
+
+  return `${subjectPart} ${framingTag} ${environmentTag} ${technicalTag} ${ar}`.trim();
 };
 
 /**

@@ -120,3 +120,148 @@ export const skinDetailListItem = [
     value: "even skin texture with subsurface scattering on limbs",
   },
 ];
+
+export const breastListItem = [
+  {
+    label: "Dáng tự nhiên",
+    value: "natural breast anatomy with soft organic curvature",
+  },
+  {
+    label: "Dáng tròn đầy",
+    value: "full rounded bust with youthful firmness and symmetry",
+  },
+  {
+    label: "Dáng giọt nước",
+    value: "elegant teardrop shaped breasts with natural gravity",
+  },
+  {
+    label: "Gọn gàng (Perky)",
+    value: "petite perky chest with high-seated positioning",
+  },
+  {
+    label: "Khối ngực săn chắc",
+    value: "toned athletic chest with subtle pectoral definition",
+  },
+];
+
+export const nippleDetailListItem = [
+  // Hình dáng & Kích thước
+  { label: "Nhũ hoa nhỏ", value: "small petite nipples with delicate texture" },
+  {
+    label: "Nhũ hoa nổi bật",
+    value: "prominent defined nipples with sharp textural detail",
+  },
+  {
+    label: "Quầng vú rộng",
+    value: "broad circular areolas with natural skin pigmentation",
+  },
+  { label: "Quầng vú nhỏ", value: "petite neat areolas with smooth edges" },
+  {
+    label: "Nhũ hoa cứng (Wet)",
+    value: "prominent hard nipples with sharp textural detail under wet skin",
+  },
+
+  // Trạng thái & Màu sắc
+  {
+    label: "Màu hồng nhạt",
+    value: "soft pinkish pigmentation on areolas and nipples",
+  },
+  {
+    label: "Màu nâu trầm",
+    value: "deep brownish pigment with realistic skin undertones",
+  },
+  {
+    label: "Trạng thái săn",
+    value: "erect nipples with visible goosebumps and skin tension",
+  },
+  {
+    label: "Kết cấu da nhũ",
+    value: "detailed areola skin texture with tiny Montgomery glands",
+  },
+
+  // Tương tác ánh sáng
+  {
+    label: "Điểm sáng nhũ hoa",
+    value: "specular highlights on the nipple tips under studio lights",
+  },
+  {
+    label: "Bóng đổ vùng ngực",
+    value: "soft contact shadows beneath the breasts for 3D depth",
+  },
+];
+
+export const pubicHairListItem = [
+  {
+    label: "Tự nhiên rậm",
+    value: "full natural pubic hair with soft organic curls and density",
+  },
+  {
+    label: "Tỉa gọn",
+    value: "neatly groomed pubic hair with precise clean edges",
+  },
+  {
+    label: "Landing Strip",
+    value: "stylish vertical landing strip grooming style",
+  },
+  {
+    label: "Lông tơ thưa",
+    value: "sparse fine pubic hair with visible skin texture underneath",
+  },
+  {
+    label: "Lông ngắn (Stubble)",
+    value: "short prickly pubic hair stubble from recent grooming",
+  },
+  {
+    label: "Sạch sẽ (Bald)",
+    value: "completely hairless pubic area with ultra-smooth skin surface",
+  },
+];
+
+export const genitalDetailListItem = [
+  // Cấu trúc (Structure)
+  {
+    label: "Môi lớn đầy đặn",
+    value: "prominent labia majora with soft natural skin folds",
+  },
+  {
+    label: "Môi bé thanh mảnh",
+    value: "delicate labia minora with realistic anatomical detail",
+  },
+  {
+    label: "Cấu trúc khép",
+    value: "closed vulva anatomy with subtle vertical shadow line",
+  },
+  {
+    label: "Cấu trúc mở nhẹ",
+    value: "slightly parted labia revealing inner mucosal textures",
+  },
+
+  // Chất cảm & Màu sắc (Texture & Pigment)
+  {
+    label: "Sắc tố hồng",
+    value: "soft pinkish mauve pigmentation of the mucosal tissues",
+  },
+  {
+    label: "Sắc tố tự nhiên",
+    value: "realistic brownish skin tones with natural color transitions",
+  },
+  {
+    label: "Độ ẩm tự nhiên",
+    value:
+      "subtle glistening moisture on the vulva surface with specular highlights",
+  },
+  {
+    label: "Texture da chi tiết",
+    value: "intricate skin texture with natural wrinkles and fine lines",
+  },
+
+  // Ánh sáng (Lighting)
+  {
+    label: "Bóng đổ vùng bẹn",
+    value: "deep contact shadows in the inguinal creases for 3D depth",
+  },
+  {
+    label: "Tán xạ ánh sáng",
+    value: "subsurface scattering on mucosal layers for lifelike realism",
+  },
+];

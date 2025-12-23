@@ -6,6 +6,7 @@ import {
   fitListItem,
   detailsListItem,
   accessoriesListItem,
+  fabricInteractionListItem,
 } from "~/consts";
 import type { OutfitData } from "~/types";
 
@@ -87,6 +88,19 @@ const props = defineProps<{ modelValue?: OutfitData }>();
         type="outfit"
         field="accessories"
         :options="accessoriesListItem"
+        mode="multi"
+        active-class="active-blue"
+      />
+    </div>
+
+    <!-- Fabric Interaction -->
+    <div>
+      <h5 class="category-title border-purple-600">Fabric Interaction</h5>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.fabricInteraction"
+        type="outfit"
+        field="fabricInteraction"
+        :options="fabricInteractionListItem"
         mode="multi"
         active-class="active-blue"
       />

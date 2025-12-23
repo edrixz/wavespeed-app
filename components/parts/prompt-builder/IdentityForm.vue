@@ -4,6 +4,10 @@ import {
   skinToneListItem,
   ethnicityListItem,
   skinDetailListItem,
+  breastListItem,
+  nippleDetailListItem,
+  pubicHairListItem,
+  genitalDetailListItem,
 } from "~/consts";
 import type { SubjectData } from "~/types";
 const props = defineProps<{ modelValue?: SubjectData }>();
@@ -93,6 +97,58 @@ const props = defineProps<{ modelValue?: SubjectData }>();
         type="subject"
         field="skinDetails"
         :options="skinDetailListItem"
+        mode="multi"
+        active-class="active-blue"
+      />
+    </div>
+
+    <!-- Breast -->
+    <div class="col-span-12">
+      <label class="lbl">Chest</label>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.breast"
+        type="subject"
+        field="breast"
+        :options="breastListItem"
+        mode="single"
+        active-class="active-blue"
+      />
+    </div>
+
+    <!-- Nipple -->
+    <div class="col-span-12">
+      <label class="lbl">Nipple</label>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.nipple"
+        type="subject"
+        field="nipple"
+        :options="nippleDetailListItem"
+        mode="multi"
+        active-class="active-blue"
+      />
+    </div>
+
+    <!-- pubicHair -->
+    <div class="col-span-12">
+      <label class="lbl">pubic Hair</label>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.pubicHair"
+        type="subject"
+        field="pubicHair"
+        :options="pubicHairListItem"
+        mode="single"
+        active-class="active-blue"
+      />
+    </div>
+
+    <!-- genitals -->
+    <div class="col-span-12">
+      <label class="lbl">Genitals</label>
+      <PartsPromptBuilderTagSelector
+        v-model="modelValue!.genitals"
+        type="subject"
+        field="genitals"
+        :options="genitalDetailListItem"
         mode="multi"
         active-class="active-blue"
       />

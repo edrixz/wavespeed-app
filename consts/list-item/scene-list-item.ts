@@ -1,5 +1,9 @@
 export const locationListItem = [
   {
+    label: "Giống ảnh reference",
+    value: "Keep location as in Image #1",
+  },
+  {
     label: "Phông vô cực (Cyclorama)",
     value:
       "professional studio with a seamless light grey cyclorama infinity wall",
@@ -225,25 +229,66 @@ export const filmEffectListItem = [
 ];
 
 export const artStyleListItem = [
+  // Ánh sáng và Điện ảnh (Lighting & Cinematic)
   {
-    label: "Ảnh chụp thực tế",
-    value: "hyper-realistic professional photography",
+    label: "Chiaroscuro Studio",
+    value:
+      "dramatic chiaroscuro studio photography with deep shadows and soft highlights",
   },
   {
-    label: "Ảnh bìa tạp chí",
-    value: "high-end fashion editorial style for Vogue or Harper Bazaar",
+    label: "Điện ảnh Noir",
+    value: "cinematic noir style with moody atmosphere and deep contrast",
   },
   {
-    label: "Ảnh Studio thương mại",
-    value: "commercial beauty photography with impeccable clarity",
+    label: "Trắng đen cổ điển",
+    value:
+      "timeless monochrome photography with rich silver tones and high dynamic range",
+  },
+
+  // Thời trang và Thương mại (Fashion & Commercial)
+  {
+    label: "Editorial cao cấp",
+    value: "vogue-style high-fashion editorial nude for premium art magazines",
   },
   {
-    label: "Chân dung Fine-art",
-    value: "fine-art portraiture with painterly light and shadows",
+    label: "Commercial Beauty",
+    value:
+      "clean commercial beauty photography with flawless skin and sharp focus",
   },
   {
-    label: "Chân dung đời thường",
-    value: "candid street photography with naturalistic style",
+    label: "Chân dung đương đại",
+    value:
+      "contemporary studio portraiture with modern aesthetic and clean lines",
+  },
+
+  // Phong cách khác (Alternative)
+  {
+    label: "Phim Analog 35mm",
+    value:
+      "vintage analog film photography with soft grain and natural color palette",
+  },
+  {
+    label: "Gothic/Dark Art",
+    value: "moody gothic art style with mysterious shadows and ethereal vibe",
+  },
+  // Nghệ thuật cao cấp (Fine Art)
+  {
+    label: "Nude Nghệ thuật",
+    value: "high-end fine art nude photography with sculptural aesthetic",
+  },
+  {
+    label: "Cổ điển Renaissance",
+    value:
+      "classical Renaissance inspired artistic nude with soft painterly lighting",
+  },
+  {
+    label: "Trừu tượng hình thể",
+    value:
+      "minimalist abstract body form photography focusing on geometry and curves",
+  },
+  {
+    label: "Siêu thực (8K)",
+    value: "hyper-realistic professional photography with 8k uhd resolution",
   },
 ];
 
@@ -268,6 +313,11 @@ export const postProcessingListItem = [
   {
     label: "Màu rực rỡ (Vibrant)",
     value: "vibrant color processing with high saturation and pop",
+  },
+  {
+    label: "Retouch & Cinematic",
+    value:
+      "high-end beauty retouching with cinematic color grading and micro-contrast boost",
   },
 ];
 
