@@ -37,8 +37,9 @@ const {
   (val) => emit("update:modelValue", val)
 );
 
-const onToggle = (val: string) => {
-  const newValue = handleToggle(val);
+const onToggle = (val: string, isAiSuggestion: boolean = false) => {
+  // Gọi handleToggle với cờ isAiSuggestion
+  const newValue = handleToggle(val, isAiSuggestion);
   emit("update:modelValue", newValue);
 };
 </script>
@@ -137,7 +138,7 @@ const onToggle = (val: string) => {
             <button
               v-for="(val, index) in aiSuggestions"
               :key="val"
-              @click="onToggle(val)"
+              @click="onToggle(val, true)"
               class="btn-chip ai-magic-chip"
               :class="isSelected(val) ? aiActiveClass : 'ai-inactive'"
               :style="{ '--delay': `${index * 0.05}s` }"

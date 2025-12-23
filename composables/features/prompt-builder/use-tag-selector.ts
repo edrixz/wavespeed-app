@@ -16,13 +16,16 @@ export const useTagSelector = (
   // Kiểm tra trạng thái Active
   const isSelected = (val: string) => {
     if (!modelValue.value) return false;
-    // Với single mode, so sánh trực tiếp; với multi, kiểm tra trong mảng
-    if (mode.value === "single") return modelValue.value === val;
     return modelValue.value
       .split(",")
       .map((s) => s.trim())
+      .filter(Boolean)
       .includes(val);
   };
+
+  const baseOptionValues = computed(() =>
+    options.value.map((opt) => opt.value)
+  );
 
   // Lấy toàn bộ mảng tag thô từ AI (chưa lọc)
   const rawAiTags = computed(() => {
@@ -49,32 +52,40 @@ export const useTagSelector = (
     rawAiTags,
     (newAiTags) => {
       if (!newAiTags.length) return;
-
-      const defaultValues = options.value.map((opt) => opt.value);
       const matches = newAiTags.filter((tag: string) =>
-        defaultValues.includes(tag)
+        baseOptionValues.value.includes(tag)
       );
 
       if (matches.length > 0) {
-        let currentValue = modelValue.value || "";
-        const tempObj = { value: currentValue };
-
+        // Nếu là mode single và chưa có base tag nào được chọn
         if (mode.value === "single") {
-          // Chỉ tự động chọn nếu HIỆN TẠI chưa có gì được chọn
-          if (!currentValue) {
-            updateAttr(tempObj, "value", matches[0], "single");
-            onUpdate(tempObj.value);
+          const hasBaseTag = modelValue.value
+            ?.split(",")
+            .some((t) => baseOptionValues.value.includes(t.trim()));
+          if (!hasBaseTag) {
+            const newValue = handleToggle(matches[0]);
+            onUpdate(newValue);
           }
         } else {
-          // Multi mode: Thêm tất cả các tag AI gợi ý (nếu chưa được chọn)
-          let changed = false;
+          // Multi mode: tự động chọn tất cả match
+          let newValue = modelValue.value || "";
           matches.forEach((tag: string) => {
             if (!isSelected(tag)) {
-              updateAttr(tempObj, "value", tag, "multi");
-              changed = true;
+              // Giả lập toggle để lấy chuỗi mới
+              const tempValue = modelValue.value;
+              // Lưu ý: handleToggle lấy modelValue trực tiếp, nên cần cập nhật tuần tự
+              // Ở đây đơn giản là nối chuỗi nếu chưa có
+              const currentTags = newValue
+                .split(",")
+                .map((t) => t.trim())
+                .filter(Boolean);
+              if (!currentTags.includes(tag)) {
+                currentTags.push(tag);
+                newValue = currentTags.join(", ");
+              }
             }
           });
-          if (changed) onUpdate(tempObj.value);
+          onUpdate(newValue);
         }
       }
     },
@@ -118,11 +129,36 @@ export const useTagSelector = (
     });
   });
 
-  const handleToggle = (val: string) => {
-    const tempObj = { value: modelValue.value || "" };
-    updateAttr(tempObj, "value", val, mode.value);
-    // Trả về giá trị mới để component emit update:modelValue
-    return tempObj.value;
+  const handleToggle = (val: string, forceMulti: boolean = false) => {
+    let currentTags = modelValue.value
+      ? modelValue.value
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean)
+      : [];
+
+    const isBaseTag = baseOptionValues.value.includes(val);
+    const isAlreadySelected = currentTags.includes(val);
+
+    // CHẾ ĐỘ HYBRID:
+    // Nếu là Base Tag và đang ở mode single (và không bị ép multi bởi AI list)
+    if (isBaseTag && mode.value === "single" && !forceMulti) {
+      // Loại bỏ các Base Tag khác đang có trong list, giữ lại AI Tags
+      currentTags = currentTags.filter(
+        (t) => !baseOptionValues.value.includes(t)
+      );
+      if (!isAlreadySelected) currentTags.push(val);
+    } else {
+      // Chế độ Multi thông thường (cho AI Suggestions hoặc mode multi)
+      if (isAlreadySelected) {
+        currentTags = currentTags.filter((t) => t !== val);
+      } else {
+        currentTags.push(val);
+      }
+    }
+
+    const finalValue = currentTags.join(", ");
+    return finalValue;
   };
 
   const handleReset = () => {
