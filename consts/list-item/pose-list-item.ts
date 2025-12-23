@@ -1,85 +1,142 @@
-export const poseListItem = [
+export const poseActionListItem = [
   {
-    name: "Cơ bản / Tĩnh",
-    items: [
-      { label: "🧍 Đứng (Standing)", value: "Standing Pose" },
-      { label: "🪑 Ngồi (Sitting)", value: "Sitting Pose" },
-      { label: "🧎 Quỳ (Kneeling)", value: "Kneeling Pose" },
-      { label: "🛌 Nằm (Lying)", value: "Lying Down Pose" },
-      { label: "🧘 Thiền/Yoga", value: "Meditation Pose, Yoga Pose" },
-      { label: "🧱 Dựa tường", value: "Against a Wall Pose" },
-      { label: "Dựa người", value: "Leaning Pose" },
-      { label: "Ngồi vắt chân", value: "Sitting Cross-Legged Pose" },
-      { label: "Ngồi thư giãn", value: "Relaxing Sitting Pose" },
-      { label: "Ngồi năng động", value: "Dynamic Sitting Pose" },
-      { label: "Cúi người", value: "Crouching Pose, Bending Pose" },
-    ],
+    label: "Đang quỳ",
+    value: "kneeling on both knees with dynamic leg positioning",
   },
   {
-    name: "Hành động / Di chuyển",
-    items: [
-      { label: "🚶 Đi bộ", value: "Walking Pose, Casual Stroll Pose" },
-      { label: "🏃 Chạy", value: "Running Pose" },
-      { label: "🦘 Nhảy (Jump)", value: "Jumping Pose, Dynamic Jump Pose" },
-      { label: "💃 Nhảy múa", value: "Dancing Pose, Artistic Dance Pose" },
-      { label: "🤸 Nhào lộn", value: "Cartwheel Pose" },
-      { label: "Đuổi theo", value: "Chasing Pose" }, // Sửa typo Chassing
-      { label: "Hành động mạnh", value: "Dynamic Action Pose" },
-      { label: "Chiến đấu", value: "Battle Pose, Kung Fu Pose" },
-      { label: "Bay/Lơ lửng", value: "Floating Pose" }, // Bổ sung cho phong phú
-    ],
+    label: "Đứng thẳng",
+    value: "standing upright with a confident and stable stance",
   },
   {
-    name: "Thời trang / Nghệ thuật",
-    items: [
-      { label: "✨ Người mẫu", value: "Fashion Model Pose, High Fashion Pose" },
-      { label: "S-Shape", value: "S-curve Pose, S-shape Pose" },
-      { label: "Vogue", value: "Vogue Pose" },
-      { label: "Quyến rũ", value: "Captivating Pose, Feminine Pose" },
-      { label: "Nam tính", value: "Masculine Pose, Power Pose" },
-      { label: "Ngoái nhìn", value: "Looking Back Over Shoulder Pose" },
-      { label: "Nghiêng đầu", value: "Tilted Head Pose" },
-      { label: "Chân dung", value: "Headshot Pose, Close-Up Beauty Shot Pose" },
-      { label: "Jojo Style", value: "Jojo Pose" },
-      { label: "Contrapposto", value: "Contrapposto Pose" },
-    ],
+    label: "Ngồi ghế",
+    value: "sitting on a studio stool with relaxed leg placement",
   },
   {
-    name: "Tương tác Tay",
-    items: [
-      { label: "Tay chống hông", value: "Hand-on-Hip Pose" },
-      { label: "Tay lên cao", value: "Arms Up Pose, Reaching Pose" },
-      { label: "Vuốt tóc", value: "Touching Hair Pose, Ajusting Hair Pose" },
-      { label: "Chạm mặt", value: "Touching Face Pose, One Hand on Face Pose" },
-      { label: "Chỉnh áo", value: "Adjusting Clothing Pose" },
-      { label: "Vẫy tay", value: "Waving Hand Pose" },
-      { label: "Khoanh tay", value: "Crossed Arms Pose" },
-      { label: "Che tai", value: "Touching Ear Pose" },
-    ],
+    label: "Tựa tường",
+    value: "leaning casually against a textured studio wall",
   },
   {
-    name: "Cầm nắm (Holding)",
-    items: [
-      { label: "📱 Điện thoại", value: "Holding Phone Pose" },
-      { label: "🍦 Kem", value: "Holding Ice Cream Pose" },
-      { label: "👜 Túi xách", value: "Holding Bag Pose" },
-      { label: "🍷 Ly nước", value: "Holding Glass Pose" },
-      { label: "🎤 Micro", value: "Holding Microphone Pose" },
-      { label: "🎧 Tai nghe", value: "Holding Headset Pose" },
-      { label: "🖊️ Bút", value: "Holding Pen Pose" },
-      { label: "📖 Đọc sách", value: "Reading Book Pose" },
-      { label: "Tương tác đồ vật", value: "Interacting with Props Pose" },
-    ],
+    label: "Cầm vật dụng",
+    value: "holding a professional prop with a firm yet natural grip",
   },
   {
-    name: "Cảm xúc / Khác",
-    items: [
-      { label: "😆 Cười lớn", value: "Laughing Candidly Pose" },
-      { label: "😶 Nhìn xa xăm", value: "Gazing into the Distance Pose" },
-      { label: "🚬 Hút thuốc", value: "Smoking Pose" },
-      { label: "🧘 Thư giãn", value: "Relaxing Pose" },
-      { label: "💪 Khoe cơ bắp", value: "Muscle Pose" },
-      { label: "Giãn cơ", value: "Stretching Pose" },
-    ],
+    label: "Đang chuyển động",
+    value: "captured in mid-motion with subtle motion blur on limbs",
   },
+];
+
+export const postureListItem = [
+  {
+    label: "Thẳng lưng",
+    value: "perfectly upright posture with shoulders pulled back",
+  },
+  {
+    label: "Đổ người nhẹ",
+    value: "leaning slightly forward to engage with the camera",
+  },
+  {
+    label: "Cong lưng nghệ thuật",
+    value: "subtle arch in the lumbar region emphasizing curvature",
+  },
+  {
+    label: "Vai thả lỏng",
+    value: "relaxed shoulders devoid of tension for a natural look",
+  },
+  {
+    label: "Xoay người",
+    value: "torso slightly twisted to the side creating a dynamic silhouette",
+  },
+];
+
+export const headAngleListItem = [
+  { label: "Chính diện", value: "head-on view looking directly into the lens" },
+  {
+    label: "Nghiêng 3/4",
+    value: "three-quarter view turned 45 degrees toward the camera",
+  },
+  {
+    label: "Nhìn nghiêng (Profile)",
+    value: "sharp profile view showcasing the facial silhouette",
+  },
+  {
+    label: "Cúi đầu nhẹ",
+    value: "head tilted slightly downward to accentuate the jawline",
+  },
+  {
+    label: "Ngước nhìn",
+    value: "head rotated upward with a contemplative gaze",
+  },
+];
+
+export const handsListItem = [
+  {
+    label: "Khoanh tay",
+    value: "arms crossed in a powerful and authoritative posture",
+  },
+  {
+    label: "Chống hông",
+    value: "hands resting on hips for a confident and casual vibe",
+  },
+  {
+    label: "Tay chạm mũ/tóc",
+    value: "hand gently splayed and resting on the headgear or hair",
+  },
+  {
+    label: "Đan tay",
+    value: "fingers interlaced and resting naturally in front",
+  },
+  {
+    label: "Cầm vợt/Dụng cụ",
+    value: "fingers curled firmly around the handle of a professional prop",
+  },
+];
+
+export const framingListItem = [
+  {
+    label: "Cận mặt (Close-up)",
+    value: "close-up portrait focusing on intricate facial details",
+  },
+  {
+    label: "Bán thân (Medium shot)",
+    value: "medium shot capturing the subject from the waist up",
+  },
+  {
+    label: "Toàn thân (Full body)",
+    value: "full body shot showcasing the entire pose and outfit",
+  },
+  {
+    label: "Cowboy shot",
+    value: "cowboy shot capturing from the mid-thighs to the head",
+  },
+  {
+    label: "Siêu cận (Extreme CU)",
+    value: "extreme close-up shot focusing on the eyes and iris",
+  },
+];
+
+export const perspectiveListItem = [
+  {
+    label: "Ngang tầm mắt",
+    value: "eye-level perspective for a direct and engaging connection",
+  },
+  {
+    label: "Góc thấp (Low angle)",
+    value: "low angle shot making the subject appear powerful and tall",
+  },
+  {
+    label: "Góc cao (High angle)",
+    value: "high angle shot looking down for a vulnerable or artistic feel",
+  },
+  {
+    label: "Góc nghiêng (Dutch)",
+    value: "tilted dutch angle for a dynamic and energetic composition",
+  },
+];
+
+export const aspectRatioListItem = [
+  { label: "Vuông (Hasselblad)", value: "1:1" },
+  { label: "Dọc (Portrait)", value: "4:5" },
+  { label: "Chuẩn (Full frame)", value: "3:2" },
+  { label: "Điện ảnh", value: "16:9" },
+  { label: "Cổ điển", value: "4:3" },
 ];

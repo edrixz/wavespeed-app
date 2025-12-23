@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { hairDetailListItem } from "~/consts";
+import {
+  hairDescriptionListItem,
+  hairColorListItem,
+  hairLengthListItem,
+  hairTextureListItem,
+} from "~/consts";
 import type { HairData } from "~/types";
 const props = defineProps<{ modelValue?: HairData }>();
 </script>
@@ -13,7 +18,7 @@ const props = defineProps<{ modelValue?: HairData }>();
         v-model="modelValue!.description"
         type="hair"
         field="description"
-        :options="hairDetailListItem.styleGroups"
+        :options="hairDescriptionListItem"
         mode="multi"
         active-class="active-amber"
       />
@@ -26,7 +31,7 @@ const props = defineProps<{ modelValue?: HairData }>();
         v-model="modelValue!.color"
         type="hair"
         field="color"
-        :options="hairDetailListItem.styleGroups"
+        :options="hairColorListItem"
         mode="multi"
         active-class="active-amber"
       />
@@ -39,7 +44,7 @@ const props = defineProps<{ modelValue?: HairData }>();
         v-model="modelValue!.length"
         type="hair"
         field="length"
-        :options="hairDetailListItem.lengths"
+        :options="hairLengthListItem"
         mode="single"
         active-class="active-amber"
       />
@@ -52,7 +57,7 @@ const props = defineProps<{ modelValue?: HairData }>();
         v-model="modelValue!.texture"
         type="hair"
         field="texture"
-        :options="hairDetailListItem.styleGroups"
+        :options="hairTextureListItem"
         mode="multi"
         active-class="active-amber"
       />

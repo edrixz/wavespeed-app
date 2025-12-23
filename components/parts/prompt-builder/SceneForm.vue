@@ -1,5 +1,18 @@
 <script setup lang="ts">
-import { sceneData } from "~/consts";
+import {
+  artStyleListItem,
+  atmosphereListItem,
+  cameraListItem,
+  colorPaletteListItem,
+  filmEffectListItem,
+  lensSettingsListItem,
+  lightColorListItem,
+  lightingListItem,
+  locationListItem,
+  postProcessingListItem,
+  shadowsListItem,
+  viewpointListItem,
+} from "~/consts";
 import type { Scene } from "~/types";
 const props = defineProps<{ modelValue?: Scene }>();
 </script>
@@ -13,7 +26,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.environment!.location"
         type="environment"
         field="location"
-        :options="sceneData.backgrounds[0].items"
+        :options="locationListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -26,7 +39,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.environment!.lighting"
         type="environment"
         field="lighting"
-        :options="[]"
+        :options="lightingListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -39,7 +52,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.environment!.lighting"
         type="environment"
         field="lightColor"
-        :options="[]"
+        :options="lightColorListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -52,7 +65,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.environment!.shadows"
         type="environment"
         field="shadows"
-        :options="[]"
+        :options="shadowsListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -65,7 +78,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.environment!.atmosphere"
         type="environment"
         field="atmosphere"
-        :options="[]"
+        :options="atmosphereListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -78,7 +91,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.environment!.colorPalette"
         type="environment"
         field="colorPalette"
-        :options="[]"
+        :options="colorPaletteListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -92,7 +105,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.tech!.camera"
         type="tech"
         field="camera"
-        :options="[]"
+        :options="cameraListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -105,7 +118,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.tech!.lensSettings"
         type="tech"
         field="lensSettings"
-        :options="[]"
+        :options="lensSettingsListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -118,7 +131,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.tech!.filmEffect"
         type="tech"
         field="filmEffect"
-        :options="[]"
+        :options="filmEffectListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -131,7 +144,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.tech!.artStyle"
         type="tech"
         field="artStyle"
-        :options="[]"
+        :options="artStyleListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -144,7 +157,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.tech!.postProcessing"
         type="tech"
         field="postProcessing"
-        :options="[]"
+        :options="postProcessingListItem"
         mode="multi"
         active-class="active-indigo"
       />
@@ -157,7 +170,7 @@ const props = defineProps<{ modelValue?: Scene }>();
         v-model="modelValue!.tech!.viewpoint"
         type="tech"
         field="viewpoint"
-        :options="sceneData.viewpoints"
+        :options="viewpointListItem"
         mode="multi"
         active-class="active-indigo"
       />

@@ -163,15 +163,21 @@ const handleRemoveSubject = (id: string) => {
       </PartsPromptBuilderSection>
 
       <PartsPromptBuilderSection
-        title="Outfit & Pose"
+        title="Outfit"
         color="green"
         :is-open="openSection === 'outfit'"
         @toggle="toggle('outfit')"
       >
-        <PartsPromptBuilderOutfitPoseForm
-          v-model:outfit="currentSubject.outfit"
-          v-model:pose="currentSubject.pose"
-        />
+        <PartsPromptBuilderOutfitForm v-model="currentSubject.outfit" />
+      </PartsPromptBuilderSection>
+
+      <PartsPromptBuilderSection
+        title="Pose"
+        color="green"
+        :is-open="openSection === 'pose'"
+        @toggle="toggle('pose')"
+      >
+        <PartsPromptBuilderPoseForm v-model="currentSubject.pose" />
       </PartsPromptBuilderSection>
 
       <!-- Subject Preview -->

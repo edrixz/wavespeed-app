@@ -16,6 +16,7 @@ export const joinValid = (separator: string, ...fields: any[]) => {
     .join(separator)
     .replace(/\s+/g, " ")
     .replace(/,\./g, ".")
+    .replace(/\.$/, "")
     .trim();
 };
 

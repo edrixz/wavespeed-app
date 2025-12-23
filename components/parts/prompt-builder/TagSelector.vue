@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { AnalyzedData } from "~/types";
+import type { AnalyzedData, ListItem } from "~/types";
 
 interface Props {
   modelValue: string | undefined; // Dữ liệu từ promptStore
   type: keyof AnalyzedData; // 'face', 'hair'...
   field: string; // 'shape', 'color'...
-  options: { label: string; value: string }[];
+  options: ListItem[];
   mode?: "single" | "multi"; // Chế độ chọn
   activeClass?: string;
   aiActiveClass?: string;
@@ -61,6 +61,11 @@ const onToggle = (val: string) => {
           ]"
         >
           <span v-if="isAiRecommended(opt.value)" class="ai-star">✨</span>
+          <span
+            v-if="opt.color"
+            class="w-3.5 h-3.5 rounded-full shadow-inner border border-white/10"
+            :style="{ backgroundColor: opt.color }"
+          ></span>
           {{ opt.label }}
         </button>
       </TransitionGroup>

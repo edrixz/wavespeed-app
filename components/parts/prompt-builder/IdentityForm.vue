@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { bodyTypeListItem, skinToneListItem } from "~/consts";
+import {
+  bodyTypeListItem,
+  skinToneListItem,
+  ethnicityListItem,
+  skinDetailListItem,
+} from "~/consts";
 import type { SubjectData } from "~/types";
 const props = defineProps<{ modelValue?: SubjectData }>();
 </script>
@@ -50,7 +55,7 @@ const props = defineProps<{ modelValue?: SubjectData }>();
         v-model="modelValue!.ethnicity"
         type="subject"
         field="ethnicity"
-        :options="skinToneListItem"
+        :options="ethnicityListItem"
         mode="single"
         active-class="active-blue"
       />
@@ -87,8 +92,8 @@ const props = defineProps<{ modelValue?: SubjectData }>();
         v-model="modelValue!.skinDetails"
         type="subject"
         field="skinDetails"
-        :options="skinToneListItem"
-        mode="single"
+        :options="skinDetailListItem"
+        mode="multi"
         active-class="active-blue"
       />
     </div>

@@ -8,7 +8,7 @@ export const useWavespeedPayloadStore = defineStore("wavespeedPayload", () => {
     "Keep the model's pose and the flowing shape of the liquid clothing unchanged. Change the clothing material from silver metal to completely transparent clear water."
   );
   const negative_prompt = ref(
-    "blurry, low quality, jpeg artifacts, ugly, deformed, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, signature, watermark, bad feet, distorted, mutation."
+    "low quality, worst quality, out of focus, blurry, deformed, extra limbs, mutated hands, bad anatomy, bad proportions, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, cartoon, anime, 3d render, illustration, painting, drawing, sketch, oil painting, semi-realistic, cgi, unreal engine, octane render."
   );
   const enableSafetyChecker = ref(false);
   const enableSyncMode = ref(false);

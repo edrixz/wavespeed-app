@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import { faceDetailListItem } from "~/consts";
+import {
+  eyesListItem,
+  eyebrowsListItem,
+  structureListItem,
+  noseListItem,
+  lipsListItem,
+  skinTextureListItem,
+  expressionListItem,
+  makeupListItem,
+} from "~/consts";
 import type { FaceData } from "~/types";
 const props = defineProps<{ modelValue?: FaceData }>();
 </script>
 
 <template>
   <div class="space-y-5">
-    <!-- Shape -->
+    <!-- Structure -->
     <div>
       <h5 class="category-title border-purple-600">Structure</h5>
       <PartsPromptBuilderTagSelector
         v-model="modelValue!.structure"
         type="face"
         field="structure"
-        :options="faceDetailListItem.shapes"
-        mode="single"
+        :options="structureListItem"
+        mode="multi"
         active-class="active-purple"
       />
     </div>
@@ -26,7 +35,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
         v-model="modelValue!.eyes"
         type="face"
         field="eyes"
-        :options="faceDetailListItem.eyes"
+        :options="eyesListItem"
         mode="multi"
         active-class="active-blue"
       />
@@ -39,7 +48,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
         v-model="modelValue!.eyebrows"
         type="face"
         field="eyebrows"
-        :options="faceDetailListItem.eyes"
+        :options="eyebrowsListItem"
         mode="multi"
         active-class="active-blue"
       />
@@ -52,7 +61,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
         v-model="modelValue!.nose"
         type="face"
         field="nose"
-        :options="faceDetailListItem.eyes"
+        :options="noseListItem"
         mode="multi"
         active-class="active-blue"
       />
@@ -65,7 +74,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
         v-model="modelValue!.lips"
         type="face"
         field="lips"
-        :options="faceDetailListItem.eyes"
+        :options="lipsListItem"
         mode="multi"
         active-class="active-blue"
       />
@@ -78,7 +87,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
         v-model="modelValue!.skinTexture"
         type="face"
         field="skinTexture"
-        :options="faceDetailListItem.eyes"
+        :options="skinTextureListItem"
         mode="multi"
         active-class="active-blue"
       />
@@ -91,7 +100,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
         v-model="modelValue!.expression"
         type="face"
         field="expression"
-        :options="faceDetailListItem.expression"
+        :options="expressionListItem"
         mode="single"
         active-class="active-purple"
       />
@@ -104,7 +113,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
         v-model="modelValue!.makeup"
         type="face"
         field="makeup"
-        :options="faceDetailListItem.makeup"
+        :options="makeupListItem"
         mode="multi"
         active-class="active-pink"
       />

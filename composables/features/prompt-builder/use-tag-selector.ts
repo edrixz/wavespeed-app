@@ -1,9 +1,9 @@
-import type { AnalyzedData } from "~/types";
+import type { AnalyzedData, ListItem } from "~/types";
 
 export const useTagSelector = (
   modelValue: ComputedRef<string>,
   mode: ComputedRef<"single" | "multi">,
-  options: ComputedRef<{ label: string; value: string }[]>,
+  options: ComputedRef<ListItem[]>,
   type: ComputedRef<keyof AnalyzedData>,
   field: ComputedRef<string>,
   onUpdate: (val: string) => void // callback để cập nhật về component
