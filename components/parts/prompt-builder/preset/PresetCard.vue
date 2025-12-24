@@ -131,7 +131,7 @@ const handleApply = async (e: Event) => {
 
       <div
         v-if="!isExpanded"
-        class="absolute top-3 right-3 px-2 py-1 bg-black/50 backdrop-blur-md rounded-md border border-white/10 opacity-0 group-hover:opacity-100 transition-all z-20"
+        class="absolute top-3 flex right-3 px-2 py-1 bg-black/50 backdrop-blur-md rounded-md border border-white/10 opacity-0 group-hover:opacity-100 transition-all z-20"
       >
         <span class="text-[8px] font-black text-white italic tracking-[0.15em]"
           >PRESET</span
