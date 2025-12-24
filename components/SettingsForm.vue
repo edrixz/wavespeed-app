@@ -23,6 +23,12 @@ const {
       />
     </div>
 
+    <div v-if="isBuilderMode" class="max-w-7xl mx-auto">
+      <section class="mt-3">
+        <PartsPromptBuilderPresetGallery />
+      </section>
+    </div>
+
     <PromptBuilder v-if="isBuilderMode" />
 
     <div v-else>

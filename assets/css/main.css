@@ -177,3 +177,18 @@
   scrollbar-width: thin;
   scrollbar-color: #374151 transparent;
 }
+
+/* Tắt hiệu ứng mờ chồng chéo (cross-fade) của trình duyệt */
+::view-transition-old(preset-img-*),
+::view-transition-new(preset-img-*) {
+  animation: none !important;
+  mix-blend-mode: normal !important;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Điều chỉnh đường bay của ảnh cho mượt (Standard Easing) */
+::view-transition-group(preset-img-*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
