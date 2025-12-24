@@ -7,9 +7,7 @@ const presetStore = usePresetStore();
 
 // Nạp dữ liệu mẫu khi component mount
 onMounted(() => {
-  if (presetStore.presets.length === 0) {
-    presetStore.presets = PRESET_SAMPLES;
-  }
+  presetStore.fetchPresets();
 });
 
 /**
@@ -56,7 +54,60 @@ const getCategoryCount = (categoryValue: string) => {
       </div>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2">
+    <div v-if="presetStore.isLoading" class="flex flex-col items-center gap-4">
+      <div
+        class="w-8 h-8 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"
+      ></div>
+      <p
+        class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 animate-pulse"
+      >
+        Đang tải thư viện mẫu...
+      </p>
+    </div>
+
+    <div
+      v-else-if="presetStore.presets.length === 0"
+      class="flex flex-col items-center text-center gap-6 max-w-xs animate-in fade-in zoom-in duration-500"
+    >
+      <div
+        class="w-16 h-16 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="w-6 h-6 text-gray-700"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <path
+            d="M20 12V8H4v12h10M4 8l8-4 8 4M12 12l8-4M12 12v8M16 16l2 2m2 2l-2-2m2-2l-2 2m0 0l-2-2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="text-sm font-black uppercase tracking-widest text-gray-400">
+          Chưa có dữ liệu
+        </h3>
+        <p class="text-[10px] text-gray-600 leading-relaxed font-medium">
+          Thư viện hiện đang trống. Hãy thử thêm Preset mới vào hệ thống.
+        </p>
+      </div>
+
+      <button
+        @click="presetStore.fetchPresets()"
+        class="px-6 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-[9px] font-black uppercase tracking-widest text-gray-400 transition-all"
+      >
+        Làm mới dữ liệu
+      </button>
+    </div>
+
+    <div
+      v-else
+      class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full"
+    >
       <TransitionGroup name="list">
         <PresetCard
           v-for="preset in presetStore.filteredPresets"
@@ -64,16 +115,6 @@ const getCategoryCount = (categoryValue: string) => {
           :preset="preset"
         />
       </TransitionGroup>
-    </div>
-
-    <div
-      v-if="presetStore.presets.length === 0"
-      class="py-20 text-center border border-dashed border-white/5 rounded-3xl"
-    >
-      <span
-        class="text-[10px] font-bold text-gray-600 uppercase tracking-widest"
-        >Đang tải thư viện mẫu...</span
-      >
     </div>
   </div>
 </template>

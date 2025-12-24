@@ -16,6 +16,8 @@ const {
   generatedPrompt,
 } = storeToRefs(promptStore);
 
+const isCreatorOpen = ref(false);
+
 const openSection = ref("");
 const toggle = (name: string) =>
   (openSection.value = openSection.value === name ? "" : name);
@@ -55,6 +57,20 @@ const handleRemoveSubject = (id: string) => {
 
       <div class="flex w-full justify-between">
         <PartsImageAnalyzer />
+      </div>
+
+      <div class="flex gap-2 w-full">
+        <button
+          @click="isCreatorOpen = true"
+          class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-blue-400 transition-all"
+        >
+          + Lưu thành Preset
+        </button>
+
+        <PartsPromptBuilderPresetCreator
+          :is-open="isCreatorOpen"
+          @close="isCreatorOpen = false"
+        />
       </div>
     </div>
 

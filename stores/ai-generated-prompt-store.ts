@@ -12,6 +12,12 @@ export const useAiGeneratedPromptStore = defineStore("aiPrompt", () => {
   // Lưu trữ các bộ điều khiển hủy bỏ yêu cầu
   const abortControllers = ref<Map<string, AbortController>>(new Map());
 
+  /**
+   * Object lưu trữ dữ liệu đã phân tích
+   * Cấu trúc: { [id: string]: AnalyzedData }
+   */
+  const generatedData = ref<Record<string, any>>({});
+
   const setAnalyzing = (
     subjectId: string,
     isAnalyzing: boolean,
@@ -40,6 +46,7 @@ export const useAiGeneratedPromptStore = defineStore("aiPrompt", () => {
 
   const setAiGeneratedData = (subjectId: string, data: AnalyzedData) => {
     aiDataMap.value[subjectId] = data;
+    generatedData.value[subjectId] = data;
   };
 
   const getAiGeneratedDataBySubjectId = (subjectId: string) => {
@@ -63,6 +70,7 @@ export const useAiGeneratedPromptStore = defineStore("aiPrompt", () => {
 
   return {
     aiDataMap,
+    generatedData,
     setAnalyzing,
     cancelAnalysis,
     isSubjectAnalyzing,
