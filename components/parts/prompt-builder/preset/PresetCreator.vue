@@ -13,6 +13,8 @@ const presetStore = usePresetStore();
 const aiStore = useAiGeneratedPromptStore();
 const promptBuilderStore = usePromptBuilderStore();
 
+const toast = useToast();
+
 // UI State
 const selectedFile = ref<File | null>(null);
 const uploadProgress = ref(0);
@@ -94,6 +96,7 @@ const handleSave = async () => {
       });
 
       if (result?.success) {
+        toast.success("Đã lưu preset thành công!");
         setTimeout(() => emit("close"), 500); // Đóng modal sau khi hoàn tất animation
       }
     }

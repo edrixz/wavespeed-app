@@ -13,6 +13,9 @@ const { isCanNotGenerate, isProcessing, resultImage, handleGenerate } =
         <StatusBar />
       </div>
     </Transition>
+
+    <ToastContainer />
+
     <div class="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div
         class="lg:col-span-1 space-y-6 bg-gray-800 p-6 rounded-xl border border-gray-700 h-fit"

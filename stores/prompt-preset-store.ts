@@ -16,21 +16,29 @@ export const usePresetStore = defineStore("preset", () => {
   const isLoading = ref(false);
   const isSaving = ref(false);
 
-  // 1. Lấy dữ liệu (READ)
+  /**
+   * Fetch toàn bộ Presets và tối ưu hóa ảnh qua proxy
+   */
   const fetchPresets = async () => {
     isLoading.value = true;
-    const { data, error } = await supabase
-      .from("presets")
-      .select("*")
-      .order("created_at", { ascending: false });
 
-    if (!error && data) {
-      presets.value = data.map((item) => ({
-        ...item,
-        thumbnail: item.thumbnail,
-      })) as any;
+    try {
+      const { data, error } = await supabase
+        .from("presets")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      if (!error && data) {
+        presets.value = data as unknown as PromptPreset[];
+      }
+    } catch (err) {
+      console.error("Lỗi khi tải danh sách mẫu:", err);
+      // Bạn có thể dùng setStatus từ logger để thông báo cho người dùng
+    } finally {
+      isLoading.value = false;
     }
-    isLoading.value = false;
   };
 
   // 2. Thêm mới (CREATE)
@@ -47,7 +55,7 @@ export const usePresetStore = defineStore("preset", () => {
         .insert({
           title: payload.title,
           category: payload.category,
-          thumbnail_url: payload.thumbnail, // Mapping sang DB
+          thumbnail: payload.thumbnail,
           data: payload.data,
         })
         .select();
@@ -57,7 +65,7 @@ export const usePresetStore = defineStore("preset", () => {
       if (data) {
         // Map ngược lại để hiển thị ngay trên UI
         const newPreset = { ...data[0], thumbnail: data[0].thumbnail };
-        presets.value.unshift(newPreset as any);
+        presets.value.push(newPreset as any);
         return { success: true };
       }
     } catch (err: any) {
@@ -68,11 +76,25 @@ export const usePresetStore = defineStore("preset", () => {
     }
   };
 
-  // 3. Xóa (DELETE)
+  /**
+   * ACTION: Xóa Preset
+   * @param id ID của bản ghi cần xóa
+   */
   const deletePreset = async (id: string) => {
-    const { error } = await supabase.from("presets").delete().eq("id", id);
-    if (!error) {
+    try {
+      // 1. Gọi API xóa trên Supabase
+      const { error } = await supabase.from("presets").delete().eq("id", id);
+
+      if (error) throw error;
+
+      // 2. Cập nhật Local State để UI biến mất ngay lập tức
+      // Nhờ TransitionGroup trong Gallery, card sẽ lướt đi mượt mà
       presets.value = presets.value.filter((p) => p.id !== id);
+
+      return { success: true };
+    } catch (err: any) {
+      console.error("Delete failed:", err.message);
+      return { success: false, error: err.message };
     }
   };
 

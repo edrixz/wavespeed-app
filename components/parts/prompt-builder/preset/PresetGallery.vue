@@ -2,27 +2,78 @@
 import { onMounted, ref, watch } from "vue";
 import { PRESET_CATEGORIES } from "~/consts";
 
-/** * Senior Fullstack Developer Insight:
- * Sử dụng Store để quản lý trạng thái đồng bộ trên toàn ứng dụng.
- */
 const presetStore = usePresetStore();
 const scrollContainer = ref<HTMLElement | null>(null);
+
+// --- LOGIC PC DRAG-TO-SCROLL & MOMENTUM ---
+const isDragging = ref(false);
+const startX = ref(0);
+const scrollLeftStart = ref(0);
+const dragVelocity = ref(0);
+const lastMouseX = ref(0);
+const rafId = ref<number | null>(null);
+const hasMoved = ref(false); // Để phân biệt giữa Click và Drag
+
+const handleMouseDown = (e: MouseEvent) => {
+  if (!scrollContainer.value || presetStore.isDialogOpen) return;
+
+  isDragging.value = true;
+  hasMoved.value = false;
+
+  // Dừng momentum cũ nếu đang chạy
+  if (rafId.value) cancelAnimationFrame(rafId.value);
+
+  startX.value = e.pageX - scrollContainer.value.offsetLeft;
+  scrollLeftStart.value = scrollContainer.value.scrollLeft;
+  lastMouseX.value = e.pageX;
+  dragVelocity.value = 0;
+};
+
+const handleMouseMove = (e: MouseEvent) => {
+  if (!isDragging.value || !scrollContainer.value) return;
+  e.preventDefault();
+
+  const x = e.pageX - scrollContainer.value.offsetLeft;
+  const distance = Math.abs(x - startX.value);
+
+  // Nếu di chuyển hơn 5px thì xác định là đang Drag
+  if (distance > 5) hasMoved.value = true;
+
+  // Tính toán vận tốc (Velocity) dựa trên di chuyển thực tế
+  dragVelocity.value = e.pageX - lastMouseX.value;
+  lastMouseX.value = e.pageX;
+
+  const walk = (x - startX.value) * 1.5;
+  scrollContainer.value.scrollLeft = scrollLeftStart.value - walk;
+};
+
+// Hàm gộp để xử lý khi thả chuột hoặc chuột rời khỏi vùng container
+const handleDragEnd = () => {
+  if (!isDragging.value) return;
+  isDragging.value = false;
+  applyMomentum();
+};
+
+const applyMomentum = () => {
+  if (!scrollContainer.value || Math.abs(dragVelocity.value) < 0.5) return;
+
+  scrollContainer.value.scrollLeft -= dragVelocity.value;
+  // Giảm dần vận tốc (hệ số ma sát 0.95)
+  dragVelocity.value *= 0.95;
+
+  rafId.value = requestAnimationFrame(applyMomentum);
+};
 
 onMounted(() => {
   presetStore.fetchPresets();
 });
 
-/**
- * FIX: Tự động cuộn về đầu khi đổi Category để người dùng không bị "lạc" ở giữa danh sách.
- */
+// Reset cuộn khi đổi Category
 watch(
   () => presetStore.activeCategory,
   () => {
     if (scrollContainer.value) {
-      scrollContainer.value.scrollTo({
-        left: 0,
-        behavior: "smooth",
-      });
+      scrollContainer.value.scrollTo({ left: 0, behavior: "smooth" });
     }
   }
 );
@@ -35,26 +86,29 @@ const getCategoryCount = (categoryValue: string) => {
 
 <template>
   <div class="preset-gallery-root space-y-4">
-    <div
-      class="flex items-center gap-2 overflow-x-auto hide-scrollbar-force py-2 px-1"
-    >
-      <button
-        v-for="cat in PRESET_CATEGORIES"
-        :key="cat.value"
-        @click="presetStore.setCategory(cat.value)"
-        class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap border flex items-center gap-2"
-        :class="
-          presetStore.activeCategory === cat.value
-            ? 'bg-blue-600 border-blue-500 text-white shadow-lg'
-            : 'bg-white/5 border-white/5 text-gray-500 hover:text-gray-300'
-        "
+    <Transition name="fade-slide">
+      <div
+        v-if="!presetStore.isDialogOpen"
+        class="flex items-center gap-2 overflow-x-auto hide-scrollbar-force py-2 px-1"
       >
-        <span>{{ cat.label }}</span>
-        <span class="opacity-40 text-[8px]"
-          >({{ getCategoryCount(cat.value) }})</span
+        <button
+          v-for="cat in PRESET_CATEGORIES"
+          :key="cat.value"
+          @click="presetStore.setCategory(cat.value)"
+          class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap border flex items-center gap-2"
+          :class="
+            presetStore.activeCategory === cat.value
+              ? 'bg-blue-600 border-blue-500 text-white shadow-lg'
+              : 'bg-white/5 border-white/5 text-gray-500 hover:text-gray-300'
+          "
         >
-      </button>
-    </div>
+          <span>{{ cat.label }}</span>
+          <span class="opacity-40 text-[8px]"
+            >({{ getCategoryCount(cat.value) }})</span
+          >
+        </button>
+      </div>
+    </Transition>
 
     <div
       v-if="presetStore.isLoading"
@@ -63,27 +117,38 @@ const getCategoryCount = (categoryValue: string) => {
       <div
         class="w-6 h-6 border-2 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"
       ></div>
-      <p class="text-[9px] font-black uppercase tracking-widest text-gray-600">
-        Syncing Library...
-      </p>
     </div>
 
-    <div
-      v-else-if="presetStore.presets.length > 0"
-      ref="scrollContainer"
-      class="flex items-center gap-4 overflow-x-auto hide-scrollbar-force snap-x snap-mandatory scroll-smooth py-2 px-4"
-    >
-      <TransitionGroup name="list">
-        <div
-          v-for="preset in presetStore.filteredPresets"
-          :key="preset.id"
-          class="flex-none w-[72%] md:w-[45%] lg:w-[140px] snap-start"
-        >
-          <PartsPromptBuilderPresetCard :preset="preset" />
-        </div>
-      </TransitionGroup>
+    <div v-else-if="presetStore.presets.length > 0" class="relative">
+      <div
+        ref="scrollContainer"
+        @mousedown="handleMouseDown"
+        @mouseleave="handleDragEnd"
+        @mouseup="handleDragEnd"
+        @mousemove="handleMouseMove"
+        class="flex items-center gap-4 overflow-x-auto hide-scrollbar-force py-2 px-4 transition-all duration-700 ease-in-out"
+        :class="[
+          isDragging
+            ? 'cursor-grabbing select-none scroll-auto'
+            : 'cursor-grab snap-x snap-mandatory scroll-smooth',
+          presetStore.isDialogOpen
+            ? 'opacity-0 pointer-events-none scale-90 translate-y-20'
+            : 'opacity-100',
+        ]"
+      >
+        <TransitionGroup name="list">
+          <div
+            v-for="preset in presetStore.filteredPresets"
+            :key="preset.id"
+            class="flex-none w-[72%] md:w-[45%] lg:w-[140px] snap-start"
+            :class="{ 'pointer-events-none': hasMoved }"
+          >
+            <PartsPromptBuilderPresetCard :preset="preset" />
+          </div>
+        </TransitionGroup>
 
-      <div class="flex-none w-10 h-1"></div>
+        <div class="flex-none w-10 h-1"></div>
+      </div>
     </div>
 
     <div
@@ -98,44 +163,40 @@ const getCategoryCount = (categoryValue: string) => {
 </template>
 
 <style scoped>
-/* 1. HIỆU ỨNG TRANSITION SIÊU MƯỢT */
+/* Ẩn Filter bar mượt mà */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.4s ease;
+}
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
 
-/* list-move: Giúp các card còn lại tự trượt vào vị trí cũ khi có card biến mất */
+/* HIỆU ỨNG DANH SÁCH */
 .list-move,
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
-
-/* Khi một card đang thoát ra, ta dùng absolute để nó không chiếm không gian, 
-giúp các card khác trượt (list-move) ngay lập tức mà không bị giật */
 .list-leave-active {
   position: absolute;
-  pointer-events: none;
 }
-
-/* Trạng thái bắt đầu xuất hiện: Bay từ phải sang và mờ dần */
 .list-enter-from {
   opacity: 0;
-  transform: translateX(30px) scale(0.9);
-  filter: blur(10px);
+  transform: translateX(30px);
 }
-
-/* Trạng thái khi biến mất: Thu nhỏ và mờ dần tại chỗ */
 .list-leave-to {
   opacity: 0;
-  transform: scale(0.5);
-  filter: blur(20px);
+  transform: scale(0.9);
 }
 
-/* 2. CƯỠNG ÉP ẨN SCROLLBAR */
 .hide-scrollbar-force {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
 .hide-scrollbar-force::-webkit-scrollbar {
   display: none !important;
-  width: 0 !important;
-  height: 0 !important;
 }
 </style>

@@ -49,22 +49,25 @@ const {
         placeholder="Describe what you want to see..."
       />
     </div>
-    <div>
-      <label class="block text-sm font-medium mb-2 text-gray-300"
-        >Negative</label
-      >
-      <textarea
-        v-model="negative_prompt"
-        rows="6"
-        class="inp w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:ring-2 focus:ring-red-500 outline-none resize-none"
-        placeholder="Bad quality..."
-      />
+    <div v-if="!isBuilderMode">
+      <div class="space-y-2">
+        <span
+          class="text-[9px] font-bold text-red-500/80 uppercase tracking-widest"
+          >Negative Prompt</span
+        >
+        <div
+          class="p-3 bg-red-500/5 rounded-lg border border-red-500/30 text-[10px] text-red-200/60 font-mono italic"
+        >
+          {{ negative_prompt }}
+        </div>
+      </div>
     </div>
 
     <!-- Aspect Ratio -->
-    <PartsAspectRatioList />
+    <PartsAspectRatioList v-if="!isBuilderMode" />
 
     <div
+      v-if="!isBuilderMode"
       class="grid grid-cols-2 gap-4 bg-gray-700/30 p-3 rounded-lg border border-gray-700/50"
     >
       <div>
@@ -107,7 +110,7 @@ const {
       </div>
     </div>
 
-    <div class="space-y-3 p-3 bg-gray-700/30 rounded-lg">
+    <div v-if="!isBuilderMode" class="space-y-3 p-3 bg-gray-700/30 rounded-lg">
       <label class="flex items-center space-x-2 cursor-pointer">
         <input
           type="checkbox"

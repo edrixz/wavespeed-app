@@ -3,12 +3,39 @@ import { ref } from "vue";
 import type { PromptPreset } from "~/types";
 
 const props = defineProps<{ preset: PromptPreset }>();
+const presetStore = usePresetStore();
 const aiStore = useAiGeneratedPromptStore();
 const promptBuilderStore = usePromptBuilderStore();
+
+const { getOptimizedUrl } = useImageProxy();
+const toast = useToast();
 
 const isExpanded = ref(false);
 const isClosing = ref(false); // Trạng thái chờ nội dung đóng xong mới thu nhỏ ảnh
 const isTransitioning = ref(false); // Chặn hover khi đang bay
+const isConfirmingDelete = ref(false);
+
+/**
+ * Logic xóa Preset từ màn hình Expanded
+ */
+const handleDelete = async () => {
+  if (!isConfirmingDelete.value) {
+    isConfirmingDelete.value = true;
+    setTimeout(() => {
+      isConfirmingDelete.value = false;
+    }, 3000);
+    return;
+  }
+
+  const result = await presetStore.deletePreset(props.preset.id);
+  if (result.success) {
+    isExpanded.value = false;
+    presetStore.isDialogOpen = false;
+    toast.success("Đã xóa mẫu preset thành công!"); // Gọi toast tại đây
+  } else {
+    toast.error("Lỗi: Không thể xóa dữ liệu.");
+  }
+};
 
 const getGroupLabel = (key: string) => {
   const map: any = {
@@ -73,6 +100,16 @@ const handleApply = async (e: Event) => {
     await closeCard();
   }
 };
+
+// 1. URL cho ảnh nhỏ ở Gallery (300-400px)
+const lowResThumbnail = computed(() => {
+  return getOptimizedUrl(props.preset.thumbnail, { w: 400, q: 80 });
+});
+
+// 2. URL cho ảnh lớn khi phóng to (1200px, nét hơn)
+const highResThumbnail = computed(() => {
+  return getOptimizedUrl(props.preset.thumbnail, { w: 1200, q: 90 });
+});
 </script>
 
 <template>
@@ -95,10 +132,8 @@ const handleApply = async (e: Event) => {
         ]"
       >
         <NuxtImg
-          :src="preset.thumbnail"
+          :src="isExpanded ? highResThumbnail : lowResThumbnail"
           :alt="preset.title"
-          width="300"
-          height="400"
           format="webp"
           loading="lazy"
           placeholder
@@ -127,6 +162,36 @@ const handleApply = async (e: Event) => {
             {{ preset.title }}
           </h2>
         </div>
+
+        <button
+          v-if="isExpanded"
+          @click="handleDelete"
+          class="absolute top-6 left-6 z-30 px-5 py-3 rounded-2xl backdrop-blur-xl border transition-all duration-300 flex items-center gap-2 group"
+          :class="[
+            isConfirmingDelete
+              ? 'bg-red-600 border-red-500 text-white shadow-[0_0_20px_rgba(220,38,38,0.5)]'
+              : 'bg-black/30 border-white/10 text-gray-400 hover:text-red-500 hover:border-red-500/50',
+            isClosing ? 'exit-content' : 'entry-content',
+          ]"
+        >
+          <svg
+            v-if="!isConfirmingDelete"
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </svg>
+          <span class="text-[9px] font-black uppercase tracking-widest">
+            {{ isConfirmingDelete ? "Xác nhận xóa?" : "Xóa mẫu" }}
+          </span>
+        </button>
 
         <button
           v-if="isExpanded"

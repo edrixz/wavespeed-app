@@ -8,6 +8,8 @@ import { assemblePromptVi } from "~/utils/prompt-preview-vi";
 
 const promptStore = usePromptBuilderStore();
 
+const { negative_prompt } = useSettingsForm();
+
 // 1. Trạng thái ngôn ngữ: false = EN, true = VI
 const isVietnamese = ref(false);
 
@@ -116,7 +118,7 @@ const copyToClipboard = (text: string) => {
       <div
         class="p-3 bg-red-500/5 rounded-lg border border-red-500/10 text-[10px] text-red-200/60 font-mono italic"
       >
-        {{ negativePrompt }}
+        {{ negative_prompt }}
       </div>
     </div>
   </div>
