@@ -92,12 +92,32 @@ const closeCard = async () => {
 
 const handleApply = async (e: Event) => {
   e.stopPropagation();
-  if (promptBuilderStore.activeSubjectId) {
-    await aiStore.setAiGeneratedData(
-      promptBuilderStore.activeSubjectId,
-      props.preset.data
-    );
+  const subjectId = promptBuilderStore.activeSubjectId;
+
+  if (subjectId) {
+    // 1. Lưu dữ liệu thô vào AI Store (để gen prompt)
+    await aiStore.setAiGeneratedData(subjectId, props.preset.data);
+
+    // 2. Cập nhật giao diện (để sáng các Tag)
+    const presetData = props.preset.data as Record<string, Record<string, any>>;
+
+    Object.entries(presetData).forEach(([groupKey, fields]) => {
+      Object.entries(fields).forEach(([fieldKey, value]) => {
+        if (value && value.value !== "") {
+          // Gọi action đã sửa ở trên
+          promptBuilderStore.updateSelection(
+            subjectId,
+            groupKey,
+            fieldKey,
+            value
+          );
+        }
+      });
+    });
+
     await closeCard();
+    const toast = useToast();
+    toast.success("Đã áp dụng công thức");
   }
 };
 
@@ -114,8 +134,6 @@ const highResThumbnail = computed(() => {
 
 <template>
   <div class="preset-card-root">
-    <div v-if="isExpanded" class="aspect-[3/4] opacity-0"></div>
-
     <div
       @click="!isExpanded && openCard()"
       :class="[
@@ -142,7 +160,6 @@ const highResThumbnail = computed(() => {
             !isExpanded && !isTransitioning
               ? 'transition-transform duration-700 group-hover:scale-105'
               : '',
-            isExpanded ? 'lg:object-cover' : '',
           ]"
           :style="{ viewTransitionName: `preset-img-${preset.id}` }"
         />

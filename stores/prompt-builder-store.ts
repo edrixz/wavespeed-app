@@ -106,6 +106,24 @@ export const usePromptBuilderStore = defineStore("promptBuilder", () => {
     applyToWavespeedPayload();
   };
 
+  const updateSelection = (
+    subjectId: string,
+    group: string,
+    field: string,
+    value: any
+  ) => {
+    // 1. Tìm subject đang được chọn để cập nhật
+    const targetSubject = subjects.value.find((s) => s.id === subjectId);
+
+    if (targetSubject && (targetSubject as any)[group]) {
+      // Nếu group thuộc về Subject (face, hair, outfit...)
+      (targetSubject as any)[group][field] = value;
+    } else if ((scene.value as any)[group]) {
+      // Nếu group thuộc về Scene (environment, tech...)
+      (scene.value as any)[group][field] = value;
+    }
+  };
+
   return {
     subjects,
     activeSubjectId,
@@ -118,6 +136,7 @@ export const usePromptBuilderStore = defineStore("promptBuilder", () => {
     removeSubject,
     applyToWavespeedPayload,
     copyToClipboard,
+    updateSelection,
   };
 });
 

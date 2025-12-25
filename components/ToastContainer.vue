@@ -19,26 +19,28 @@ const colors: Record<string, string> = {
 <template>
   <Teleport to="body">
     <div
-      class="fixed top-6 right-6 z-[2000] flex flex-col gap-3 w-full max-w-[320px] pointer-events-none"
+      class="fixed top-6 right-6 z-[2000] flex flex-col gap-3 w-[calc(100%-3rem)] max-w-[320px] pointer-events-none"
     >
       <TransitionGroup name="toast">
         <div
           v-for="toast in toastStore.toasts"
           :key="toast.id"
-          class="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl border backdrop-blur-xl shadow-2xl transition-all duration-500"
+          class="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl border backdrop-blur-xl shadow-2xl transition-all duration-500 w-full"
           :class="colors[toast.type]"
         >
           <span
-            class="w-6 h-6 rounded-full flex items-center justify-center border border-current text-[10px] font-black"
+            class="w-6 h-6 shrink-0 rounded-full flex items-center justify-center border border-current text-[10px] font-black"
           >
             {{ icons[toast.type] }}
           </span>
-          <p class="text-[11px] font-bold uppercase tracking-wider flex-1">
+          <p
+            class="text-[11px] font-bold uppercase tracking-wider flex-1 truncate"
+          >
             {{ toast.message }}
           </p>
           <button
             @click="toastStore.removeToast(toast.id)"
-            class="opacity-40 hover:opacity-100 text-xs"
+            class="opacity-40 hover:opacity-100 text-xs shrink-0"
           >
             ✕
           </button>
@@ -49,15 +51,28 @@ const colors: Record<string, string> = {
 </template>
 
 <style scoped>
+/* Trạng thái xuất hiện */
 .toast-enter-from {
   opacity: 0;
   transform: translateX(50px) scale(0.9);
 }
+
+/* 1. Quan trọng: toast-move giúp các phần tử còn lại trượt lên mượt mà */
+.toast-move,
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 2. Ép chiều rộng không đổi khi biến mất */
+.toast-leave-active {
+  position: absolute;
+  /* Đảm bảo width vẫn bám theo container khi bị absolute */
+  width: 100%;
+}
+
 .toast-leave-to {
   opacity: 0;
   transform: translateX(20px) scale(0.9);
-}
-.toast-leave-active {
-  position: absolute;
 }
 </style>

@@ -8,13 +8,13 @@ const { isCanNotGenerate, isProcessing, resultImage, handleGenerate } =
   <div
     class="min-h-screen bg-gray-900 text-white p-6 pb-32 lg:pb-6 font-sans transition-all duration-500"
   >
+    <ToastContainer />
+
     <Transition name="expand">
       <div v-if="hasLogMessage" class="status-bar-wrapper">
         <StatusBar />
       </div>
     </Transition>
-
-    <ToastContainer />
 
     <div class="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div
