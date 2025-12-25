@@ -13,7 +13,7 @@ export default defineNuxtConfig({
       download: true,
       inject: true,
     },
-  ], "@nuxtjs/supabase"],
+  ], "@nuxtjs/supabase", "@nuxt/image"],
   css: ["~/assets/css/main.css"],
   runtimeConfig: {
     // Private keys (chỉ server mới thấy)

@@ -76,130 +76,139 @@ const handleApply = async (e: Event) => {
 </script>
 
 <template>
-  <div v-if="isExpanded" class="aspect-[3/4] opacity-0"></div>
+  <div class="preset-card-root">
+    <div v-if="isExpanded" class="aspect-[3/4] opacity-0"></div>
 
-  <div
-    @click="!isExpanded && openCard()"
-    :class="[
-      'preset-card overflow-hidden select-none min-h-36',
-      isExpanded
-        ? 'fixed inset-0 z-[100] flex flex-col lg:flex-row bg-[#0a0a0a] cursor-default'
-        : 'relative aspect-[3/4] rounded-2xl border border-white/5 bg-[#111] cursor-pointer group',
-    ]"
-  >
     <div
+      @click="!isExpanded && openCard()"
       :class="[
-        'relative shrink-0 overflow-hidden bg-black transition-all duration-500',
-        isExpanded ? 'w-full lg:w-3/5 h-[45vh] lg:h-full' : 'w-full h-full',
+        'preset-card overflow-hidden select-none min-h-36',
+        isExpanded
+          ? 'fixed inset-0 z-[100] flex flex-col lg:flex-row bg-[#0a0a0a] cursor-default'
+          : 'relative aspect-[3/4] rounded-2xl border border-white/5 bg-[#111] cursor-pointer group',
       ]"
     >
-      <img
-        :src="preset.thumbnail"
-        class="w-full h-full object-cover"
-        :class="[
-          !isExpanded && !isTransitioning
-            ? 'transition-transform duration-700 group-hover:scale-105'
-            : '',
-          isExpanded ? 'lg:object-contain' : '',
-        ]"
-        :style="{ viewTransitionName: `preset-img-${preset.id}` }"
-      />
-
-      <div
-        v-if="isExpanded"
-        class="absolute inset-x-0 bottom-[-2px] h-[70%] bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent z-10 pointer-events-none"
-      ></div>
-
-      <div
-        v-if="isExpanded"
-        class="absolute inset-x-0 bottom-0 p-8 z-20 entry-title-expanded"
-      >
-        <h2
-          class="text-2xl lg:text-4xl font-black italic uppercase text-white tracking-tighter drop-shadow-2xl"
-        >
-          {{ preset.title }}
-        </h2>
-      </div>
-
-      <button
-        v-if="isExpanded"
-        @click="closeCard"
-        class="absolute top-6 right-6 z-30 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-white/10 transition-colors"
-      >
-        ✕
-      </button>
-
-      <div
-        v-if="!isExpanded"
-        class="absolute top-3 flex right-3 px-2 py-1 bg-black/50 backdrop-blur-md rounded-md border border-white/10 opacity-0 group-hover:opacity-100 transition-all z-20"
-      >
-        <span class="text-[8px] font-black text-white italic tracking-[0.15em]"
-          >PRESET</span
-        >
-      </div>
-    </div>
-
-    <div
-      v-if="isExpanded"
-      class="flex-1 flex flex-col h-full overflow-hidden bg-[#0a0a0a] z-20"
-    >
       <div
         :class="[
-          'flex-1 overflow-y-auto p-8 custom-scrollbar pb-32',
-          isClosing ? 'exit-content' : 'entry-content',
+          'relative shrink-0 overflow-hidden bg-black transition-all duration-500',
+          isExpanded ? 'w-full lg:w-2/5 h-[30vh] lg:h-full' : 'w-full h-full',
         ]"
       >
-        <div class="space-y-8">
-          <div
-            v-for="(groupData, groupKey) in preset.data"
-            :key="groupKey"
-            class="space-y-4"
+        <NuxtImg
+          :src="preset.thumbnail"
+          :alt="preset.title"
+          width="300"
+          height="400"
+          format="webp"
+          loading="lazy"
+          placeholder
+          class="w-full h-full object-cover"
+          :class="[
+            !isExpanded && !isTransitioning
+              ? 'transition-transform duration-700 group-hover:scale-105'
+              : '',
+            isExpanded ? 'lg:object-cover' : '',
+          ]"
+          :style="{ viewTransitionName: `preset-img-${preset.id}` }"
+        />
+
+        <div
+          v-if="isExpanded"
+          class="absolute inset-x-0 bottom-[-2px] h-[70%] bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent z-10 pointer-events-none"
+        ></div>
+
+        <div
+          v-if="isExpanded"
+          class="absolute inset-x-0 bottom-0 p-8 z-20 entry-title-expanded"
+        >
+          <h2
+            class="text-2xl lg:text-4xl font-black italic uppercase text-white tracking-tighter drop-shadow-2xl"
           >
-            <h4
-              class="text-[10px] font-black text-blue-500 uppercase tracking-widest flex items-center gap-2"
-            >
-              <span
-                class="w-1.5 h-1.5 bg-blue-600 rounded-full shadow-[0_0_8px_#2563eb]"
-              ></span>
-              {{ getGroupLabel(groupKey) }}
-            </h4>
-            <div class="flex flex-wrap gap-2">
-              <template v-for="fieldValue in groupData">
-                <span
-                  v-for="tag in fieldValue!.label_vi.split(',')"
-                  :key="tag"
-                  class="px-3 py-1.5 bg-white/[0.04] border border-white/5 rounded-lg text-[10px] text-gray-400 font-medium"
-                >
-                  {{ tag.trim() }}
-                </span>
-              </template>
-            </div>
-          </div>
+            {{ preset.title }}
+          </h2>
+        </div>
+
+        <button
+          v-if="isExpanded"
+          @click="closeCard"
+          class="absolute top-6 right-6 z-30 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-white/10 transition-colors"
+        >
+          ✕
+        </button>
+
+        <div
+          v-if="!isExpanded"
+          class="absolute top-3 flex right-3 px-2 py-1 bg-black/50 backdrop-blur-md rounded-md border border-white/10 opacity-0 group-hover:opacity-100 transition-all z-20"
+        >
+          <span
+            class="text-[8px] font-black text-white italic tracking-[0.15em]"
+            >PRESET</span
+          >
         </div>
       </div>
 
       <div
-        :class="[
-          'p-8 border-t border-white/5 bg-[#0a0a0a] relative',
-          isClosing ? 'exit-content' : 'entry-content',
-        ]"
+        v-if="isExpanded"
+        class="flex-1 flex flex-col h-full overflow-hidden bg-[#0a0a0a] z-20"
       >
-        <button
-          @click="handleApply"
-          class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl transition-all"
+        <div
+          :class="[
+            'flex-1 overflow-y-auto p-8 custom-scrollbar pb-32',
+            isClosing ? 'exit-content' : 'entry-content',
+          ]"
         >
-          Apply This Recipe
-        </button>
-      </div>
-    </div>
+          <div class="space-y-8">
+            <div
+              v-for="(groupData, groupKey) in preset.data"
+              :key="groupKey"
+              class="space-y-4"
+            >
+              <h4
+                class="text-[10px] font-black text-blue-500 uppercase tracking-widest flex items-center gap-2"
+              >
+                <span
+                  class="w-1.5 h-1.5 bg-blue-600 rounded-full shadow-[0_0_8px_#2563eb]"
+                ></span>
+                {{ getGroupLabel(groupKey) }}
+              </h4>
+              <div class="flex flex-wrap gap-2">
+                <template v-for="fieldValue in groupData">
+                  <span
+                    v-for="tag in fieldValue!.label_vi.split(',')"
+                    :key="tag"
+                    class="px-3 py-1.5 bg-white/[0.04] border border-white/5 rounded-lg text-[10px] text-gray-400 font-medium"
+                  >
+                    {{ tag.trim() }}
+                  </span>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <div
-      v-if="!isExpanded"
-      class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-4"
-    >
-      <h3 class="text-[10px] font-black uppercase tracking-widest text-white">
-        {{ preset.title }}
-      </h3>
+        <div
+          :class="[
+            'p-8 border-t border-white/5 bg-[#0a0a0a] relative',
+            isClosing ? 'exit-content' : 'entry-content',
+          ]"
+        >
+          <button
+            @click="handleApply"
+            class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl transition-all"
+          >
+            Apply This Recipe
+          </button>
+        </div>
+      </div>
+
+      <div
+        v-if="!isExpanded"
+        class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-4"
+      >
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-white">
+          {{ preset.title }}
+        </h3>
+      </div>
     </div>
   </div>
 </template>

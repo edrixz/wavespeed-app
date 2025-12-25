@@ -27,7 +27,7 @@ export const usePresetStore = defineStore("preset", () => {
     if (!error && data) {
       presets.value = data.map((item) => ({
         ...item,
-        thumbnail: item.thumbnail_url,
+        thumbnail: item.thumbnail,
       })) as any;
     }
     isLoading.value = false;
@@ -56,7 +56,7 @@ export const usePresetStore = defineStore("preset", () => {
 
       if (data) {
         // Map ngược lại để hiển thị ngay trên UI
-        const newPreset = { ...data[0], thumbnail: data[0].thumbnail_url };
+        const newPreset = { ...data[0], thumbnail: data[0].thumbnail };
         presets.value.unshift(newPreset as any);
         return { success: true };
       }
