@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { useWavespeedPayloadStore } from "~/stores/wavespeed-payload-store";
 
 export const useSettingsForm = () => {
+  const toast = useToast();
   const payloadStore = useWavespeedPayloadStore();
 
   // Destructure refs để dùng trực tiếp trong template với v-model
@@ -23,19 +24,21 @@ export const useSettingsForm = () => {
     isBuilderMode.value = !isBuilderMode.value;
   };
 
-  // DATA: Định nghĩa các tỷ lệ
-  const ratiosData = {
-    square: [{ label: "1:1", w: 1, h: 1 }],
-    vertical: [
-      { label: "3:4", w: 3, h: 4 },
-      { label: "2:3", w: 2, h: 3 },
-      { label: "9:16", w: 9, h: 16 },
-    ],
-    horizontal: [
-      { label: "4:3", w: 4, h: 3 },
-      { label: "3:2", w: 3, h: 2 },
-      { label: "16:9", w: 16, h: 9 },
-    ],
+  const applySimplePreset = (data: {
+    prompt: string;
+    negative_prompt: string;
+    size: string;
+  }) => {
+    // 1. Cập nhật Text]
+    prompt.value = data.prompt;
+    negative_prompt.value = data.negative_prompt || "";
+
+    // 2. Xử lý Size (Tách 2752*4096 -> width: 2752, height: 4096)]
+    const [w, h] = data.size.split("*");
+    width.value = parseInt(w);
+    height.value = parseInt(h);
+
+    toast.success("Applied Simple Preset!");
   };
 
   // --- LOGIC: Reset ---
@@ -60,5 +63,6 @@ export const useSettingsForm = () => {
     // Computed & Methods
     resetToDefault,
     toggleBuilderMode,
+    applySimplePreset,
   };
 };
