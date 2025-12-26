@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch } from "vue";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import { PRESET_CATEGORIES } from "~/consts";
@@ -12,14 +12,18 @@ const { uploadImage, isUploading } = useUploadToSupabase();
 const presetStore = usePresetStore();
 const aiStore = useAiGeneratedPromptStore();
 const promptBuilderStore = usePromptBuilderStore();
+const uploadImageStore = useUploadImageStore();
+const {
+  selectedFile,
+  uploadProgress,
+  isCropping,
+  cropperRef,
+  localPreviewUrl,
+} = storeToRefs(uploadImageStore);
 
 const toast = useToast();
 
 // UI State
-const selectedFile = ref<File | null>(null);
-const uploadProgress = ref(0);
-const isCropping = ref(false);
-const cropperRef = ref();
 const form = ref({ title: "", category: "Fine Art" });
 
 // 1. RESET DỮ LIỆU KHI MỞ MODAL
@@ -28,83 +32,52 @@ watch(
   (newVal) => {
     if (newVal) {
       form.value = { title: "", category: "Fine Art" };
-      selectedFile.value = null;
-      uploadProgress.value = 0;
-      isCropping.value = false;
+      uploadImageStore.initState();
     }
   }
 );
 
-// 2. TẠO PREVIEW CỤC BỘ
-const localPreviewUrl = computed(() => {
-  if (!selectedFile.value) return "";
-  return URL.createObjectURL(selectedFile.value);
-});
-
-// 3. LOGIC PROGRESS SIÊU MƯỢT (Ease-out)
-const startFakeProgress = () => {
-  uploadProgress.value = 0;
-  const timer = setInterval(() => {
-    if (uploadProgress.value < 90) {
-      // Chạy nhanh lúc đầu, chậm dần về sau để tạo cảm giác xử lý sâu
-      uploadProgress.value += (92 - uploadProgress.value) * 0.05;
-    }
-  }, 100);
-  return timer;
-};
-
-// 4. CHỨC NĂNG CẮT ẢNH
-const applyCrop = () => {
-  const { canvas } = cropperRef.value.getResult();
-  canvas.toBlob((blob: Blob) => {
-    if (blob) {
-      selectedFile.value = new File([blob], "cropped_image.jpg", {
-        type: "image/jpeg",
-      });
-    }
-    isCropping.value = false;
-  }, "image/jpeg");
-};
-
 // 5. CHỨC NĂNG LƯU (Lazy Upload)
 const handleSave = async () => {
   if (!selectedFile.value || !form.value.title)
-    return alert("Vui lòng điền đủ thông tin");
+    return toast.warning("Vui lòng điền đủ thông tin");
 
-  const progressTimer = startFakeProgress();
+  // Bước A: Lấy dữ liệu công thức AI
+  const currentData = promptBuilderStore.activeSubjectId
+    ? aiStore.generatedData[promptBuilderStore.activeSubjectId]
+    : null;
+
+  if (!currentData)
+    return toast.warning("Không có dữ liệu công thức AI để lưu!");
+
+  const progressTimer = uploadImageStore.startFakeProgress();
 
   try {
-    // Bước A: Upload ảnh lên Supabase
-    const publicUrl = await uploadImage(selectedFile.value);
+    if (currentData) {
+      // Bước B: Upload ảnh lên Supabase
+      const publicUrl = await uploadImage(selectedFile.value);
+      if (publicUrl) {
+        uploadProgress.value = 100;
+        clearInterval(progressTimer);
 
-    if (publicUrl) {
-      uploadProgress.value = 100;
-      clearInterval(progressTimer);
+        // Bước C: Ghi Database
+        const result = await presetStore.savePreset({
+          ...form.value,
+          thumbnail: publicUrl,
+          data: currentData,
+        });
 
-      // Bước B: Lấy dữ liệu công thức AI
-      const currentData = promptBuilderStore.activeSubjectId
-        ? aiStore.generatedData[promptBuilderStore.activeSubjectId]
-        : null;
-
-      if (!currentData) return alert("Không có dữ liệu công thức AI để lưu!");
-
-      // Bước C: Ghi Database
-      const result = await presetStore.savePreset({
-        ...form.value,
-        thumbnail: publicUrl,
-        data: currentData,
-      });
-
-      if (result?.success) {
-        toast.success("Đã lưu preset thành công!");
-        setTimeout(() => emit("close"), 500); // Đóng modal sau khi hoàn tất animation
+        if (result?.success) {
+          toast.success("Đã lưu preset thành công!");
+          setTimeout(() => emit("close"), 500); // Đóng modal sau khi hoàn tất animation
+        }
       }
     }
   } catch (error) {
     clearInterval(progressTimer);
     uploadProgress.value = 0;
     console.error("Save Error:", error);
-    alert("Có lỗi xảy ra trong quá trình lưu.");
+    toast.error("Có lỗi xảy ra trong quá trình lưu.");
   }
 };
 </script>
@@ -223,7 +196,7 @@ const handleSave = async () => {
             Back
           </button>
           <button
-            @click="applyCrop"
+            @click="uploadImageStore.applyCrop"
             class="flex-[2] lg:flex-none px-12 py-4 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl"
           >
             Apply Crop

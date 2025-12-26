@@ -3,6 +3,8 @@ import type { Scene, Subject } from "~/types";
 
 export const usePromptBuilderStore = defineStore("promptBuilder", () => {
   const { setStatus } = useLogger();
+  const toast = useToast();
+
   const payloadStore = useWavespeedPayloadStore();
   const { prompt } = storeToRefs(payloadStore);
 
@@ -24,7 +26,7 @@ export const usePromptBuilderStore = defineStore("promptBuilder", () => {
     const index = subjects.value.findIndex((s) => s.id === id);
     if (index === -1) return;
     if (subjects.value.length <= 1)
-      return alert("Cannot remove the last subject!");
+      return toast.warning("Cannot remove the last subject!");
 
     if (activeSubjectId.value === id) {
       const newActive = subjects.value[index - 1] || subjects.value[index + 1];

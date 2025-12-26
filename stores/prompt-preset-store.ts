@@ -5,7 +5,6 @@ import { PRESET_SAMPLES } from "~/consts";
 import type { Database, PromptPreset } from "~/types";
 
 export const usePresetStore = defineStore("preset", () => {
-  const { setStatus } = useLogger();
   const supabase = useSupabaseClient<Database>();
 
   // --- STATE ---
@@ -17,7 +16,7 @@ export const usePresetStore = defineStore("preset", () => {
   const isSaving = ref(false);
 
   /**
-   * Fetch toàn bộ Presets và tối ưu hóa ảnh qua proxy
+   * Fetch toàn bộ Presets
    */
   const fetchPresets = async () => {
     isLoading.value = true;

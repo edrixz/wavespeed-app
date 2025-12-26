@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useImageAnalyzer } from "~/composables";
 
+const toast = useToast();
+
 const store = usePromptBuilderStore();
 const { currentSubject } = storeToRefs(store);
 
@@ -18,7 +20,7 @@ const handleMagicFill = async (mode: "fast" | "pro") => {
     currentSub.refImageIdx !== -1 ? currentSub.refImageIdx : 0;
   const targetImage = images.value[targetImageIdx];
 
-  if (!targetImage) return alert("Please upload an image first!");
+  if (!targetImage) return toast.warning("Please upload an image first!");
 
   // Đã sử dụng $fetch bên trong để tránh cảnh báo mounted của Nuxt
   await analyzeImage(targetImage.url, mode);

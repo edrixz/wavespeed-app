@@ -9,7 +9,8 @@ const promptStore = usePromptBuilderStore();
 const { subjects, currentSubject, activeSubjectId, scene } =
   storeToRefs(promptStore);
 
-const isCreatorOpen = ref(false);
+const isPresetSaveOpen = ref(false);
+const isPresetCreateOpen = ref(false);
 
 const openSection = ref("");
 const toggle = (name: string) =>
@@ -54,15 +55,29 @@ const handleRemoveSubject = (id: string) => {
 
       <div class="flex gap-2 w-full">
         <button
-          @click="isCreatorOpen = true"
+          @click="isPresetSaveOpen = true"
           class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-blue-400 transition-all"
         >
           + Lưu thành Preset
         </button>
 
-        <PartsPromptBuilderPresetCreator
-          :is-open="isCreatorOpen"
-          @close="isCreatorOpen = false"
+        <PartsPromptBuilderPresetSave
+          :is-open="isPresetSaveOpen"
+          @close="isPresetSaveOpen = false"
+        />
+      </div>
+
+      <div class="flex gap-2 w-full">
+        <button
+          @click="isPresetCreateOpen = true"
+          class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-blue-400 transition-all"
+        >
+          + Tạo Preset
+        </button>
+
+        <PartsPromptBuilderPresetCreate
+          :is-open="isPresetCreateOpen"
+          @close="isPresetCreateOpen = false"
         />
       </div>
     </div>
