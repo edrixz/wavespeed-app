@@ -11,6 +11,19 @@ const {
   resetToDefault,
   toggleBuilderMode,
 } = useSettingsForm();
+
+// Trạng thái để kích hoạt hiệu ứng Reset]
+const isResetting = ref(false);
+
+const handleReset = () => {
+  isResetting.value = true; // Kích hoạt class animation]
+  resetToDefault(); // Gọi logic xóa dữ liệu]
+  
+  // Tắt hiệu ứng sau khi hoàn tất (600ms khớp với CSS)]
+  setTimeout(() => {
+    isResetting.value = false;
+  }, 600);
+};
 </script>
 
 <template>
@@ -34,38 +47,68 @@ const {
 
     <template v-else>
       <section class="animate-fade-in">
-        <LazyPartsPromptBuilderPresetSimpleGallery />
+        <PartsPromptBuilderPresetSimpleGallery />
       </section>
 
-      <div class="space-y-2">
-        <div class="flex justify-between">
-          <label class="text-sm font-medium text-gray-300">
-            Prompt <span class="text-red-500">*</span>
-          </label>
-          <span
-            class="text-xs text-gray-500 cursor-pointer hover:text-blue-400 transition-colors"
-            @click="resetToDefault"
-            >Reset Default</span
+      <div class="space-y-2 animate-fade-in">
+        <div class="flex justify-between items-center ml-1">
+          <div class="flex items-center gap-1.5">
+            <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+            <span class="text-[9px] font-black text-blue-400/80 uppercase tracking-widest">
+              Input: Positive Vision
+            </span>
+          </div>
+          <button 
+            @click="handleReset"
+            :disabled="isResetting"
+            class="text-[8px] text-gray-600 hover:text-blue-400 italic uppercase font-bold transition-all active:scale-95 disabled:opacity-30"
           >
+            [ Reset System ]
+          </button>
         </div>
-        <textarea
-          v-model="prompt"
-          rows="6"
-          class="inp w-full bg-gray-800/50 border border-gray-700 rounded-xl p-4 text-sm text-white focus:ring-2 focus:ring-blue-500/50 outline-none resize-none placeholder-gray-600 transition-all shadow-inner"
-          placeholder="Describe what you want to see..."
-        />
+
+        <div class="relative group overflow-hidden rounded-xl">
+          <textarea
+            v-model="prompt"
+            rows="14"
+            class="w-full bg-blue-600/[0.03] border border-blue-600/20 rounded-xl p-4 text-[10px] text-blue-200/60 font-mono italic leading-relaxed outline-none focus:border-blue-600/40 focus:bg-blue-600/[0.06] transition-all resize-none no-scrollbar"
+            placeholder="Describe your vision..."
+          />
+          
+          <div v-if="isResetting" class="absolute inset-0 pointer-events-none z-10">
+            <div class="sweep-light"></div>
+          </div>
+        </div>
       </div>
 
-      <div class="space-y-2">
-        <span
-          class="text-[9px] font-black text-red-500/80 uppercase tracking-widest ml-1"
-        >
-          System: Negative Prompt
-        </span>
-        <div
-          class="p-4 bg-red-500/5 rounded-xl border border-red-500/20 text-[10px] text-red-200/60 font-mono italic leading-relaxed"
-        >
-          {{ negative_prompt || "No negative constraints defined." }}
+      <div class="space-y-2 animate-fade-in">
+        <div class="flex justify-between items-center ml-1">
+          <div class="flex items-center gap-1.5">
+             <div class="w-1.5 h-1.5 bg-red-500/50 rounded-full"></div>
+             <span class="text-[9px] font-black text-red-500/80 uppercase tracking-widest">
+               System: Negative Constraints
+             </span>
+          </div>
+          <button 
+            @click="handleReset"
+            :disabled="isResetting"
+            class="text-[8px] text-gray-600 hover:text-red-500 italic uppercase font-bold transition-all active:scale-95"
+          >
+            [ Clear All ]
+          </button>
+        </div>
+
+        <div class="relative group overflow-hidden rounded-xl">
+          <textarea
+            v-model="negative_prompt"
+            rows="14"
+            class="w-full bg-red-500/[0.03] border border-red-500/20 rounded-xl p-4 text-[10px] text-red-200/60 font-mono italic leading-relaxed outline-none focus:border-red-500/40 focus:bg-red-500/[0.06] transition-all resize-none no-scrollbar"
+            placeholder="Avoid these elements..."
+          />
+          
+          <div v-if="isResetting" class="absolute inset-0 pointer-events-none z-10">
+            <div class="sweep-light red-sweep"></div>
+          </div>
         </div>
       </div>
 
@@ -194,4 +237,43 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
 }
+
+/* Hiệu ứng tia sáng quét ngang] */
+.sweep-light {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(59, 130, 246, 0.1),
+    rgba(255, 255, 255, 0.5),
+    rgba(59, 130, 246, 0.1),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: sweep 0.6s ease-out forwards;
+}
+
+/* Biến thể màu đỏ cho Negative Prompt] */
+.red-sweep {
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(239, 68, 68, 0.1),
+    rgba(255, 255, 255, 0.5),
+    rgba(239, 68, 68, 0.1),
+    transparent
+  );
+}
+
+@keyframes sweep {
+  0% { left: -100%; }
+  100% { left: 160%; }
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
