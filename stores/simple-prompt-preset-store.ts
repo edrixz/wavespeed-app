@@ -1,17 +1,17 @@
-// stores/simplePresetStore.ts]
+// stores/simplePresetStore.ts [cite: 2025-12-19]
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { Database } from "~/types";
 
-// 1. Cập nhật Interface: Cho phép nullable để khớp với DB]
 export interface SimplePreset {
   id: string;
   user_id: string;
   title: string;
+  thumbnail: string | null;
   prompt: string;
   negative_prompt: string | null;
-  size: string | null; // Sửa từ string thành string | null]
-  created_at: string | null; // Sửa từ string thành string | null]
+  size: string | null;
+  created_at: string | null;
 }
 
 export const useSimplePresetStore = defineStore("simplePreset", () => {
@@ -24,48 +24,44 @@ export const useSimplePresetStore = defineStore("simplePreset", () => {
   const isLoading = ref(false);
   const isSaving = ref(false);
 
-  /**
-   * ACTION: Fetch Presets
-   */
+  // Lấy dữ liệu danh sách [cite: 2025-12-19]
   const fetchPresets = async () => {
     if (!user.value) return;
     isLoading.value = true;
-
     try {
       const { data, error } = await supabase
         .from("simple_presets")
         .select("*")
         .order("created_at", { ascending: false });
-
       if (error) throw error;
-
-      // Ép kiểu an toàn sau khi đã lấy dữ liệu]
       presets.value = data as any as SimplePreset[];
     } catch (err: any) {
-      console.error("Fetch Simple Presets failed:", err.message);
+      console.error("Fetch Error:", err.message);
     } finally {
       isLoading.value = false;
     }
   };
 
-  /**
-   * ACTION: Save Preset
-   */
+  // Lưu mới sử dụng .sub
   const savePreset = async (payload: {
     title: string;
+    thumbnail?: string;
     prompt: string;
     negative_prompt: string;
     size: string;
   }) => {
-    if (!user.value) return { success: false, error: "Chưa đăng nhập" };
+    const userUid = user.value?.sub; 
+    
+    if (!userUid) return { success: false, error: "Authentication failed: No user UID" };
     isSaving.value = true;
 
     try {
       const { data, error } = await supabase
         .from("simple_presets")
         .insert({
-          user_id: user.value.id,
+          user_id: userUid, //
           title: payload.title,
+          thumbnail: payload.thumbnail || null,
           prompt: payload.prompt,
           negative_prompt: payload.negative_prompt,
           size: payload.size,
@@ -73,8 +69,7 @@ export const useSimplePresetStore = defineStore("simplePreset", () => {
         .select();
 
       if (error) throw error;
-
-      if (data && data[0]) {
+      if (data?.[0]) {
         presets.value.unshift(data[0] as any as SimplePreset);
         return { success: true };
       }
@@ -85,54 +80,28 @@ export const useSimplePresetStore = defineStore("simplePreset", () => {
     }
   };
 
-  /**
-   * ACTION: Apply Preset]
-   */
   const applyPreset = (preset: SimplePreset) => {
-    try {
-      settings.prompt.value = preset.prompt;
-      settings.negative_prompt.value = preset.negative_prompt || "";
-
-      // Xử lý an toàn khi size có thể null]
-      const sizeValue = preset.size || "1024*1024"; // Giá trị mặc định nếu null]
-      const [w, h] = sizeValue.split("*");
-
-      settings.width.value = parseInt(w) || 1024;
-      settings.height.value = parseInt(h) || 1024;
-
-      if (settings.isBuilderMode.value) {
-        settings.toggleBuilderMode();
-      }
-
-      toast.success(`Đã áp dụng mẫu: ${preset.title}`);
-    } catch (err) {
-      toast.error("Lỗi khi áp dụng cấu hình.");
-    }
+    settings.prompt.value = preset.prompt;
+    settings.negative_prompt.value = preset.negative_prompt || "";
+    const [w, h] = (preset.size || "1024*1024").split("*");
+    settings.width.value = parseInt(w);
+    settings.height.value = parseInt(h);
+    if (settings.isBuilderMode.value) settings.toggleBuilderMode();
+    toast.success(`Applied: ${preset.title}`);
   };
 
   const deletePreset = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from("simple_presets")
-        .delete()
-        .eq("id", id);
+      const { error } = await supabase.from("simple_presets").delete().eq("id", id);
       if (error) throw error;
       presets.value = presets.value.filter((p) => p.id !== id);
-      toast.success("Đã xóa mẫu nhanh.");
+      toast.success("Preset removed.");
       return { success: true };
     } catch (err: any) {
-      toast.error("Lỗi khi xóa: " + err.message);
+      toast.error(err.message);
       return { success: false };
     }
   };
 
-  return {
-    presets,
-    isLoading,
-    isSaving,
-    fetchPresets,
-    savePreset,
-    deletePreset,
-    applyPreset,
-  };
+  return { presets, isLoading, isSaving, fetchPresets, savePreset, deletePreset, applyPreset };
 });
