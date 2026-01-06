@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usePromptBuilderStore } from "~/stores/prompt-builder-store";
+import { usePromptBuilderStore } from "~/stores/prompt";
 const imageStore = useImageStore();
 const { images } = storeToRefs(imageStore);
 

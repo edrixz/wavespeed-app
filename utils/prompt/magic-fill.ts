@@ -1,7 +1,9 @@
 import type { AnalyzedData } from "~/types/entities";
 import { useLogger } from "~/composables";
-import { usePromptBuilderStore } from "~/stores/prompt-builder-store";
-import { useAiGeneratedPromptStore } from "~/stores/ai-generated-prompt-store";
+import {
+  usePromptBuilderStore,
+  useAiGeneratedPromptStore,
+} from "~/stores/prompt";
 
 /**
  * Map dữ liệu phân tích từ AI vào store (Magic Fill)

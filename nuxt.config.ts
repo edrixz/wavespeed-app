@@ -29,7 +29,6 @@ export default defineNuxtConfig({
     public: {},
   },
   supabase: {
-    typesPath: "~/types/database.types.ts",
     redirectOptions: {
       login: "/login",
       callback: "/confirm",

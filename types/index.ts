@@ -12,5 +12,4 @@ export * from "./prompt-preset";
 export * from "./database";
 
 // Deprecated paths - maintained for backward compatibility during transition
-export * from "./gemini";
 export * from "./prompt";
