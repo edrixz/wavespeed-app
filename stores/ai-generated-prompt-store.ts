@@ -1,6 +1,6 @@
 // stores/aiPromptStore.ts
 import { defineStore } from "pinia";
-import type { AnalyzedData } from "~/types";
+import type { AnalyzedData } from "~/types/entities";
 
 export const useAiGeneratedPromptStore = defineStore("aiPrompt", () => {
   // Lưu trữ dữ liệu AI theo ID của Subject để không bị nhầm lẫn khi đổi Tab

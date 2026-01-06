@@ -7,8 +7,8 @@ import {
   detailsListItem,
   accessoriesListItem,
   fabricInteractionListItem,
-} from "~/consts";
-import type { OutfitData } from "~/types";
+} from "~/consts/list-items/outfit";
+import type { OutfitData } from "~/types/entities";
 
 const props = defineProps<{ modelValue?: OutfitData }>();
 </script>

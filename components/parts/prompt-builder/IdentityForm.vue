@@ -9,8 +9,9 @@ import {
   nippleDetailListItem,
   pubicHairListItem,
   genitalDetailListItem,
-} from "~/consts";
-import type { ListItem, SubjectData } from "~/types";
+} from "~/consts/list-items/identity";
+import type { SubjectData } from "~/types/entities";
+import type { ListItem } from "~/types/list-item";
 const props = defineProps<{ modelValue?: SubjectData }>();
 const emit = defineEmits(["update:modelValue"]);
 

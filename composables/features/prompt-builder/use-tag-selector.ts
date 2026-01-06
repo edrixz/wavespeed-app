@@ -1,4 +1,5 @@
-import type { AiValue, AnalyzedData, ListItem } from "~/types";
+import type { AiValue, AnalyzedData } from "~/types/entities";
+import type { ListItem } from "~/types/list-item";
 
 export const useTagSelector = (
   modelValue: ComputedRef<AiValue>,

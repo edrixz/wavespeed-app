@@ -1,23 +1,5 @@
-// utils/prompt-assembler.ts
-import type { Subject, Scene, AnalyzedData } from "~/types";
-
-/**
- * Nối các thành phần với dấu câu thông minh.
- */
-export const joinValid = (separator: string, ...fields: any[]) => {
-  return fields
-    .map((f) => {
-      if (!f) return "";
-      if (Array.isArray(f)) return f.filter(Boolean).join(", ");
-      return String(f).trim();
-    })
-    .filter((f) => f !== "")
-    .join(separator)
-    .replace(/\s+/g, " ")
-    .replace(/,\./g, ".")
-    .replace(/\.$/, "")
-    .trim();
-};
+import type { Subject, Scene, AnalyzedData } from "~/types/entities";
+import { joinValid } from "../helpers/text";
 
 /**
  * Bóc tách chi tiết nhân vật (Subject + Anatomy + Face + Hair + Outfit + Pose)

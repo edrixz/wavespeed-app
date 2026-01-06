@@ -8,8 +8,8 @@ import {
   skinTextureListItem,
   expressionListItem,
   makeupListItem,
-} from "~/consts";
-import type { FaceData } from "~/types";
+} from "~/consts/list-items/face";
+import type { FaceData } from "~/types/entities";
 const props = defineProps<{ modelValue?: FaceData }>();
 </script>
 

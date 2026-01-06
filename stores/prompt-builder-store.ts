@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { Scene, Subject } from "~/types";
+import type { Scene, Subject } from "~/types/entities";
 
 export const usePromptBuilderStore = defineStore("promptBuilder", () => {
   const { setStatus } = useLogger();

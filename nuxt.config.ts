@@ -29,13 +29,14 @@ export default defineNuxtConfig({
     public: {},
   },
   supabase: {
+    typesPath: "~/types/database.types.ts",
     redirectOptions: {
       login: "/login",
       callback: "/confirm",
-      exclude: ["/register"], // Tuyệt đối KHÔNG để '/' ở đây để bảo vệ trang chủ Senior Fullstack Developer...]
+      exclude: ["/register"],
     },
     cookieOptions: {
-      maxAge: 60 * 60 * 8, // Giữ phiên đăng nhập trong 8 giờ Senior Fullstack Developer...]
+      maxAge: 60 * 60 * 8,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
     },

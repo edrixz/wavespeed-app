@@ -8,8 +8,8 @@ import {
   framingListItem,
   perspectiveListItem,
   aspectRatioListItem,
-} from "~/consts";
-import type { PoseData } from "~/types";
+} from "~/consts/list-items/pose";
+import type { PoseData } from "~/types/entities";
 
 const props = defineProps<{ modelValue?: PoseData }>();
 </script>

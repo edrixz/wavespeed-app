@@ -12,8 +12,8 @@ import {
   postProcessingListItem,
   shadowsListItem,
   viewpointListItem,
-} from "~/consts";
-import type { Scene } from "~/types";
+} from "~/consts/list-items/scene";
+import type { Scene } from "~/types/entities";
 const props = defineProps<{ modelValue?: Scene }>();
 </script>
 

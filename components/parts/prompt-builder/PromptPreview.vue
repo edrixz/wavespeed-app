@@ -3,8 +3,8 @@ import { ref, computed } from "vue";
 import {
   assemblePrompt,
   assembleNegativePrompt,
-} from "~/utils/prompt-assembler";
-import { assemblePromptVi } from "~/utils/prompt-preview-vi";
+  assemblePromptVi,
+} from "~/utils/prompt";
 
 const promptStore = usePromptBuilderStore();
 

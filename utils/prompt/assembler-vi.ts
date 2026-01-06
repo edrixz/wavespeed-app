@@ -1,6 +1,5 @@
-// utils/prompt-preview-vi.ts
-import type { Subject, Scene } from "~/types";
-import { joinValid } from "./prompt-assembler"; // Tái sử dụng hàm joinValid cũ
+import type { Subject, Scene } from "~/types/entities";
+import { joinValid } from "../helpers/text";
 
 /**
  * Bóc tách chi tiết nhân vật bằng Tiếng Việt

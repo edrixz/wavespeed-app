@@ -4,8 +4,8 @@ import {
   hairColorListItem,
   hairLengthListItem,
   hairTextureListItem,
-} from "~/consts";
-import type { HairData } from "~/types";
+} from "~/consts/list-items/hair";
+import type { HairData } from "~/types/entities";
 const props = defineProps<{ modelValue?: HairData }>();
 </script>
 
