@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useImageAnalyzer } from "~/composables";
+import { usePromptBuilderStore } from "~/stores/prompt/prompt-builder-store";
+import { useImageStore } from "~/stores/image/image-store";
 
 const toast = useToast();
 

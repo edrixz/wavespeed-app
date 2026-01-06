@@ -3,6 +3,8 @@ import { PRESET_CATEGORIES } from "~/consts";
 import { storeToRefs } from "pinia";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
+import { usePresetStore } from "~/stores/prompt/preset-store";
+import { useUploadImageStore } from "~/stores/image/upload-image-store";
 
 const props = defineProps<{ isOpen: boolean }>();
 const emit = defineEmits(["close"]);

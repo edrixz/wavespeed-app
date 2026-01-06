@@ -5,6 +5,7 @@ import {
   assembleNegativePrompt,
   assemblePromptVi,
 } from "~/utils/prompt";
+import { usePromptBuilderStore } from "~/stores/prompt/prompt-builder-store";
 
 const promptStore = usePromptBuilderStore();
 

@@ -1,10 +1,11 @@
 // stores/common/auth-store.ts
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { useToastStore } from "./ui/toast-store";
 
 export const useAuthStore = defineStore("auth", () => {
   const client = useSupabaseClient();
-  const toast = useToast();
+  const toastStore = useToastStore();
   const isLoading = ref(false);
 
   const handleLogin = async (username: string, pass: string) => {
@@ -20,11 +21,11 @@ export const useAuthStore = defineStore("auth", () => {
 
       if (error) throw error;
 
-      toast.success("Chào mừng bạn trở lại!");
+      toastStore.addToast("Chào mừng bạn trở lại!", "success");
       // Dùng window.location để refresh sạch sẽ trạng thái
       window.location.href = "/";
     } catch (err: any) {
-      toast.error("Tên đăng nhập hoặc mật khẩu không đúng.");
+      toastStore.addToast("Tên đăng nhập hoặc mật khẩu không đúng.", "error");
     } finally {
       isLoading.value = false;
     }

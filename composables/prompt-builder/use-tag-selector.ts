@@ -1,5 +1,7 @@
 import type { AiValue, AnalyzedData } from "~/types/entities";
 import type { ListItem } from "~/types/list-item";
+import { usePromptBuilderStore } from "~/stores/prompt/prompt-builder-store";
+import { useAiGeneratedPromptStore } from "~/stores/prompt/ai-generated-prompt-store";
 
 export const useTagSelector = (
   modelValue: ComputedRef<AiValue>,

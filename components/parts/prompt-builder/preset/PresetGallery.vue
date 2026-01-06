@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { PRESET_CATEGORIES } from "~/consts";
+import { usePresetStore } from "~/stores/prompt/preset-store";
 
 const presetStore = usePresetStore();
 const scrollContainer = ref<HTMLElement | null>(null);

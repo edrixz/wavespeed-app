@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { usePromptBuilderStore } from "~/stores/prompt/prompt-builder-store";
+
 const store = usePromptBuilderStore();
 const { copyToClipboard } = store;
 

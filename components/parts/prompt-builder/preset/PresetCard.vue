@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { PromptPreset } from "~/types";
+import { usePresetStore } from "~/stores/prompt/preset-store";
+import { useAiGeneratedPromptStore } from "~/stores/prompt/ai-generated-prompt-store";
+import { usePromptBuilderStore } from "~/stores/prompt/prompt-builder-store";
 
 const props = defineProps<{ preset: PromptPreset }>();
 const presetStore = usePresetStore();

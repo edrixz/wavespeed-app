@@ -1,5 +1,7 @@
 import { useLogger } from "~/composables";
 import type { AnalyzedData, AnalyzeResponse } from "~/types";
+import { useAiGeneratedPromptStore } from "~/stores/prompt/ai-generated-prompt-store";
+import { usePromptBuilderStore } from "~/stores/prompt/prompt-builder-store";
 
 export const useImageAnalyzer = () => {
   const { setStatus } = useLogger();

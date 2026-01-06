@@ -1,4 +1,5 @@
 import type { LogStatus } from "~/types";
+import { useLoggerStore } from "~/stores/common/ui/logger-store";
 
 // Global logger state (Singleton)
 const globalLoggerStatus = ref<LogStatus>({

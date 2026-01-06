@@ -3,6 +3,10 @@ import { ref, watch } from "vue";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import { PRESET_CATEGORIES } from "~/consts";
+import { usePresetStore } from "~/stores/prompt/preset-store";
+import { useAiGeneratedPromptStore } from "~/stores/prompt/ai-generated-prompt-store";
+import { usePromptBuilderStore } from "~/stores/prompt/prompt-builder-store";
+import { useUploadImageStore } from "~/stores/image/upload-image-store";
 
 const props = defineProps<{ isOpen: boolean }>();
 const emit = defineEmits(["close"]);
