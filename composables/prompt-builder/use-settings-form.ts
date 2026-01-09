@@ -8,6 +8,7 @@ export const useSettingsForm = () => {
 
   // Destructure refs để dùng trực tiếp trong template với v-model
   const {
+    modelVersion,
     width,
     height,
     prompt,
@@ -22,6 +23,11 @@ export const useSettingsForm = () => {
   // --- LOGIC: Toggle Mode ---
   const toggleBuilderMode = () => {
     isBuilderMode.value = !isBuilderMode.value;
+  };
+
+  const isVersionV45 = computed(() => modelVersion.value === "v4.5");
+  const toggleVersionMode = () => {
+    modelVersion.value = modelVersion.value === "v4" ? "v4.5" : "v4";
   };
 
   const applySimplePreset = (data: {
@@ -52,6 +58,7 @@ export const useSettingsForm = () => {
   return {
     // State
     isBuilderMode,
+    isVersionV45,
     width,
     height,
     prompt,
@@ -63,6 +70,7 @@ export const useSettingsForm = () => {
     // Computed & Methods
     resetToDefault,
     toggleBuilderMode,
+    toggleVersionMode,
     applySimplePreset,
   };
 };

@@ -10,6 +10,7 @@ export const usePayloadMapper = () => {
 
   const payloadStore = useWavespeedPayloadStore();
   const {
+    modelVersion,
     prompt,
     negative_prompt,
     width,
@@ -51,6 +52,9 @@ export const usePayloadMapper = () => {
   const submitTask = async (payload: seedreamEditPayload): Promise<string> => {
     const response: any = await $fetch("/api/generate", {
       method: "POST",
+      headers: {
+        "x-model-version": modelVersion.value,
+      },
       body: payload,
     });
 
