@@ -1,6 +1,10 @@
+import { storeToRefs } from "pinia";
+import { useWavespeedPayloadStore } from "~/stores";
+
 // server/api/generate.post.ts
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
+  const modelVersion = getHeader(event, "x-model-version") || "v4.5";
   const body = await readBody(event);
 
   if (!config.wavespeedApiKey) {
@@ -10,10 +14,19 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const url = "https://api.wavespeed.ai/api/v3/bytedance/seedream-v4.5/edit";
+  const ENDPOINTS = {
+    v4: "https://api.wavespeed.ai/api/v3/bytedance/seedream-v4/edit",
+    "v4.5": "https://api.wavespeed.ai/api/v3/bytedance/seedream-v4.5/edit",
+  };
+
+  const targetUrl =
+    ENDPOINTS[modelVersion as keyof typeof ENDPOINTS] || ENDPOINTS["v4.5"];
 
   try {
-    const response = await $fetch(url, {
+    console.log(`[${modelVersion.toUpperCase()}] `);
+    console.log(`[${targetUrl}] `);
+
+    const response = await $fetch(targetUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

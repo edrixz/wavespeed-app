@@ -6,11 +6,11 @@ const { hasLogMessage } = useLogger();
   <div
     class="min-h-screen bg-gray-900 text-white p-6 pb-32 lg:pb-6 font-sans transition-all duration-500"
   >
-    <ToastContainer />
+    <CommonToastContainer />
 
     <Transition name="expand">
       <div v-if="hasLogMessage" class="status-bar-wrapper">
-        <StatusBar />
+        <CommonStatusBar />
       </div>
     </Transition>
 

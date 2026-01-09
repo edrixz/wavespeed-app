@@ -67,9 +67,9 @@ const { isCanNotGenerate, isProcessing, resultImage, handleGenerate } =
           Wavespeed Seedream
         </h1>
 
-        <PartsImageUploader />
+        <ImageUploader />
 
-        <SettingsForm />
+        <PromptBuilderSettingsForm />
 
         <div
           class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gray-900/90 backdrop-blur-md border-t border-gray-700 lg:static lg:bg-transparent lg:border-none lg:p-0 transition-all"
