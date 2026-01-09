@@ -11,7 +11,7 @@ onMounted(() => {
   </NuxtLayout>
 
   <div v-if="isReady">
-    <ToastContainer />
+    <CommonToastContainer />
   </div>
 </template>
 

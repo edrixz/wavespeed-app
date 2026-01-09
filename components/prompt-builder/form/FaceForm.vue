@@ -18,7 +18,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
     <!-- Structure -->
     <div>
       <h5 class="category-title border-purple-600">Structure</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.structure"
         type="face"
         field="structure"
@@ -31,7 +31,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
     <!-- Eyes -->
     <div>
       <h5 class="category-title border-purple-600">Eyes</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.eyes"
         type="face"
         field="eyes"
@@ -44,7 +44,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
     <!-- Eyebrows -->
     <div>
       <h5 class="category-title border-purple-600">Eyebrows</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.eyebrows"
         type="face"
         field="eyebrows"
@@ -57,7 +57,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
     <!-- Nose -->
     <div>
       <h5 class="category-title border-purple-600">Nose</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.nose"
         type="face"
         field="nose"
@@ -70,7 +70,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
     <!-- Lips -->
     <div>
       <h5 class="category-title border-purple-600">Lips</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.lips"
         type="face"
         field="lips"
@@ -83,7 +83,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
     <!-- Skin Texture -->
     <div>
       <h5 class="category-title border-purple-600">Skin Texture</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.skinTexture"
         type="face"
         field="skinTexture"
@@ -96,7 +96,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
     <!-- Expression -->
     <div>
       <h5 class="category-title border-purple-600">Expression</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.expression"
         type="face"
         field="expression"
@@ -109,7 +109,7 @@ const props = defineProps<{ modelValue?: FaceData }>();
     <!-- Makeup -->
     <div>
       <h5 class="category-title border-purple-600">Makeup</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.makeup"
         type="face"
         field="makeup"

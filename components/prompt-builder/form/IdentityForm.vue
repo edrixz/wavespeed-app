@@ -104,7 +104,7 @@ const handleAgeUpdate = (val: string) => {
     <!-- Ethnicity -->
     <div class="col-span-12">
       <label class="lbl">Ethnicity</label>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.ethnicity"
         type="subject"
         field="ethnicity"
@@ -116,7 +116,7 @@ const handleAgeUpdate = (val: string) => {
 
     <div class="col-span-12">
       <label class="lbl">Body Type</label>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.bodyType"
         type="subject"
         field="bodyType"
@@ -128,7 +128,7 @@ const handleAgeUpdate = (val: string) => {
 
     <div class="col-span-12">
       <label class="lbl">Skin Tone</label>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.skinTone"
         type="subject"
         field="skinTone"
@@ -141,7 +141,7 @@ const handleAgeUpdate = (val: string) => {
     <!-- Skin Details -->
     <div class="col-span-12">
       <label class="lbl">Skin Details</label>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.skinDetails"
         type="subject"
         field="skinDetails"
@@ -154,7 +154,7 @@ const handleAgeUpdate = (val: string) => {
     <!-- Breast -->
     <div class="col-span-12">
       <label class="lbl">Chest</label>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.breast"
         type="subject"
         field="breast"
@@ -167,7 +167,7 @@ const handleAgeUpdate = (val: string) => {
     <!-- Nipple -->
     <div class="col-span-12">
       <label class="lbl">Nipple</label>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.nipple"
         type="subject"
         field="nipple"
@@ -180,7 +180,7 @@ const handleAgeUpdate = (val: string) => {
     <!-- pubicHair -->
     <div class="col-span-12">
       <label class="lbl">pubic Hair</label>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.pubicHair"
         type="subject"
         field="pubicHair"
@@ -193,7 +193,7 @@ const handleAgeUpdate = (val: string) => {
     <!-- genitals -->
     <div class="col-span-12">
       <label class="lbl">Genitals</label>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.genitals"
         type="subject"
         field="genitals"

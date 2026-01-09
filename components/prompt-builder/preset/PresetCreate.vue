@@ -131,7 +131,7 @@ const handleCreate = async () => {
                 >
                   Thumbnail Preview (3:4)
                 </label>
-                <PartsPromptBuilderPresetUploadFile
+                <PromptBuilderPresetUploadFile
                   v-model="selectedFile"
                   :progress="uploadProgress"
                   @open-crop="isCropping = true"

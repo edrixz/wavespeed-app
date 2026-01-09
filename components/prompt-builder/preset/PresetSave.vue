@@ -119,7 +119,7 @@ const handleSave = async () => {
                 class="text-[9px] font-black text-gray-500 uppercase tracking-widest block text-center"
                 >Thumbnail</label
               >
-              <PartsPromptBuilderPresetUploadFile
+              <PromptBuilderPresetUploadFile
                 v-model="selectedFile"
                 :progress="uploadProgress"
                 @open-crop="isCropping = true"

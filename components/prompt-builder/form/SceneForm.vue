@@ -22,7 +22,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Location -->
     <div>
       <h5 class="category-title border-indigo-600">Location</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.environment!.location"
         type="environment"
         field="location"
@@ -35,7 +35,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Lighting -->
     <div>
       <h5 class="category-title border-indigo-600">Lighting</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.environment!.lighting"
         type="environment"
         field="lighting"
@@ -48,7 +48,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Light Color -->
     <div>
       <h5 class="category-title border-indigo-600">Light Color</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.environment!.lighting"
         type="environment"
         field="lightColor"
@@ -61,7 +61,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Shadows -->
     <div>
       <h5 class="category-title border-indigo-600">Shadows</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.environment!.shadows"
         type="environment"
         field="shadows"
@@ -74,7 +74,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Atmosphere -->
     <div>
       <h5 class="category-title border-indigo-600">Atmosphere</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.environment!.atmosphere"
         type="environment"
         field="atmosphere"
@@ -87,7 +87,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Color Palette -->
     <div>
       <h5 class="category-title border-indigo-600">Color Palette</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.environment!.colorPalette"
         type="environment"
         field="colorPalette"
@@ -101,7 +101,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Camera -->
     <div>
       <h5 class="category-title border-indigo-600">Camera</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.tech!.camera"
         type="tech"
         field="camera"
@@ -114,7 +114,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Lens Settings -->
     <div>
       <h5 class="category-title border-indigo-600">Lens Settings</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.tech!.lensSettings"
         type="tech"
         field="lensSettings"
@@ -127,7 +127,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- FilmEffect -->
     <div>
       <h5 class="category-title border-indigo-600">FilmEffect</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.tech!.filmEffect"
         type="tech"
         field="filmEffect"
@@ -140,7 +140,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Art Style -->
     <div>
       <h5 class="category-title border-indigo-600">Art Style</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.tech!.artStyle"
         type="tech"
         field="artStyle"
@@ -153,7 +153,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Post Processing -->
     <div>
       <h5 class="category-title border-indigo-600">Post Processing</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.tech!.postProcessing"
         type="tech"
         field="postProcessing"
@@ -166,7 +166,7 @@ const props = defineProps<{ modelValue?: Scene }>();
     <!-- Viewpoint -->
     <div>
       <h5 class="category-title border-indigo-600">Viewpoint</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.tech!.viewpoint"
         type="tech"
         field="viewpoint"

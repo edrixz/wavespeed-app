@@ -39,7 +39,7 @@ const handleReset = () => {
     <template v-if="isBuilderMode">
       <div class="max-w-7xl mx-auto">
         <section class="mt-3">
-          <PartsPromptBuilderPresetGallery />
+          <PromptBuilderPresetGallery />
         </section>
       </div>
       <PromptBuilder />
@@ -47,7 +47,7 @@ const handleReset = () => {
 
     <template v-else>
       <section class="animate-fade-in">
-        <PartsPromptBuilderPresetSimpleGallery />
+        <PromptBuilderPresetSimpleGallery />
       </section>
 
       <div class="space-y-2 animate-fade-in">

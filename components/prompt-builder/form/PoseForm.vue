@@ -19,7 +19,7 @@ const props = defineProps<{ modelValue?: PoseData }>();
     <!-- Action -->
     <div>
       <h5 class="category-title border-purple-600">Action</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.action"
         type="pose"
         field="action"
@@ -32,7 +32,7 @@ const props = defineProps<{ modelValue?: PoseData }>();
     <!-- Interaction -->
     <div>
       <h5 class="category-title border-purple-600">Interaction</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.interaction"
         type="pose"
         field="interaction"
@@ -45,7 +45,7 @@ const props = defineProps<{ modelValue?: PoseData }>();
     <!-- Posture -->
     <div>
       <h5 class="category-title border-purple-600">Posture</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.posture"
         type="pose"
         field="posture"
@@ -58,7 +58,7 @@ const props = defineProps<{ modelValue?: PoseData }>();
     <!-- HeadAngle -->
     <div>
       <h5 class="category-title border-purple-600">HeadAngle</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.headAngle"
         type="pose"
         field="headAngle"
@@ -71,7 +71,7 @@ const props = defineProps<{ modelValue?: PoseData }>();
     <!-- Hands -->
     <div>
       <h5 class="category-title border-purple-600">Hands</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.hands"
         type="pose"
         field="hands"
@@ -84,7 +84,7 @@ const props = defineProps<{ modelValue?: PoseData }>();
     <!-- Framing -->
     <div>
       <h5 class="category-title border-purple-600">Framing</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.framing"
         type="pose"
         field="framing"
@@ -97,7 +97,7 @@ const props = defineProps<{ modelValue?: PoseData }>();
     <!-- Perspective -->
     <div>
       <h5 class="category-title border-purple-600">Perspective</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.perspective"
         type="pose"
         field="perspective"
@@ -110,7 +110,7 @@ const props = defineProps<{ modelValue?: PoseData }>();
     <!-- Aspect Ratio -->
     <div>
       <h5 class="category-title border-purple-600">Aspect Ratio</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.aspectRatio"
         type="pose"
         field="aspectRatio"

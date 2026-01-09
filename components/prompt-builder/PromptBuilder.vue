@@ -50,7 +50,7 @@ const handleRemoveSubject = (id: string) => {
       </div>
 
       <div class="flex w-full justify-between">
-        <PartsImageAnalyzer />
+        <ImageAnalyzer />
       </div>
 
       <div class="flex gap-2 w-full">
@@ -61,7 +61,7 @@ const handleRemoveSubject = (id: string) => {
           + Lưu thành Preset
         </button>
 
-        <PartsPromptBuilderPresetSave
+        <PromptBuilderPresetSave
           :is-open="isPresetSaveOpen"
           @close="isPresetSaveOpen = false"
         />
@@ -75,7 +75,7 @@ const handleRemoveSubject = (id: string) => {
           + Tạo Preset
         </button>
 
-        <PartsPromptBuilderPresetCreate
+        <PromptBuilderPresetCreate
           :is-open="isPresetCreateOpen"
           @close="isPresetCreateOpen = false"
         />
@@ -160,65 +160,65 @@ const handleRemoveSubject = (id: string) => {
         </div>
       </div>
 
-      <PartsPromptBuilderSection
+      <PromptBuilderSection
         title="Identity & Body"
         color="white"
         :is-open="openSection === 'identity'"
         @toggle="toggle('identity')"
       >
-        <PartsPromptBuilderIdentityForm v-model="currentSubject.subject" />
-      </PartsPromptBuilderSection>
+        <PromptBuilderFormIdentityForm v-model="currentSubject.subject" />
+      </PromptBuilderSection>
 
-      <PartsPromptBuilderSection
+      <PromptBuilderSection
         title="Face Details"
         color="purple"
         :is-open="openSection === 'face'"
         @toggle="toggle('face')"
       >
-        <PartsPromptBuilderFaceForm v-model="currentSubject.face" />
-      </PartsPromptBuilderSection>
+        <PromptBuilderFormFaceForm v-model="currentSubject.face" />
+      </PromptBuilderSection>
 
-      <PartsPromptBuilderSection
+      <PromptBuilderSection
         title="Hair & Style"
         color="yellow"
         :is-open="openSection === 'hair'"
         @toggle="toggle('hair')"
       >
-        <PartsPromptBuilderHairForm :modelValue="currentSubject.hair" />
-      </PartsPromptBuilderSection>
+        <PromptBuilderFormHairForm :modelValue="currentSubject.hair" />
+      </PromptBuilderSection>
 
-      <PartsPromptBuilderSection
+      <PromptBuilderSection
         title="Outfit"
         color="green"
         :is-open="openSection === 'outfit'"
         @toggle="toggle('outfit')"
       >
-        <PartsPromptBuilderOutfitForm v-model="currentSubject.outfit" />
-      </PartsPromptBuilderSection>
+        <PromptBuilderFormOutfitForm v-model="currentSubject.outfit" />
+      </PromptBuilderSection>
 
-      <PartsPromptBuilderSection
+      <PromptBuilderSection
         title="Pose"
         color="green"
         :is-open="openSection === 'pose'"
         @toggle="toggle('pose')"
       >
-        <PartsPromptBuilderPoseForm v-model="currentSubject.pose" />
-      </PartsPromptBuilderSection>
+        <PromptBuilderFormPoseForm v-model="currentSubject.pose" />
+      </PromptBuilderSection>
     </div>
 
     <!-- SCENE -->
     <div class="mt-6">
-      <PartsPromptBuilderSection
+      <PromptBuilderSection
         title="Scene"
         color="blue"
         :is-open="openSection === 'scene'"
         @toggle="toggle('scene')"
       >
-        <PartsPromptBuilderSceneForm v-model="scene" />
-      </PartsPromptBuilderSection>
+        <PromptBuilderFormSceneForm v-model="scene" />
+      </PromptBuilderSection>
     </div>
 
-    <PartsPromptBuilderPromptPreview />
+    <PromptBuilderPromptPreview />
   </div>
 </template>
 

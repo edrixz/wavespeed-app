@@ -144,7 +144,7 @@ const getCategoryCount = (categoryValue: string) => {
             class="flex-none w-[72%] md:w-[45%] lg:w-[140px] snap-start"
             :class="{ 'pointer-events-none': hasMoved }"
           >
-            <PartsPromptBuilderPresetCard :preset="preset" />
+            <PromptBuilderPresetCard :preset="preset" />
           </div>
         </TransitionGroup>
 

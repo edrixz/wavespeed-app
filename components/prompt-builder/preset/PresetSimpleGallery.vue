@@ -271,7 +271,7 @@ const executeDelete = async (id: string) => {
           >
             <div class="max-w-4xl mx-auto grid lg:grid-cols-2 gap-12">
               <div class="animate-item" style="--delay: 2">
-                <PartsPromptBuilderPresetUploadFile
+                <PromptBuilderPresetUploadFile
                   v-model="selectedFile"
                   :progress="uploadProgress"
                   @open-crop="isCropping = true"

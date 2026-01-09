@@ -14,7 +14,7 @@ const props = defineProps<{ modelValue?: HairData }>();
     <!-- Description -->
     <div>
       <h5 class="category-title border-amber-600">Description</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.description"
         type="hair"
         field="description"
@@ -27,7 +27,7 @@ const props = defineProps<{ modelValue?: HairData }>();
     <!-- Color -->
     <div>
       <h5 class="category-title border-amber-600">Color</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.color"
         type="hair"
         field="color"
@@ -40,7 +40,7 @@ const props = defineProps<{ modelValue?: HairData }>();
     <!-- Length -->
     <div>
       <h5 class="category-title border-amber-600">Length</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.length"
         type="hair"
         field="length"
@@ -53,7 +53,7 @@ const props = defineProps<{ modelValue?: HairData }>();
     <!-- Texture -->
     <div>
       <h5 class="category-title border-amber-600">Texture</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.texture"
         type="hair"
         field="texture"

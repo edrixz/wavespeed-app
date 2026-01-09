@@ -18,7 +18,7 @@ const props = defineProps<{ modelValue?: OutfitData }>();
     <!-- Description -->
     <div>
       <h5 class="category-title border-purple-600">Description</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.description"
         type="outfit"
         field="description"
@@ -31,7 +31,7 @@ const props = defineProps<{ modelValue?: OutfitData }>();
     <!-- Materials -->
     <div>
       <h5 class="category-title border-purple-600">Materials</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.materials"
         type="outfit"
         field="materials"
@@ -44,7 +44,7 @@ const props = defineProps<{ modelValue?: OutfitData }>();
     <!-- Layering -->
     <div>
       <h5 class="category-title border-purple-600">Layering</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.layering"
         type="outfit"
         field="layering"
@@ -57,7 +57,7 @@ const props = defineProps<{ modelValue?: OutfitData }>();
     <!-- Fit -->
     <div>
       <h5 class="category-title border-purple-600">Fit</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.fit"
         type="outfit"
         field="fit"
@@ -70,7 +70,7 @@ const props = defineProps<{ modelValue?: OutfitData }>();
     <!-- Details -->
     <div>
       <h5 class="category-title border-purple-600">Details</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.details"
         type="outfit"
         field="details"
@@ -83,7 +83,7 @@ const props = defineProps<{ modelValue?: OutfitData }>();
     <!-- Accessories -->
     <div>
       <h5 class="category-title border-purple-600">Accessories</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.accessories"
         type="outfit"
         field="accessories"
@@ -96,7 +96,7 @@ const props = defineProps<{ modelValue?: OutfitData }>();
     <!-- Fabric Interaction -->
     <div>
       <h5 class="category-title border-purple-600">Fabric Interaction</h5>
-      <PartsPromptBuilderTagSelector
+      <PromptBuilderTagSelector
         v-model="modelValue!.fabricInteraction"
         type="outfit"
         field="fabricInteraction"
