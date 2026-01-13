@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useGalleryStore } from "~/stores/common/ui/gallery-store";
+
 const user = useSupabaseUser();
 const authStore = useAuthStore();
 const isOpen = ref(false);
@@ -9,10 +11,11 @@ const toggleMenu = () => (isOpen.value = !isOpen.value);
 
 const handleLogout = async () => {
   isOpen.value = false;
-
-  // Xóa lịch sử log
+  const galleryStore = useGalleryStore();
   const loggerStore = useLoggerStore();
+
   loggerStore.clearMessages();
+  galleryStore.clearSession();
 
   // Thực hiện logout
   await authStore.logout();

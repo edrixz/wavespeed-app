@@ -2,8 +2,10 @@ import { useLogger } from "~/composables/common";
 import { usePayloadMapper } from "./use-payload-mapper";
 import { usePolling } from "./use-polling";
 import { useResponseHandler } from "./use-response-handler";
+import { useGalleryStore } from "~/stores/common/ui/gallery-store";
 
 export const useWavespeedApiGenerate = () => {
+  const galleryStore = useGalleryStore();
   const { setStatus } = useLogger();
   const loggerStore = useLoggerStore();
   const { buildPayload, submitTask } = usePayloadMapper();
@@ -50,6 +52,13 @@ export const useWavespeedApiGenerate = () => {
       });
 
       resultImage.value = finalUrl;
+
+      galleryStore.addGeneratedItem(finalUrl, {
+        prompt: payloadStore.prompt,
+        negative_prompt: payloadStore.negative_prompt,
+        size: `${payloadStore.width}*${payloadStore.height}`,
+      });
+
       handleSuccess("Complete! Image is ready.");
     } catch (error: any) {
       handleError(error);
