@@ -5,6 +5,7 @@ import { useResponseHandler } from "./use-response-handler";
 
 export const useWavespeedApiGenerate = () => {
   const { setStatus } = useLogger();
+  const loggerStore = useLoggerStore();
   const { buildPayload, submitTask } = usePayloadMapper();
   const { pollTask } = usePolling();
   const { handleError, handleSuccess } = useResponseHandler();
@@ -26,6 +27,11 @@ export const useWavespeedApiGenerate = () => {
 
     isProcessing.value = true;
     resultImage.value = null;
+
+    // 1. KHỞI TẠO NHÓM LOG
+    loggerStore.startGroup(
+      `Dreamer Process - ${new Date().toLocaleTimeString()}`
+    );
     setStatus("Starting processing...", "info");
 
     try {
@@ -49,6 +55,8 @@ export const useWavespeedApiGenerate = () => {
       handleError(error);
     } finally {
       isProcessing.value = false;
+      // 2. KẾT THÚC NHÓM LOG
+      loggerStore.endGroup();
     }
   };
 

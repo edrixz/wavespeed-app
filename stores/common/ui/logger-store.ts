@@ -1,85 +1,76 @@
-// stores/common/ui/logger-store.ts
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
 
-/**
- * Logger store for status messages and debugging
- */
 export const useLoggerStore = defineStore("logger", () => {
-  const messages = ref<
-    Array<{
-      id: string;
-      message: string;
-      type: "info" | "success" | "warning" | "error" | "loading";
-      timestamp: number;
-    }>
-  >([]);
+  const messages = ref<any[]>([]);
+  const activeGroupId = ref<string | null>(null);
+  const activeGroupName = ref<string | null>(null);
 
-  const currentStatus = ref<{
-    message: string;
-    type: "info" | "success" | "warning" | "error" | "loading";
-  }>({
-    message: "",
-    type: "info",
-  });
-
-  /**
-   * Set status message
-   */
-  const setStatus = (
-    message: string,
-    type: "info" | "success" | "warning" | "error" | "loading" = "info"
-  ) => {
-    currentStatus.value = { message, type };
-    addMessage(message, type);
+  // Bắt đầu một tiến trình mới (ví dụ: "Dreamer Process #123")
+  const startGroup = (name: string) => {
+    activeGroupId.value = `group-${Date.now()}`;
+    activeGroupName.value = name;
+    return activeGroupId.value;
   };
 
-  /**
-   * Add message to log
-   */
-  const addMessage = (
-    message: string,
-    type: "info" | "success" | "warning" | "error" | "loading" = "info"
-  ) => {
+  const endGroup = () => {
+    activeGroupId.value = null;
+    activeGroupName.value = null;
+  };
+
+  const addMessage = (message: string, type: string) => {
     messages.value.push({
-      id: `msg-${Date.now()}`,
+      id: `msg-${Date.now()}-${Math.random()}`,
+      groupId: activeGroupId.value,
+      groupName: activeGroupName.value,
       message,
       type,
       timestamp: Date.now(),
     });
 
-    // Keep only last 50 messages
-    if (messages.value.length > 50) {
-      messages.value.shift();
-    }
+    if (messages.value.length > 100) messages.value.shift();
   };
 
-  /**
-   * Clear all messages
-   */
-  const clearMessages = () => {
-    messages.value = [];
-  };
+  // Logic phân nhóm log để hiển thị ở trang chi tiết
+  const groupedMessages = computed(() => {
+    const groups: Record<string, any> = {};
+    const orphans: any[] = [];
 
-  /**
-   * Get messages by type
-   */
-  const getMessagesByType = (type: string) => {
-    return messages.value.filter((m) => m.type === type);
-  };
+    messages.value.forEach((msg) => {
+      if (msg.groupId) {
+        if (!groups[msg.groupId]) {
+          groups[msg.groupId] = {
+            id: msg.groupId,
+            name: msg.groupName,
+            timestamp: msg.timestamp,
+            status: "processing", // Sẽ được cập nhật dựa trên item cuối
+            items: [],
+          };
+        }
+        groups[msg.groupId].items.push(msg);
+        if (msg.type === "success" || msg.type === "error") {
+          groups[msg.groupId].status = msg.type;
+        }
+      } else {
+        orphans.push(msg);
+      }
+    });
 
-  /**
-   * Check if has any log message
-   */
-  const hasLogMessage = computed(() => messages.value.length > 0);
+    return {
+      groups: Object.values(groups).reverse(),
+      orphans: orphans.reverse(),
+    };
+  });
+
+  const clearMessages = () => (messages.value = []);
 
   return {
     messages,
-    currentStatus,
-    hasLogMessage,
-    setStatus,
+    activeGroupId,
+    startGroup,
+    endGroup,
     addMessage,
+    groupedMessages,
     clearMessages,
-    getMessagesByType,
+    hasLogMessage: computed(() => messages.value.length > 0),
   };
 });

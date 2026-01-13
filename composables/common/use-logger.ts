@@ -1,32 +1,31 @@
-import type { LogStatus } from "~/types";
+// composables/useLogger.ts
 import { useLoggerStore } from "~/stores/common/ui/logger-store";
 
-// Global logger state (Singleton)
-const globalLoggerStatus = ref<LogStatus>({
+const globalLoggerStatus = ref({
   message: "",
-  type: "info",
+  type: "info" as "info" | "warning" | "error" | "success" | "loading",
 });
 
 const progress = ref(100);
-let autoHideTimer: ReturnType<typeof setTimeout> | null = null;
-let progressInterval: ReturnType<typeof setInterval> | null = null;
+let autoHideTimer: any = null;
+let progressInterval: any = null;
 
 export const useLogger = () => {
+  const loggerStore = useLoggerStore();
+
   const setStatus = (
     message: string,
     type: "info" | "warning" | "error" | "success" | "loading" = "info"
   ) => {
-    // Clear existing timers
-    if (autoHideTimer) {
-      clearTimeout(autoHideTimer);
-    }
+    if (autoHideTimer) clearTimeout(autoHideTimer);
     if (progressInterval) clearInterval(progressInterval);
 
-    // Update status
     globalLoggerStatus.value = { message, type };
     progress.value = 100;
 
-    // Auto-hide non-loading messages
+    // LƯU VÀO STORE: Đẩy vào lịch sử thông báo
+    loggerStore.addMessage(message, type);
+
     if (type !== "loading") {
       const duration = type === "error" ? 10000 : 5000;
       const intervalStep = 100;
@@ -42,10 +41,7 @@ export const useLogger = () => {
 
       autoHideTimer = setTimeout(() => {
         progress.value = 0;
-        globalLoggerStatus.value = {
-          message: "",
-          type: "info",
-        };
+        globalLoggerStatus.value = { message: "", type: "info" };
       }, duration);
     }
   };
@@ -57,17 +53,11 @@ export const useLogger = () => {
     progress.value = 0;
   };
 
-  const loggerStatus = computed(() => globalLoggerStatus.value);
-  const hasLogMessage = computed(
-    () => globalLoggerStatus.value.message.length > 0
-  );
-
   return {
     status: readonly(globalLoggerStatus),
     progress: readonly(progress),
     setStatus,
     clearStatus,
-    loggerStatus,
-    hasLogMessage,
+    hasLogMessage: computed(() => globalLoggerStatus.value.message.length > 0),
   };
 };
