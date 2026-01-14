@@ -87,7 +87,7 @@ const getButtonLayout = (index: number) => {
     <Teleport to="body">
       <div v-if="show" class="fixed inset-0 z-[3000] pointer-events-none">
         <div
-          class="absolute top-0 left-0 p-6 pt-12 flex flex-col items-start gap-2 max-w-[80%]"
+          class="absolute top-5 left-0 p-6 pt-12 flex flex-col items-start gap-2 max-w-[80%]"
         >
           <Transition name="slide-down" mode="out-in">
             <div
@@ -211,7 +211,7 @@ const getButtonLayout = (index: number) => {
 }
 .slide-down-enter-from {
   opacity: 0;
-  transform: translateY(-20px);
+  transform: translateY(-30px);
 } /* Bay từ trên xuống */
 .slide-down-leave-to {
   opacity: 0;

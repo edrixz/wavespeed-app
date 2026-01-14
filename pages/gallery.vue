@@ -84,7 +84,7 @@ const handleTouchEndAction = () => {
         }"
         :class="[
           isHolding && currentHoldingItem?.id === item.id
-            ? 'scale-110 brightness-110 shadow-[0_30px_60px_rgba(0,0,0,0.8)] ring-2 ring-blue-500/50'
+            ? 'scale-110 brightness-110 shadow-[0_30px_60px_rgba(0,0,0,0.8)] ring-2 ring-blue-500/50 -rotate-[8deg]'
             : '',
         ]"
         @touchstart="onTouchStart($event, () => (currentHoldingItem = item))"
