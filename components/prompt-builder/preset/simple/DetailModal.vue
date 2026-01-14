@@ -38,7 +38,7 @@ const startDelete = (id: string) => {
     <Transition name="ios-modal">
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-[1000] bg-[#050505] flex flex-col overflow-hidden h-screen w-screen touch-none"
+        class="fixed inset-0 z-[99999] bg-[#050505] flex flex-col overflow-hidden h-screen w-screen touch-none"
       >
         <div class="absolute inset-0 z-0 pointer-events-none ambient-layer">
           <img
@@ -53,7 +53,7 @@ const startDelete = (id: string) => {
         >
           <button
             @click="$emit('update:modelValue', null)"
-            class="absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white/70 hover:bg-white hover:text-black transition-all active:scale-90 ui-element"
+            class="absolute top-4 right-4 z-[100] w-8 h-8 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white/70 hover:bg-white hover:text-black transition-all active:scale-90 ui-element"
           >
             ✕
           </button>
@@ -176,82 +176,52 @@ const startDelete = (id: string) => {
 </template>
 
 <style scoped>
+/* Copy y nguyên phần style của câu trả lời trước */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .touch-none {
   touch-action: none;
 }
-
-/* ==========================================================================
-   SUPER SMOOTH IOS ANIMATIONS
-   ========================================================================== */
-
-/* --- 1. ENTRY ANIMATION (Lúc mở) --- */
 .ios-modal-enter-active {
   transition: opacity 0.5s ease;
 }
 .ios-modal-enter-from {
   opacity: 0;
 }
-
-/* Ảnh tự động Settle (Thu nhỏ về chuẩn) khi mở */
 .ios-modal-enter-active .hero-img {
   animation: imageSettleIn 0.8s cubic-bezier(0.2, 0, 0.2, 1) forwards;
 }
-
-/* Nội dung trượt lên */
 .ios-modal-enter-active .animate-in-up {
   animation: contentSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
   animation-delay: var(--delay);
   transform: translateY(30px);
 }
-
-/* --- 2. LEAVE ANIMATION (Lúc đóng) - QUAN TRỌNG NHẤT --- */
-
-/* Thời gian tổng cho việc đóng */
 .ios-modal-leave-active {
   transition: opacity 0.4s ease-out;
-  transition-delay: 0.1s; /* Đợi một chút cho hiệu ứng con chạy */
+  transition-delay: 0.1s;
 }
 .ios-modal-leave-to {
   opacity: 0;
 }
-
-/* A. ẢNH: Phóng to (Zoom-out) và Mờ đi */
 .ios-modal-leave-active .hero-img {
-  /* KILL ANIMATION CŨ NGAY LẬP TỨC */
   animation: none !important;
-
-  /* Thiết lập trạng thái đích */
-  transform: scale(1.3) !important; /* Phóng to 130% */
-  filter: blur(10px) brightness(0.5) !important; /* Mờ và tối đi */
-
-  /* Transition mượt mà */
+  transform: scale(1.3) !important;
+  filter: blur(10px) brightness(0.5) !important;
   transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1), filter 0.4s ease !important;
 }
-
-/* B. UI ELEMENTS (Body, Footer, Close btn): Trượt xuống nhanh */
 .ios-modal-leave-active .ui-element {
-  /* Kill animation cũ */
   animation: none !important;
-
   transform: translateY(100px) !important;
   opacity: 0 !important;
-
-  /* Easing 'In' để bắt đầu chậm, kết thúc nhanh (Rơi xuống) */
   transition: all 0.25s cubic-bezier(0.5, 0, 0.75, 0) !important;
 }
-
-/* C. MAIN CARD: Thu nhỏ nhẹ container tổng để tạo chiều sâu */
 .ios-modal-leave-active .main-card {
   transform: scale(0.96);
-  border-radius: 48px; /* Bo tròn hơn khi đóng */
+  border-radius: 48px;
   transition: all 0.4s ease;
 }
-
-/* --- KEYFRAMES --- */
 @keyframes imageSettleIn {
   from {
     transform: scale(1.2);
@@ -262,7 +232,6 @@ const startDelete = (id: string) => {
     filter: blur(0);
   }
 }
-
 @keyframes contentSlideUp {
   to {
     opacity: 1;
