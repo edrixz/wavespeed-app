@@ -40,8 +40,6 @@ const handleTouchEndAction = () => {
         title: `Style ${new Date().getTime().toString().slice(-4)}`,
         prompt: currentHoldingItem.value.config.prompt,
         thumbnail: currentHoldingItem.value.url,
-        negative_prompt: "",
-        size: "",
       });
       toast.success("Saved to Presets!");
     } else if (selectedType === "save") {

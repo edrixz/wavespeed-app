@@ -38,7 +38,7 @@ const startDelete = (id: string) => {
     <Transition name="ios-modal">
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-[99999] bg-[#050505] flex flex-col overflow-hidden h-screen w-screen touch-none"
+        class="fixed inset-0 z-[99999] bg-[#050505] flex flex-col h-[100dvh] w-screen touch-none"
       >
         <div class="absolute inset-0 z-0 pointer-events-none ambient-layer">
           <img
@@ -49,7 +49,7 @@ const startDelete = (id: string) => {
         </div>
 
         <div
-          class="relative z-10 flex-1 flex flex-col h-full overflow-hidden sm:m-6 sm:rounded-[32px] sm:border sm:border-white/10 bg-black/20 backdrop-blur-sm main-card will-change-transform"
+          class="relative z-10 flex flex-col h-full max-h-full w-full overflow-hidden sm:m-6 sm:rounded-[32px] sm:border sm:border-white/10 bg-black/20 backdrop-blur-sm main-card will-change-transform"
         >
           <button
             @click="$emit('update:modelValue', null)"
@@ -58,9 +58,7 @@ const startDelete = (id: string) => {
             ✕
           </button>
 
-          <div
-            class="relative w-full h-[38vh] flex-shrink-0 overflow-hidden hero-wrapper"
-          >
+          <div class="relative w-full h-[38vh] flex-shrink-0 hero-wrapper">
             <img
               :src="modelValue.thumbnail"
               class="w-full h-full object-cover hero-img"
@@ -71,80 +69,84 @@ const startDelete = (id: string) => {
           </div>
 
           <main
-            class="flex-1 relative z-20 -mt-12 bg-[#080808] rounded-t-[32px] overflow-y-auto no-scrollbar pt-8 px-6 pb-28 border-t border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] ui-element content-body"
+            class="flex-1 min-h-0 relative z-20 -mt-12 bg-[#080808] rounded-t-[32px] border-t border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] ui-element content-body flex flex-col"
           >
-            <div class="max-w-2xl mx-auto space-y-6">
-              <div
-                class="flex items-start justify-between gap-4 animate-in-up"
-                style="--delay: 0.1s"
-              >
-                <h1
-                  class="text-2xl font-black uppercase text-white leading-tight tracking-wide"
-                >
-                  {{ modelValue.title }}
-                </h1>
-                <span
-                  class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-bold text-blue-400 uppercase tracking-widest whitespace-nowrap"
-                >
-                  {{ modelValue.size }}
-                </span>
-              </div>
-
-              <div class="space-y-4">
+            <div class="flex-1 overflow-y-auto no-scrollbar pt-8 px-6 pb-28">
+              <div class="max-w-2xl mx-auto space-y-6">
                 <div
-                  class="p-5 rounded-2xl bg-white/[0.03] border border-white/5 animate-in-up"
-                  style="--delay: 0.2s"
+                  class="flex items-start justify-between gap-4 animate-in-up"
+                  style="--delay: 0.1s"
                 >
-                  <div class="flex items-center gap-2 mb-2 opacity-50">
-                    <Icon
-                      name="lucide:sparkles"
-                      size="12"
-                      class="text-blue-400"
-                    />
-                    <span
-                      class="text-[9px] font-bold uppercase tracking-widest text-gray-300"
-                      >Prompt</span
-                    >
-                  </div>
-                  <p
-                    class="text-[12px] text-gray-300 font-mono leading-relaxed line-clamp-[8]"
+                  <h1
+                    class="text-2xl font-black uppercase text-white leading-tight tracking-wide"
                   >
-                    {{ modelValue.prompt }}
-                  </p>
+                    {{ modelValue.title }}
+                  </h1>
+                  <span
+                    class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-bold text-blue-400 uppercase tracking-widest whitespace-nowrap"
+                  >
+                    {{ modelValue.size }}
+                  </span>
                 </div>
 
-                <div
-                  v-if="modelValue.negative_prompt"
-                  class="p-5 rounded-2xl bg-red-500/[0.02] border border-red-500/5 animate-in-up"
-                  style="--delay: 0.3s"
-                >
-                  <div class="flex items-center gap-2 mb-2 opacity-50">
-                    <Icon
-                      name="lucide:shield-ban"
-                      size="12"
-                      class="text-red-400"
-                    />
-                    <span
-                      class="text-[9px] font-bold uppercase tracking-widest text-gray-300"
-                      >Negative</span
-                    >
-                  </div>
-                  <p
-                    class="text-[11px] text-red-200/50 font-mono leading-relaxed line-clamp-4"
+                <div class="space-y-4">
+                  <div
+                    class="p-5 rounded-2xl bg-white/[0.03] border border-white/5 animate-in-up"
+                    style="--delay: 0.2s"
                   >
-                    {{ modelValue.negative_prompt }}
-                  </p>
+                    <div class="flex items-center gap-2 mb-2 opacity-50">
+                      <Icon
+                        name="lucide:sparkles"
+                        size="12"
+                        class="text-blue-400"
+                      />
+                      <span
+                        class="text-[9px] font-bold uppercase tracking-widest text-gray-300"
+                        >Prompt</span
+                      >
+                    </div>
+                    <p
+                      class="text-[12px] text-gray-300 font-mono leading-relaxed break-words whitespace-pre-wrap"
+                    >
+                      {{ modelValue.prompt }}
+                    </p>
+                  </div>
+
+                  <div
+                    v-if="modelValue.negative_prompt"
+                    class="p-5 rounded-2xl bg-red-500/[0.02] border border-red-500/5 animate-in-up"
+                    style="--delay: 0.3s"
+                  >
+                    <div class="flex items-center gap-2 mb-2 opacity-50">
+                      <Icon
+                        name="lucide:shield-ban"
+                        size="12"
+                        class="text-red-400"
+                      />
+                      <span
+                        class="text-[9px] font-bold uppercase tracking-widest text-gray-300"
+                        >Negative</span
+                      >
+                    </div>
+                    <p
+                      class="text-[11px] text-red-200/50 font-mono leading-relaxed break-words whitespace-pre-wrap"
+                    >
+                      {{ modelValue.negative_prompt }}
+                    </p>
+                  </div>
+
+                  <div class="h-10"></div>
                 </div>
               </div>
             </div>
           </main>
 
           <div
-            class="absolute bottom-4 left-4 right-4 z-40 animate-in-up ui-element"
+            class="absolute bottom-4 left-4 right-4 z-40 animate-in-up ui-element pointer-events-none"
             style="--delay: 0.4s"
           >
             <div
-              class="max-w-xl mx-auto p-1.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/10 shadow-2xl flex items-center justify-between gap-2"
+              class="max-w-xl mx-auto p-1.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/10 shadow-2xl flex items-center justify-between gap-2 pointer-events-auto"
             >
               <button
                 @click="startDelete(modelValue.id)"
@@ -176,13 +178,13 @@ const startDelete = (id: string) => {
 </template>
 
 <style scoped>
-/* Copy y nguyên phần style của câu trả lời trước */
+/* Giữ nguyên toàn bộ style Animation cũ */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-.touch-none {
-  touch-action: none;
-}
+/* Bỏ touch-none ở container chính để cho phép scroll nội dung */
+/* .touch-none { touch-action: none; } -> XÓA DÒNG NÀY HOẶC CHỈ ÁP DỤNG CHO OVERLAY */
+
 .ios-modal-enter-active {
   transition: opacity 0.5s ease;
 }
@@ -198,6 +200,7 @@ const startDelete = (id: string) => {
   animation-delay: var(--delay);
   transform: translateY(30px);
 }
+
 .ios-modal-leave-active {
   transition: opacity 0.4s ease-out;
   transition-delay: 0.1s;
@@ -222,6 +225,7 @@ const startDelete = (id: string) => {
   border-radius: 48px;
   transition: all 0.4s ease;
 }
+
 @keyframes imageSettleIn {
   from {
     transform: scale(1.2);
