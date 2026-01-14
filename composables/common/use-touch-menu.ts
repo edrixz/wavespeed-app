@@ -1,4 +1,3 @@
-// composables/useTouchMenu.ts
 export const useTouchMenu = () => {
   const isHolding = ref(false);
   const anchorX = ref(0);
@@ -8,15 +7,12 @@ export const useTouchMenu = () => {
   const activeActionId = ref<string | null>(null);
   let holdTimer: any = null;
 
-  // CẤU HÌNH QUAN TRỌNG
-  const RADIUS = 80; // Bán kính vòng cung (nút gần nhau)
-  const HIT_DIST = 60; // Khoảng cách bắt dính (ngón tay cách nút < 60px là dính)
-  const ACTION_IDS = ["save", "preset", "cloud"];
+  // Cấu hình vật lý
+  const RADIUS = 80; // Bán kính vòng tròn menu
+  const HIT_DIST = 60; // Khoảng cách bắt dính ngón tay
 
   const onTouchStart = (e: TouchEvent, onConfirm: () => void) => {
-    // Chỉ xử lý 1 ngón tay
     if (e.touches.length > 1) return;
-
     const touch = e.touches[0];
     anchorX.value = currentX.value = touch.clientX;
     anchorY.value = currentY.value = touch.clientY;
@@ -28,13 +24,16 @@ export const useTouchMenu = () => {
     }, 450);
   };
 
-  const onTouchMove = (e: TouchEvent, startAngle: number) => {
+  // QUAN TRỌNG: Nhận thêm activeActionIds để biết đang có những nút nào
+  const onTouchMove = (
+    e: TouchEvent,
+    startAngle: number,
+    activeActionIds: string[]
+  ) => {
     if (!isHolding.value) {
-      // Nếu di chuyển trước khi giữ đủ lâu -> Hủy giữ
       clearTimeout(holdTimer);
       return;
     }
-    // CHẶN SCROLL TRÌNH DUYỆT
     if (e.cancelable) e.preventDefault();
 
     const touch = e.touches[0];
@@ -43,20 +42,24 @@ export const useTouchMenu = () => {
 
     // HIT-TESTING
     let foundId: string | null = null;
-    ACTION_IDS.forEach((id, index) => {
+
+    // Duyệt qua danh sách ID động được truyền vào
+    activeActionIds.forEach((id, index) => {
+      // Góc của nút thứ 'index'
       const angle = index * 60 + startAngle;
       const rad = (angle * Math.PI) / 180;
 
-      // Vị trí tâm của nút (khi chưa active)
+      // Tọa độ tâm của nút
       const btnX = anchorX.value + Math.cos(rad) * RADIUS;
       const btnY = anchorY.value + Math.sin(rad) * RADIUS;
 
-      // Tính khoảng cách
+      // Khoảng cách từ ngón tay đến nút
       const dist = Math.hypot(currentX.value - btnX, currentY.value - btnY);
 
       if (dist < HIT_DIST) foundId = id;
     });
 
+    // Feedback Rung khi đổi nút chọn
     if (activeActionId.value !== foundId) {
       activeActionId.value = foundId;
       if (foundId && window.navigator.vibrate) window.navigator.vibrate(10);
@@ -78,9 +81,7 @@ export const useTouchMenu = () => {
     isHolding,
     anchorX,
     anchorY,
-    currentX,
-    currentY,
-    activeActionId,
+    activeActionId, // ID của nút đang được chọn
     onTouchStart,
     onTouchMove,
     onTouchEnd,

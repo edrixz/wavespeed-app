@@ -1,18 +1,7 @@
 // stores/simplePresetStore.ts
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { Database } from "~/types";
-
-export interface SimplePreset {
-  id: string;
-  user_id: string;
-  title: string;
-  thumbnail: string | null;
-  prompt: string;
-  negative_prompt: string | null;
-  size: string | null;
-  created_at: string | null;
-}
+import type { Database, SimplePreset } from "~/types";
 
 export const useSimplePresetStore = defineStore("simplePreset", () => {
   const supabase = useSupabaseClient<Database>();

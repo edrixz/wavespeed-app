@@ -36,6 +36,50 @@ export const useGalleryStore = defineStore("session-gallery", () => {
       timestamp: Date.now() - 60000,
       isSaved: true,
     },
+    {
+      id: "img-3",
+      url: "https://placehold.co/300x400",
+      config: {
+        prompt: "A beautiful landscape",
+        negative_prompt: "",
+        size: "512x512",
+      },
+      timestamp: Date.now() - 60000,
+      isSaved: true,
+    },
+    {
+      id: "img-4",
+      url: "https://placehold.co/300x400",
+      config: {
+        prompt: "A beautiful landscape",
+        negative_prompt: "",
+        size: "512x512",
+      },
+      timestamp: Date.now() - 60000,
+      isSaved: true,
+    },
+    {
+      id: "img-5",
+      url: "https://placehold.co/300x400",
+      config: {
+        prompt: "A beautiful landscape",
+        negative_prompt: "",
+        size: "512x512",
+      },
+      timestamp: Date.now() - 60000,
+      isSaved: true,
+    },
+    {
+      id: "img-6",
+      url: "https://placehold.co/300x400",
+      config: {
+        prompt: "A beautiful landscape",
+        negative_prompt: "",
+        size: "512x512",
+      },
+      timestamp: Date.now() - 60000,
+      isSaved: true,
+    },
   ]);
 
   const addGeneratedItem = (url: string, config: any) => {

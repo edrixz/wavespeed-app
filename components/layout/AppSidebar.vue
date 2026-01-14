@@ -12,7 +12,7 @@ const menuItems = [
 
 <template>
   <aside
-    class="fixed inset-y-0 left-0 z-[60] w-72 bg-[#0d0d0d] border-r border-white/5 flex flex-col transition-transform duration-300 lg:static lg:translate-x-0"
+    class="fixed inset-y-0 left-0 z-[500] w-72 bg-[#0d0d0d] border-r border-white/5 flex flex-col transition-transform duration-300 lg:static lg:translate-x-0"
     :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
   >
     <div class="p-6 flex items-center justify-between">
