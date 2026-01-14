@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useWavespeedPayloadStore = defineStore("wavespeedPayload", () => {
-  const modelVersion = ref("v4");
+  const modelVersion = ref("v4.5");
   const width = ref(2752);
   const height = ref(4096);
   const prompt = ref(

@@ -5,6 +5,7 @@ import CommonMenuLongPressContext from "~/components/common/menu/LongPressContex
 
 definePageMeta({ layout: "default" });
 
+// --- 1. INIT STORES & REFS ---
 const galleryStore = useGalleryStore();
 const simpleStore = useSimplePresetStore();
 const toast = useToast();
@@ -13,35 +14,35 @@ const menuRef = ref<InstanceType<typeof CommonMenuLongPressContext> | null>(
   null
 );
 const activeTab = ref<"session" | "favorites" | "presets">("session");
+const isPrivacyMode = ref(true); // Trạng thái Privacy Mode
 
+// --- 2. CONFIG ---
 const tabs = [
   { id: "session", label: "Session", icon: "lucide:layers" },
   { id: "favorites", label: "Favorites", icon: "lucide:heart" },
   { id: "presets", label: "Presets", icon: "lucide:zap" },
 ] as const;
 
-// --- DEFINITION: Action ID Lists (KHỚP VỚI MENU COMPONENT) ---
-// Session: Save(0) -> Preset(1) -> Cloud(2)
+// Action IDs (Phải khớp thứ tự với Component Menu)
 const sessionActionIds = ["save", "preset", "cloud"];
-// Preset: Cloud(0) -> Delete(1)
 const presetActionIds = ["cloud", "delete"];
 
-// Computed: List ID hiện tại để truyền vào logic Touch
+// Computed: Chọn list ID dựa trên Tab hiện tại
 const currentActionIds = computed(() => {
   if (activeTab.value === "presets") return presetActionIds;
   return sessionActionIds;
 });
 
-// --- INTERFACE ---
+// --- 3. DATA ADAPTER ---
 interface GalleryViewItem extends SimplePreset {
   isFavorite: boolean;
   type: "session" | "preset";
   originalData: any;
 }
 
-// --- COMPUTED: Adapter ---
 const displayedItems = computed<GalleryViewItem[]>(() => {
   if (activeTab.value === "presets") {
+    // Mapping Presets
     return (simpleStore.presets || []).map((p: SimplePreset) => ({
       ...p,
       isFavorite: false,
@@ -49,6 +50,7 @@ const displayedItems = computed<GalleryViewItem[]>(() => {
       originalData: p,
     }));
   } else {
+    // Mapping Session Items
     let items = galleryStore.items;
     if (activeTab.value === "favorites") {
       items = items.filter((i: any) => i.isFavorite);
@@ -57,7 +59,7 @@ const displayedItems = computed<GalleryViewItem[]>(() => {
       id: i.id,
       user_id: "current_user",
       title: "Generated Image",
-      thumbnail: i.url, // Map URL
+      thumbnail: i.url, // Map URL sang thumbnail
       prompt: i.config?.prompt || "",
       negative_prompt: i.config?.negative_prompt || null,
       size: i.config?.size || null,
@@ -69,7 +71,7 @@ const displayedItems = computed<GalleryViewItem[]>(() => {
   }
 });
 
-// --- TOUCH LOGIC ---
+// --- 4. TOUCH LOGIC ---
 const {
   isHolding,
   anchorX,
@@ -83,10 +85,9 @@ const {
 const currentHoldingItem = ref<GalleryViewItem | null>(null);
 
 const handleTouchMove = (e: TouchEvent) => {
-  // 1. Lấy góc bắt đầu từ Visual
+  // Lấy góc bắt đầu từ Visual Component
   const angle = menuRef.value?.getStartAngle?.() ?? -150;
-
-  // 2. Truyền danh sách ID hiện tại vào Logic để Hit-test đúng
+  // Truyền danh sách ID động vào logic xử lý
   onTouchMove(e, angle, currentActionIds.value);
 };
 
@@ -123,6 +124,7 @@ const handleTouchEndAction = async () => {
       case "delete":
         if (viewItem.type === "preset") {
           await simpleStore.deletePreset(viewItem.id);
+          toast.success("Preset deleted");
         }
         break;
     }
@@ -141,12 +143,31 @@ const handleTouchEndAction = async () => {
             Your Creative Assets
           </p>
         </div>
-        <div class="px-3 py-1 bg-white/5 rounded-full border border-white/10">
-          <span class="text-[10px] font-bold text-blue-500"
-            >{{ displayedItems.length }} ITEMS</span
+
+        <div class="flex items-center gap-3">
+          <button
+            @click="isPrivacyMode = !isPrivacyMode"
+            class="w-8 h-8 rounded-full flex items-center justify-center border transition-all active:scale-90"
+            :class="
+              isPrivacyMode
+                ? 'bg-blue-500 border-blue-400 text-white'
+                : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
+            "
           >
+            <Icon
+              :name="isPrivacyMode ? 'lucide:eye-off' : 'lucide:eye'"
+              size="14"
+            />
+          </button>
+
+          <div class="px-3 py-1 bg-white/5 rounded-full border border-white/10">
+            <span class="text-[10px] font-bold text-blue-500">
+              {{ displayedItems.length }} ITEMS
+            </span>
+          </div>
         </div>
       </div>
+
       <div
         class="p-1 bg-white/5 rounded-2xl border border-white/5 flex relative"
       >
@@ -208,7 +229,12 @@ const handleTouchEndAction = async () => {
           <img
             v-if="item.thumbnail"
             :src="item.thumbnail"
-            class="w-full h-full object-cover pointer-events-none"
+            class="w-full h-full object-cover pointer-events-none transition-all duration-500"
+            :class="{
+              'blur-xl scale-110 opacity-50':
+                isPrivacyMode &&
+                !(isHolding && currentHoldingItem?.id === item.id),
+            }"
             loading="lazy"
           />
           <div
@@ -218,30 +244,51 @@ const handleTouchEndAction = async () => {
             <Icon name="lucide:image-off" size="24" class="text-white/20" />
           </div>
 
-          <div v-if="item.isFavorite" class="absolute top-4 right-4 z-20">
-            <div
-              class="w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 shadow-lg"
-            >
-              <Icon
-                name="lucide:heart"
-                size="14"
-                class="text-red-500 fill-red-500"
-              />
-            </div>
-          </div>
           <div
-            v-if="item.type === 'preset'"
-            class="absolute bottom-4 left-4 z-20"
+            v-if="
+              isPrivacyMode &&
+              !(isHolding && currentHoldingItem?.id === item.id)
+            "
+            class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none animate-fade-in"
+          >
+            <Icon name="lucide:lock" size="24" class="text-white/30" />
+          </div>
+
+          <template
+            v-if="
+              !isPrivacyMode ||
+              (isHolding && currentHoldingItem?.id === item.id)
+            "
           >
             <div
-              class="px-3 py-1 rounded-full bg-blue-600/80 backdrop-blur-md border border-white/10 shadow-lg"
+              v-if="item.isFavorite"
+              class="absolute top-4 right-4 z-20 animate-fade-in"
             >
-              <span
-                class="text-[8px] font-black text-white uppercase tracking-widest"
-                >PRESET</span
+              <div
+                class="w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 shadow-lg"
               >
+                <Icon
+                  name="lucide:heart"
+                  size="14"
+                  class="text-red-500 fill-red-500"
+                />
+              </div>
             </div>
-          </div>
+
+            <div
+              v-if="item.type === 'preset'"
+              class="absolute bottom-4 left-4 z-20 animate-fade-in"
+            >
+              <div
+                class="flex px-3 py-1 rounded-full bg-blue-600/80 backdrop-blur-md border border-white/10 shadow-lg"
+              >
+                <span
+                  class="text-[8px] font-black text-white uppercase tracking-widest"
+                  >PRESET</span
+                >
+              </div>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -258,6 +305,7 @@ const handleTouchEndAction = async () => {
 </template>
 
 <style scoped>
+/* Utility */
 .select-none {
   -webkit-user-select: none;
   user-select: none;
@@ -267,6 +315,8 @@ const handleTouchEndAction = async () => {
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* Stagger Animation */
 @keyframes fadeInUpStagger {
   from {
     opacity: 0;
@@ -282,6 +332,8 @@ const handleTouchEndAction = async () => {
   animation: fadeInUpStagger 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: calc(var(--i) * 0.05s);
 }
+
+/* Header Animation */
 .animate-fade-in-down {
   animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -293,6 +345,19 @@ const handleTouchEndAction = async () => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Fade In Utility */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 </style>
