@@ -4,3 +4,4 @@
 export * from "./use-logger";
 export * from "./use-toast";
 export * from "./use-file-upload";
+export * from "./use-touch-menu";

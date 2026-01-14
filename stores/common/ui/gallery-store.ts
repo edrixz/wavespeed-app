@@ -13,7 +13,30 @@ export const useGalleryStore = defineStore("session-gallery", () => {
       timestamp: number;
       isSaved: boolean; // Trạng thái đã lưu vào DB hay chưa
     }>
-  >([]);
+  >([
+    {
+      id: "img-1",
+      url: "https://placehold.co/300x400",
+      config: {
+        prompt: "A beautiful landscape",
+        negative_prompt: "",
+        size: "512x512",
+      },
+      timestamp: Date.now() - 60000,
+      isSaved: true,
+    },
+    {
+      id: "img-2",
+      url: "https://placehold.co/300x400",
+      config: {
+        prompt: "A beautiful landscape",
+        negative_prompt: "",
+        size: "512x512",
+      },
+      timestamp: Date.now() - 60000,
+      isSaved: true,
+    },
+  ]);
 
   const addGeneratedItem = (url: string, config: any) => {
     items.value.unshift({
