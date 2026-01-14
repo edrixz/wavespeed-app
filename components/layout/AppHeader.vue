@@ -4,7 +4,7 @@ defineEmits(["open-menu"]);
 
 <template>
   <header
-    class="h-16 lg:h-20 px-4 lg:px-8 border-b border-white/5 flex items-center justify-between bg-[#0a0a0a]/50 backdrop-blur-xl sticky top-0 z-40"
+    class="h-16 lg:h-20 px-4 lg:px-8 border-b border-white/5 flex items-center justify-between bg-[#0a0a0a]/50 backdrop-blur-xl sticky top-0 z-[1000]"
   >
     <div class="flex items-center gap-4">
       <button

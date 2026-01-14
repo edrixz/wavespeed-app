@@ -1,22 +1,16 @@
 <script setup lang="ts">
-import { ref, watch, computed, onUnmounted } from "vue";
+import { ref, watch, onUnmounted } from "vue";
 
 const props = defineProps<{
   image: string | null;
   loading: boolean;
 }>();
 
+const loggerStore = useLoggerStore();
+
 // --- LOGIC FAKE PROGRESS ---
 const progress = ref(0);
 let progressTimer: ReturnType<typeof setInterval> | null = null;
-
-const statusText = computed(() => {
-  if (progress.value < 20) return "Initializing AI Model...";
-  if (progress.value < 50) return "Analyzing Prompt & Style...";
-  if (progress.value < 85) return "Rendering Pixels...";
-  if (progress.value < 100) return "Finalizing Masterpiece...";
-  return "Generation Complete";
-});
 
 watch(
   () => props.loading,
@@ -131,7 +125,7 @@ onUnmounted(() => {
           <p
             class="text-blue-100 font-black uppercase tracking-[0.3em] text-xs mb-2"
           >
-            {{ statusText }}
+            {{ loggerStore.messages[0].message }}
           </p>
           <p
             class="text-[9px] text-gray-500 uppercase tracking-widest font-bold"

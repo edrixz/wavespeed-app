@@ -7,16 +7,34 @@ const props = defineProps<{
 }>();
 
 const actions = [
-  { id: "save", icon: "lucide:heart", label: "Save", color: "bg-red-500" },
-  { id: "preset", icon: "lucide:zap", label: "Preset", color: "bg-blue-600" },
+  {
+    id: "save",
+    icon: "lucide:heart",
+    label: "Add to Favorites",
+    color: "bg-red-500",
+    text: "text-red-400",
+  },
+  {
+    id: "preset",
+    icon: "lucide:zap",
+    label: "Save as Preset",
+    color: "bg-blue-600",
+    text: "text-blue-400",
+  },
   {
     id: "cloud",
     icon: "lucide:upload-cloud",
-    label: "Cloud",
+    label: "Upload to Cloud",
     color: "bg-white",
+    text: "text-white",
   },
 ];
 
+const activeAction = computed(() =>
+  actions.find((a) => a.id === props.activeId)
+);
+
+// Logic góc bung (Giữ nguyên)
 const getStartAngle = () => {
   if (typeof window === "undefined") return -150;
   if (props.anchorX < 100) return -90;
@@ -26,7 +44,7 @@ const getStartAngle = () => {
 
 defineExpose({ getStartAngle });
 
-// Tách biệt logic tính toán
+// Logic Layout nút (Giữ nguyên)
 const getButtonLayout = (index: number) => {
   if (!props.show)
     return {
@@ -40,13 +58,10 @@ const getButtonLayout = (index: number) => {
   const angle = index * 60 + getStartAngle();
   const rad = (angle * Math.PI) / 180;
 
-  // 1. Tọa độ Gốc (Cho Wrapper) - Cố định ở 80px
   const baseTx = Math.cos(rad) * 80;
   const baseTy = Math.sin(rad) * 80;
-
-  // 2. Vector Đẩy (Cho Inner Button) - Đẩy thêm 20px theo cùng hướng
-  const pushTx = Math.cos(rad) * 20;
-  const pushTy = Math.sin(rad) * 20;
+  const pushTx = Math.cos(rad) * 25;
+  const pushTy = Math.sin(rad) * 25;
 
   return {
     "--base-tx": `${baseTx}px`,
@@ -64,9 +79,48 @@ const getButtonLayout = (index: number) => {
       <Transition name="fade">
         <div
           v-if="show"
-          class="fixed inset-0 z-[1000] bg-black/40 backdrop-blur-md pointer-events-none"
+          class="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-xl pointer-events-none"
         ></div>
       </Transition>
+    </Teleport>
+
+    <Teleport to="body">
+      <div v-if="show" class="fixed inset-0 z-[3000] pointer-events-none">
+        <div
+          class="absolute top-0 left-0 p-6 pt-12 flex flex-col items-start gap-2 max-w-[80%]"
+        >
+          <Transition name="slide-down" mode="out-in">
+            <div
+              v-if="activeAction"
+              :key="activeAction.id"
+              class="flex flex-col gap-1"
+            >
+              <span
+                class="text-[10px] font-mono text-gray-400 uppercase tracking-widest pl-1"
+                >Selected Action</span
+              >
+              <h2
+                class="text-3xl font-black uppercase tracking-tighter leading-none drop-shadow-2xl"
+                :class="activeAction.text"
+              >
+                {{ activeAction.label }}
+              </h2>
+            </div>
+
+            <div v-else class="flex flex-col gap-1 opacity-40">
+              <span
+                class="text-[10px] font-mono text-white uppercase tracking-widest pl-1"
+                >Menu Active</span
+              >
+              <h2
+                class="text-3xl font-black uppercase tracking-tighter text-white leading-none"
+              >
+                Select Option
+              </h2>
+            </div>
+          </Transition>
+        </div>
+      </div>
     </Teleport>
 
     <Teleport to="body">
@@ -79,7 +133,7 @@ const getButtonLayout = (index: number) => {
           :style="{ left: `${anchorX}px`, top: `${anchorY}px` }"
         >
           <div
-            class="w-16 h-16 -ml-8 -mt-8 rounded-full border border-white/20 bg-white/5 animate-ping opacity-30"
+            class="w-24 h-24 -ml-12 -mt-12 rounded-full border border-white/10 bg-white/5 animate-ping opacity-20"
           ></div>
 
           <div
@@ -102,15 +156,6 @@ const getButtonLayout = (index: number) => {
                   action.color === 'bg-white' ? 'text-black' : 'text-white'
                 "
               />
-
-              <Transition name="pop">
-                <div
-                  v-if="activeId === action.id"
-                  class="absolute -top-12 bg-white text-black text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-xl whitespace-nowrap"
-                >
-                  {{ action.label }}
-                </div>
-              </Transition>
             </div>
           </div>
         </div>
@@ -120,13 +165,12 @@ const getButtonLayout = (index: number) => {
 </template>
 
 <style scoped>
-/* 1. LỚP VỎ: Chỉ xử lý việc bay từ tâm ra vị trí gốc (80px) */
+/* Animation Nút (Giữ nguyên) */
 .button-wrapper {
   animation: entrance-burst 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)
     var(--delay) forwards;
   will-change: transform;
 }
-
 @keyframes entrance-burst {
   from {
     transform: translate(0, 0) scale(0);
@@ -137,37 +181,40 @@ const getButtonLayout = (index: number) => {
     opacity: 1;
   }
 }
-
-/* 2. LỚP LÕI: Xử lý hiệu ứng nảy khi tương tác */
 .inner-button {
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 0.2s ease;
-  transform: translate(0, 0) scale(1); /* Mặc định */
+  transform: translate(0, 0) scale(1);
   will-change: transform;
 }
-
-/* Khi Active: Đẩy thêm vector push và phóng to */
 .is-active {
   z-index: 2100;
-  /* Đây là mấu chốt: Di chuyển thêm một đoạn push-tx/ty từ vị trí gốc */
-  transform: translate(var(--push-tx), var(--push-ty)) scale(1.2);
-
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.4), 0 15px 35px rgba(0, 0, 0, 0.6);
+  transform: translate(var(--push-tx), var(--push-ty)) scale(1.35);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.3), 0 20px 50px rgba(0, 0, 0, 0.7);
   border: 2px solid white;
 }
 
-/* Transition phụ */
-.fade-enter-active {
+/* Fade Blur Background */
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.3s ease;
 }
-.fade-enter-from {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
-.pop-enter-active {
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+/* SLIDE DOWN ANIMATION CHO LABEL (Hiệu ứng rơi từ trên xuống) */
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.pop-enter-from {
+.slide-down-enter-from {
   opacity: 0;
-  transform: translateY(10px) scale(0.5);
-}
+  transform: translateY(-20px);
+} /* Bay từ trên xuống */
+.slide-down-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+} /* Bay xuống dưới khi mất */
 </style>
