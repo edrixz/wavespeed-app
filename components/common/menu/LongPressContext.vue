@@ -6,8 +6,6 @@ const props = defineProps<{
   activeId: string | null;
 }>();
 
-const emit = defineEmits(["update:activeId"]);
-
 const actions = [
   { id: "save", icon: "lucide:heart", label: "Save", color: "bg-red-500" },
   { id: "preset", icon: "lucide:zap", label: "Preset", color: "bg-blue-600" },
@@ -28,15 +26,33 @@ const getStartAngle = () => {
 
 defineExpose({ getStartAngle });
 
-const getButtonStyle = (index: number) => {
+// Tách biệt logic tính toán
+const getButtonLayout = (index: number) => {
+  if (!props.show)
+    return {
+      "--base-tx": "0px",
+      "--base-ty": "0px",
+      "--push-tx": "0px",
+      "--push-ty": "0px",
+      "--delay": "0s",
+    };
+
   const angle = index * 60 + getStartAngle();
   const rad = (angle * Math.PI) / 180;
-  const tx = Math.cos(rad) * 110;
-  const ty = Math.sin(rad) * 110;
+
+  // 1. Tọa độ Gốc (Cho Wrapper) - Cố định ở 80px
+  const baseTx = Math.cos(rad) * 80;
+  const baseTy = Math.sin(rad) * 80;
+
+  // 2. Vector Đẩy (Cho Inner Button) - Đẩy thêm 20px theo cùng hướng
+  const pushTx = Math.cos(rad) * 20;
+  const pushTy = Math.sin(rad) * 20;
 
   return {
-    "--tx": `${tx}px`,
-    "--ty": `${ty}px`,
+    "--base-tx": `${baseTx}px`,
+    "--base-ty": `${baseTy}px`,
+    "--push-tx": `${pushTx}px`,
+    "--push-ty": `${pushTy}px`,
     "--delay": `${index * 0.05}s`,
   };
 };
@@ -63,29 +79,39 @@ const getButtonStyle = (index: number) => {
           :style="{ left: `${anchorX}px`, top: `${anchorY}px` }"
         >
           <div
+            class="w-16 h-16 -ml-8 -mt-8 rounded-full border border-white/20 bg-white/5 animate-ping opacity-30"
+          ></div>
+
+          <div
             v-for="(action, index) in actions"
             :key="action.id"
-            class="action-button absolute w-14 h-14 -ml-7 -mt-7 rounded-full flex items-center justify-center shadow-2xl"
-            :class="[
-              action.color,
-              activeId === action.id ? 'active-btn z-[2100]' : 'opacity-90',
-            ]"
-            :style="getButtonStyle(index)"
+            class="button-wrapper absolute w-14 h-14 -ml-7 -mt-7 flex items-center justify-center"
+            :style="getButtonLayout(index)"
           >
-            <Icon
-              :name="action.icon"
-              :size="22"
-              :class="action.color === 'bg-white' ? 'text-black' : 'text-white'"
-            />
+            <div
+              class="inner-button w-full h-full rounded-full flex items-center justify-center shadow-2xl"
+              :class="[
+                action.color,
+                activeId === action.id ? 'is-active' : 'opacity-90',
+              ]"
+            >
+              <Icon
+                :name="action.icon"
+                :size="22"
+                :class="
+                  action.color === 'bg-white' ? 'text-black' : 'text-white'
+                "
+              />
 
-            <Transition name="pop">
-              <div
-                v-if="activeId === action.id"
-                class="absolute -top-12 bg-white text-black text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-xl"
-              >
-                {{ action.label }}
-              </div>
-            </Transition>
+              <Transition name="pop">
+                <div
+                  v-if="activeId === action.id"
+                  class="absolute -top-12 bg-white text-black text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-xl whitespace-nowrap"
+                >
+                  {{ action.label }}
+                </div>
+              </Transition>
+            </div>
           </div>
         </div>
       </div>
@@ -94,33 +120,45 @@ const getButtonStyle = (index: number) => {
 </template>
 
 <style scoped>
-/* Hiệu ứng nổ từ tâm quan trọng nhất */
-.action-button {
-  animation: burst 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) var(--delay)
-    forwards;
-  will-change: transform, opacity;
+/* 1. LỚP VỎ: Chỉ xử lý việc bay từ tâm ra vị trí gốc (80px) */
+.button-wrapper {
+  animation: entrance-burst 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+    var(--delay) forwards;
+  will-change: transform;
 }
 
-@keyframes burst {
+@keyframes entrance-burst {
   from {
     transform: translate(0, 0) scale(0);
     opacity: 0;
   }
   to {
-    transform: translate(var(--tx), var(--ty)) scale(1);
+    transform: translate(var(--base-tx), var(--base-ty)) scale(1);
     opacity: 1;
   }
 }
 
-.active-btn {
-  transform: translate(var(--tx), var(--ty)) scale(1.4) !important;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3), 0 10px 20px rgba(0, 0, 0, 0.5);
-  border: 4px solid white;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+/* 2. LỚP LÕI: Xử lý hiệu ứng nảy khi tương tác */
+.inner-button {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.2s ease;
+  transform: translate(0, 0) scale(1); /* Mặc định */
+  will-change: transform;
 }
 
+/* Khi Active: Đẩy thêm vector push và phóng to */
+.is-active {
+  z-index: 2100;
+  /* Đây là mấu chốt: Di chuyển thêm một đoạn push-tx/ty từ vị trí gốc */
+  transform: translate(var(--push-tx), var(--push-ty)) scale(1.2);
+
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.4), 0 15px 35px rgba(0, 0, 0, 0.6);
+  border: 2px solid white;
+}
+
+/* Transition phụ */
 .fade-enter-active {
-  transition: opacity 0.4s ease;
+  transition: opacity 0.3s ease;
 }
 .fade-enter-from {
   opacity: 0;
