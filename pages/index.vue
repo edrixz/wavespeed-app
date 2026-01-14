@@ -4,6 +4,8 @@ definePageMeta({ layout: "default" });
 const { isCanNotGenerate, isProcessing, resultImage, handleGenerate } =
   useWavespeedApiGenerate();
 
+const { isVersionV45, toggleVersionMode } = useSettingsForm();
+
 const canGenerate = computed(
   () => !isProcessing.value && !isCanNotGenerate.value
 );
@@ -19,12 +21,21 @@ const canGenerate = computed(
 
     <div class="lg:col-span-4 order-1 lg:order-1">
       <div
-        class="bg-[#0d0d0d] p-6 rounded-[2.5rem] border border-white/5 space-y-8 lg:sticky lg:top-8"
+        class="bg-[#0d0d0d] p-2 rounded-[1rem] border border-white/5 space-y-8 lg:sticky lg:top-8"
       >
         <div>
-          <h2 class="text-xl font-black text-white uppercase tracking-tight">
-            AI Dreamer
-          </h2>
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-black text-white uppercase tracking-tight">
+              AI Dreamer
+            </h2>
+            <PartsButtonSwitch
+              @toggle="toggleVersionMode"
+              :is-enable="isVersionV45"
+            >
+              <template #opt1>v4</template>
+              <template #opt2>v4.5</template>
+            </PartsButtonSwitch>
+          </div>
           <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">
             Configure generation parameters
           </p>

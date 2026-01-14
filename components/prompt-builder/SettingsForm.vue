@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const {
   isBuilderMode,
-  isVersionV45,
   prompt,
   negative_prompt,
   width,
@@ -11,7 +10,6 @@ const {
   enableSyncMode,
   resetToDefault,
   toggleBuilderMode,
-  toggleVersionMode,
 } = useSettingsForm();
 
 // Trạng thái để kích hoạt hiệu ứng Reset]
@@ -35,16 +33,6 @@ const handleReset = () => {
       <PartsButtonSwitch @toggle="toggleBuilderMode" :is-enable="isBuilderMode"
         ><template #opt1>Simple</template>
         <template #opt2>Builder</template>
-      </PartsButtonSwitch>
-    </div>
-
-    <div class="flex justify-between items-center mb-2">
-      <label class="text-sm font-medium text-gray-300"
-        >Version {{ isVersionV45 ? "v4.5" : "v4" }}</label
-      >
-      <PartsButtonSwitch @toggle="toggleVersionMode" :is-enable="isVersionV45">
-        <template #opt1>v4</template>
-        <template #opt2>v4.5</template>
       </PartsButtonSwitch>
     </div>
 
