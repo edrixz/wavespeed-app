@@ -18,13 +18,6 @@ export const useSettingsForm = () => {
     enableBase64Output,
   } = storeToRefs(payloadStore);
 
-  const isBuilderMode = ref(false);
-
-  // --- LOGIC: Toggle Mode ---
-  const toggleBuilderMode = () => {
-    isBuilderMode.value = !isBuilderMode.value;
-  };
-
   const isVersionV45 = computed(() => modelVersion.value === "v4.5");
   const toggleVersionMode = () => {
     modelVersion.value = modelVersion.value === "v4" ? "v4.5" : "v4";
@@ -57,7 +50,6 @@ export const useSettingsForm = () => {
 
   return {
     // State
-    isBuilderMode,
     isVersionV45,
     width,
     height,
@@ -69,7 +61,6 @@ export const useSettingsForm = () => {
 
     // Computed & Methods
     resetToDefault,
-    toggleBuilderMode,
     toggleVersionMode,
     applySimplePreset,
   };

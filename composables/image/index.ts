@@ -5,4 +5,3 @@ export * from "./use-image-add";
 export * from "./use-image-remove";
 export * from "./use-image-replace";
 export * from "./use-image-uploader";
-export * from "./use-image-analyzer";

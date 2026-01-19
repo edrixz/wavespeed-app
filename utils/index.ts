@@ -7,5 +7,3 @@
 
 // Re-export all subdirectories
 export * from "./helpers";
-export * from "./prompt";
-export * from "./api";

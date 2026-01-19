@@ -10,11 +10,3 @@ export type Toast = {
   type: ToastType;
   duration?: number;
 };
-
-export type LogLevel = "info" | "success" | "warning" | "error" | "loading";
-
-export type LogEntry = {
-  timestamp: number;
-  level: LogLevel;
-  message: string;
-};
