@@ -12,8 +12,5 @@ export * from "./common";
 // Image composables
 export * from "./image";
 
-// Prompt builder composables
-export * from "./prompt-builder";
-
 // WaveSpeed API composables
 export * from "./wavespeed";

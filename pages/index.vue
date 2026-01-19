@@ -7,7 +7,7 @@ const { isCanNotGenerate, isProcessing, resultImage, handleGenerate } =
 const { isVersionV45, toggleVersionMode } = useSettingsForm();
 
 const canGenerate = computed(
-  () => !isProcessing.value && !isCanNotGenerate.value
+  () => !isProcessing.value && !isCanNotGenerate.value,
 );
 </script>
 
@@ -42,7 +42,8 @@ const canGenerate = computed(
         </div>
 
         <ImageUploader />
-        <PromptBuilderSettingsForm />
+
+        <FeaturesWavespeedSettingForm />
 
         <div class="hidden lg:block">
           <PartsButtonPrimary

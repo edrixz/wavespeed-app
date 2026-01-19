@@ -2,6 +2,7 @@ import { useLogger } from "~/composables/common";
 
 export const useResponseHandler = () => {
   const { setStatus } = useLogger();
+  const toastStore = useToastStore();
 
   const handleError = (error: any): string => {
     const errorMsg =
@@ -12,6 +13,7 @@ export const useResponseHandler = () => {
       "Unknown error";
 
     setStatus(`Error: ${errorMsg}`, "error");
+    toastStore.addToast(`${errorMsg}`, "error");
     return errorMsg;
   };
 
