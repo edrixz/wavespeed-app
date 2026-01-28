@@ -10,6 +10,10 @@ const {
   resetToDefault,
 } = useSettingsForm();
 
+// --- NEW: Import Logic Gemini Vision ---
+import { useGeminiVision } from "~/composables/gemini/use-gemini-vision";
+const { analyzeCurrentImages, isAnalyzing, canAnalyze } = useGeminiVision();
+
 // Trạng thái để kích hoạt hiệu ứng Reset]
 const isResetting = ref(false);
 
@@ -36,13 +40,45 @@ const handleReset = () => {
             Prompt
           </span>
         </div>
-        <button
-          @click="handleReset"
-          :disabled="isResetting"
-          class="text-[8px] text-gray-600 hover:text-blue-400 italic uppercase font-bold transition-all active:scale-95 disabled:opacity-30"
-        >
-          [ Reset System ]
-        </button>
+
+        <div class="flex items-center gap-3">
+          <button
+            @click="analyzeCurrentImages"
+            :disabled="!canAnalyze"
+            class="group flex items-center gap-1.5 px-2 py-1 rounded-md transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
+            :class="
+              isAnalyzing
+                ? 'bg-purple-500/10 text-purple-400'
+                : 'hover:bg-purple-500/10 text-gray-500 hover:text-purple-400'
+            "
+          >
+            <div class="relative w-3 h-3 flex items-center justify-center">
+              <PartsIconsLoading
+                v-if="isAnalyzing"
+                class="w-3 h-3 animate-spin text-purple-500"
+              />
+              <span
+                v-else
+                class="text-xs transition-transform group-hover:rotate-12 group-hover:scale-110"
+                >✨</span
+              >
+            </div>
+
+            <span class="text-[8px] font-black uppercase tracking-widest">
+              {{ isAnalyzing ? "ANALYZING..." : "MAGIC FILL" }}
+            </span>
+          </button>
+
+          <div class="h-3 w-px bg-white/10"></div>
+
+          <button
+            @click="handleReset"
+            :disabled="isResetting"
+            class="text-[8px] text-gray-600 hover:text-red-400 italic uppercase font-bold transition-all active:scale-95 disabled:opacity-30"
+          >
+            [ Reset ]
+          </button>
+        </div>
       </div>
 
       <div class="relative group overflow-hidden rounded-xl">
@@ -50,8 +86,24 @@ const handleReset = () => {
           v-model="prompt"
           rows="14"
           class="w-full bg-blue-600/[0.03] border border-blue-600/20 rounded-xl p-4 text-[10px] text-blue-200/60 font-mono italic leading-relaxed outline-none focus:border-blue-600/40 focus:bg-blue-600/[0.06] transition-all resize-none no-scrollbar"
-          placeholder="Describe your vision..."
+          :placeholder="
+            isAnalyzing
+              ? 'AI đang quan sát ảnh của bạn...'
+              : 'Describe your vision...'
+          "
+          :disabled="isAnalyzing"
         />
+
+        <div
+          v-if="isAnalyzing"
+          class="absolute inset-0 z-20 bg-black/10 backdrop-blur-[1px] flex items-center justify-center"
+        >
+          <div class="flex flex-col items-center gap-2">
+            <span class="text-purple-400 text-xs animate-pulse"
+              >✨ Gemini Vision...</span
+            >
+          </div>
+        </div>
 
         <div
           v-if="isResetting"
@@ -77,18 +129,17 @@ const handleReset = () => {
           :disabled="isResetting"
           class="text-[8px] text-gray-600 hover:text-red-500 italic uppercase font-bold transition-all active:scale-95"
         >
-          [ Clear All ]
+          [ Clear ]
         </button>
       </div>
 
       <div class="relative group overflow-hidden rounded-xl">
         <textarea
           v-model="negative_prompt"
-          rows="14"
+          rows="6"
           class="w-full bg-red-500/[0.03] border border-red-500/20 rounded-xl p-4 text-[10px] text-red-200/60 font-mono italic leading-relaxed outline-none focus:border-red-500/40 focus:bg-red-500/[0.06] transition-all resize-none no-scrollbar"
           placeholder="Avoid these elements..."
         />
-
         <div
           v-if="isResetting"
           class="absolute inset-0 pointer-events-none z-10"

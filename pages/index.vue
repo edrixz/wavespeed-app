@@ -15,6 +15,8 @@ const canGenerate = computed(
   <div
     class="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-10 pb-28 lg:pb-0"
   >
+    <FeaturesGeminiMagicFillDialog />
+
     <div class="lg:col-span-8 order-2 lg:order-2">
       <ResultDisplay :image="resultImage" :loading="isProcessing" />
     </div>

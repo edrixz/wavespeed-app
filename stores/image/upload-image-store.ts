@@ -1,61 +1,39 @@
-// stores/presetStore.ts
+// FILE: stores/image/upload-image-store.ts
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
+export interface UploadedImage {
+  id: string;
+  url: string;
+  file: File;
+}
+
 export const useUploadImageStore = defineStore("uploadImage", () => {
-  // --- STATE ---
-  const selectedFile = ref<File | null>(null);
-  const uploadProgress = ref(0);
-  const isCropping = ref(false);
-  const cropperRef = ref();
+  const images = ref<UploadedImage[]>([]);
 
-  // TẠO PREVIEW CỤC BỘ
-  const localPreviewUrl = computed(() => {
-    if (!selectedFile.value) return "";
-    return URL.createObjectURL(selectedFile.value);
-  });
-
-  const initState = () => {
-    selectedFile.value = null;
-    uploadProgress.value = 0;
-    isCropping.value = false;
-    cropperRef.value = undefined;
+  // Function set nhiều ảnh
+  const setImages = (files: File[]) => {
+    images.value.forEach((img) => URL.revokeObjectURL(img.url));
+    images.value = files.map((file) => ({
+      id: `img-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      url: URL.createObjectURL(file),
+      file: file,
+    }));
   };
 
-  // LOGIC PROGRESS SIÊU MƯỢT (Ease-out)
-  const startFakeProgress = () => {
-    uploadProgress.value = 0;
-    const timer = setInterval(() => {
-      if (uploadProgress.value < 90) {
-        // Chạy nhanh lúc đầu, chậm dần về sau để tạo cảm giác xử lý sâu
-        uploadProgress.value += (92 - uploadProgress.value) * 0.05;
-      }
-    }, 100);
-    return timer;
+  // Function thêm 1 ảnh
+  const addImage = (file: File) => {
+    images.value.push({
+      id: `img-${Date.now()}-${Math.random()}`,
+      url: URL.createObjectURL(file),
+      file: file,
+    });
   };
 
-  // CHỨC NĂNG CẮT ẢNH
-  const applyCrop = () => {
-    const { canvas } = cropperRef.value.getResult();
-    canvas.toBlob((blob: Blob) => {
-      if (blob) {
-        selectedFile.value = new File([blob], "cropped_image.jpg", {
-          type: "image/jpeg",
-        });
-      }
-      isCropping.value = false;
-    }, "image/jpeg");
+  const clearImages = () => {
+    images.value.forEach((img) => URL.revokeObjectURL(img.url));
+    images.value = [];
   };
 
-  // Trả ra các biến/hàm cần dùng
-  return {
-    selectedFile,
-    uploadProgress,
-    isCropping,
-    cropperRef,
-    localPreviewUrl,
-    initState,
-    startFakeProgress,
-    applyCrop,
-  };
+  return { images, setImages, addImage, clearImages };
 });
