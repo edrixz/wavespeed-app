@@ -1,6 +1,3 @@
-import { storeToRefs } from "pinia";
-import { useWavespeedPayloadStore } from "~/stores";
-
 // server/api/generate.post.ts
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -39,7 +36,7 @@ export default defineEventHandler(async (event) => {
     // --- QUAN TRỌNG: Log chi tiết lỗi ra Terminal để debug ---
     console.error(
       "❌ WAVESPEED API ERROR:",
-      JSON.stringify(error.data, null, 2)
+      JSON.stringify(error.data, null, 2),
     );
 
     // Trả lỗi chi tiết về Client thay vì lỗi chung chung

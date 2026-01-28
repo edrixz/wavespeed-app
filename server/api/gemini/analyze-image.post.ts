@@ -1,4 +1,3 @@
-// FILE: server/api/gemini/analyze-image.post.ts
 import { GoogleGenAI } from "@google/genai";
 import { analysisSchema } from "~/consts/gemini/schema";
 
@@ -11,36 +10,32 @@ export default defineEventHandler(async (event) => {
   }
 
   const config = useRuntimeConfig();
+  if (!config.geminiApiKey) {
+    throw createError({ statusCode: 500, message: "Gemini API Key missing" });
+  }
 
-  // Khởi tạo SDK @google/genai
   const ai = new GoogleGenAI({ apiKey: config.geminiApiKey });
+  const modelName =
+    mode === "pro" ? "gemini-2.5-flash" : "gemini-2.5-flash-lite";
 
-  // Mapping model name chuẩn của SDK mới
-  // Lưu ý: mode 'pro' sẽ dùng flash (mạnh hơn flash-lite) hoặc pro nếu bạn có quyền
-  const modelName = mode === "pro" ? "gemini-1.5-flash" : "gemini-1.5-flash-8b";
-
-  // SYSTEM PROMPT CỦA BẠN (High-End Reverse Engineering)
+  // --- NÂNG CẤP SYSTEM PROMPT ---
   const systemPrompt = `
-    SYSTEM ROLE: You are a High-End Image Reverse-Engineering Expert. Your goal is to deconstruct images into hyper-detailed technical metadata for 99% visual reconstruction.
-
-    CORE INSTRUCTIONS:
-    1. QUANTITATIVE DATA: Use numbers and technical units (e.g., "35mm focal length," "85% opacity").
-    2. PHOTOREALISM TERMINOLOGY: Use terms like "Subsurface scattering," "Ray-traced reflections," "Chiaroscuro."
-    3. MATERIAL PHYSICS: Describe light interaction—sheen, matte finish, fabric tension.
-    4. MICRO-DETAILS: Identify pores, weave patterns, skin indentation.
-    5. STRICT EMPTY RULE: If a detail is invisible, return empty strings.
-
-    BILINGUAL STRUCTURAL MIRRORING (CRITICAL):
-    - "label_vi" MUST mirror the exact structure of "value". 
-    - Use commas to separate ideas.
-    - Example:
-      "value": "Slender build, defined skeletal frame",
-      "label_vi": "Vóc dáng mảnh mai, khung xương rõ nét"
-
-    OUTPUT: Return ONLY a valid JSON object following the schema categories (subject, clothing, pose, etc.).
+    ROLE: You are a World-Class Director of Photography and AI Prompt Engineer.
+    OBJECTIVE: Reverse-engineer the provided image into a hyper-detailed text prompt for Stable Diffusion/Midjourney.
+    
+    INSTRUCTIONS:
+    1. ANALYZE DEEPLY: Don't just say "a girl". Describe "a young woman with porcelain skin, sharp jawline, high cheekbones".
+    2. LIGHTING & ATMOSPHERE: Identify specific lighting (volumetric, rim light, chiaroscuro, cinematic, softbox) and mood.
+    3. MATERIALITY: Describe textures vividly (silk, matte leather, rusted metal, subsurface scattering on skin).
+    4. CAMERA INFO: Estimate focal length (e.g., 85mm portrait), depth of field (bokeh), and angle.
+    
+    STRICT JSON OUTPUT RULES:
+    - You must fill the JSON schema exactly.
+    - "value": The high-quality English prompt segment.
+    - "label_vi": A professional Vietnamese translation of the "value".
+    - Do not include markdown code blocks. Just the raw JSON object.
   `;
 
-  // Hàm xử lý từng ảnh
   const analyzeSingleImage = async (base64Str: string) => {
     try {
       const cleanBase64 = base64Str.replace(/^data:image\/\w+;base64,/, "");
@@ -63,30 +58,29 @@ export default defineEventHandler(async (event) => {
         ],
         config: {
           responseMimeType: "application/json",
-          responseSchema: analysisSchema, // Ép kiểu trả về theo Schema đã định nghĩa
+          responseSchema: analysisSchema,
         },
       });
 
-      // SDK mới trả về text trực tiếp hoặc qua method text()
       const jsonText = result.text;
       if (!jsonText) return null;
       return JSON.parse(jsonText);
-    } catch (err) {
-      console.error("Gemini Single Image Error:", err);
-      return null; // Bỏ qua ảnh lỗi, không làm chết cả process
+    } catch (err: any) {
+      console.error(`Gemini Error (${modelName}):`, err.message);
+      return null;
     }
   };
 
   try {
-    // Chạy song song để tối ưu tốc độ
     const results = await Promise.all(
       images.map((img: string) => analyzeSingleImage(img)),
     );
+    const validResults = results.filter((r) => r !== null);
 
-    // Lọc bỏ các kết quả null (nếu có ảnh lỗi)
-    return results.filter((r) => r !== null);
+    if (validResults.length === 0) throw new Error("Analysis failed");
+
+    return validResults;
   } catch (error: any) {
-    console.error("Gemini Batch Error:", error);
     throw createError({
       statusCode: 500,
       message: error.message || "Gemini API Error",
