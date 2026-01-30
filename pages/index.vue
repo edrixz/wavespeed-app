@@ -42,7 +42,7 @@ const canGenerate = computed(
         </div>
 
         <ImageUploader />
-        <ImageMoondreamAnalyzer />
+        <!-- <ImageMoondreamAnalyzer /> -->
         <PromptBuilderSettingsForm />
 
         <div class="hidden lg:block">
