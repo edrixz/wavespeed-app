@@ -128,7 +128,7 @@ const handleCopy = async () => {
     </button>
 
     <Transition name="fade">
-      <div v-if="result" class="result-box relative group/preview">
+      <div class="result-box relative group/preview">
         <div class="flex items-center justify-between mb-1 px-1">
           <span
             class="text-[9px] font-bold text-green-400 uppercase tracking-widest"

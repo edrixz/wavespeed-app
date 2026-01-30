@@ -8,4 +8,5 @@ export interface MoondreamRequestBody {
 
 export interface MoondreamResponse {
   answer: string;
+  reasoning?: any;
 }
