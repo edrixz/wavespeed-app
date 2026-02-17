@@ -87,7 +87,7 @@ const formatTime = (ts: number) => {
     <Transition name="slide-fade">
       <div
         v-if="isOpen"
-        class="fixed inset-x-4 top-20 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-3 w-auto sm:w-80 bg-[#111111] border border-white/5 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-[100] overflow-hidden backdrop-blur-2xl"
+        class="fixed inset-x-4 top-[4rem] sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-3 w-auto sm:w-80 bg-[#111111] border border-white/5 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-[100] overflow-hidden backdrop-blur-2xl"
       >
         <div
           class="p-5 border-b border-white/5 flex justify-between items-center bg-white/[0.02]"

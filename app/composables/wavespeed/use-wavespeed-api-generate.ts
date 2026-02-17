@@ -9,7 +9,7 @@ export const useWavespeedApiGenerate = () => {
   const imageStore = useImageStore();
   const { images } = storeToRefs(imageStore);
 
-  const payloadStore = useWavespeedPayloadStore();
+  const payloadStore = useSeedreamPayloadStore();
   const { prompt } = storeToRefs(payloadStore);
 
   const isProcessing = ref(false);
@@ -63,7 +63,9 @@ export const useWavespeedApiGenerate = () => {
     }
   };
 
-  const isCanNotGenerate = computed(() => prompt.value === "");
+  const canNotGenerate = computed(
+    () => prompt.value === "" || isProcessing.value,
+  );
 
-  return { isProcessing, resultImage, isCanNotGenerate, handleGenerate };
+  return { isProcessing, resultImage, canNotGenerate, handleGenerate };
 };

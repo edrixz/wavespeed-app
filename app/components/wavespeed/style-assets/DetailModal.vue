@@ -2,7 +2,7 @@
 const props = defineProps<{ modelValue: any }>();
 const emit = defineEmits(["update:modelValue"]);
 
-const store = useSimplePresetStore();
+const store = useStyleAssetsStore();
 const countdown = ref(0);
 const timer = ref<any>(null);
 
@@ -11,17 +11,17 @@ watch(
   () => {
     clearInterval(timer.value);
     countdown.value = 0;
-  }
+  },
 );
 
 const handleApply = (item: any) => {
-  store.applyPreset(item);
+  store.applyStyleAsset(item);
   emit("update:modelValue", null);
 };
 
 const startDelete = (id: string) => {
   if (countdown.value > 0) {
-    store.deletePreset(id);
+    store.deleteStyleAsset(id);
     emit("update:modelValue", null);
   } else {
     countdown.value = 5;
@@ -212,7 +212,9 @@ const startDelete = (id: string) => {
   animation: none !important;
   transform: scale(1.3) !important;
   filter: blur(10px) brightness(0.5) !important;
-  transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1), filter 0.4s ease !important;
+  transition:
+    transform 0.4s cubic-bezier(0.33, 1, 0.68, 1),
+    filter 0.4s ease !important;
 }
 .ios-modal-leave-active .ui-element {
   animation: none !important;

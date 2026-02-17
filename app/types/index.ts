@@ -13,3 +13,4 @@ export * from "./database";
 
 // Deprecated paths - maintained for backward compatibility during transition
 export * from "./prompt";
+export * from "./wavespeed";

@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 
 export const useRatio = () => {
-  const payloadStore = useWavespeedPayloadStore();
+  const payloadStore = useSeedreamPayloadStore();
   const { width, height } = storeToRefs(payloadStore);
 
   const ratiosData = {

@@ -5,7 +5,7 @@ export const usePromptBuilderStore = defineStore("promptBuilder", () => {
   const { setStatus } = useLogger();
   const toast = useToast();
 
-  const payloadStore = useWavespeedPayloadStore();
+  const payloadStore = useSeedreamPayloadStore();
   const { prompt } = storeToRefs(payloadStore);
 
   // --- 1. STATE (Dữ liệu) ---

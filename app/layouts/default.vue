@@ -14,7 +14,7 @@ watch(
 
 <template>
   <div class="flex h-screen bg-[#0a0a0a] text-white font-sans overflow-hidden">
-    <ToastContainer />
+    <CommonToastContainer />
 
     <div
       v-if="isSidebarOpen"

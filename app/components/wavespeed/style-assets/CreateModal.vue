@@ -11,7 +11,7 @@ const {
   localPreviewUrl,
   cropperRef,
 } = storeToRefs(uploadStore);
-const simpleStore = useSimplePresetStore();
+const store = useStyleAssetsStore();
 const { uploadImage } = useUploadToSupabase();
 
 const form = ref({
@@ -32,7 +32,7 @@ const handleSave = async () => {
   try {
     let url = selectedFile.value ? await uploadImage(selectedFile.value) : "";
     clearInterval(timer);
-    await simpleStore.savePreset({ ...form.value, thumbnail: url || "" });
+    await store.saveStyleAsset({ ...form.value, thumbnail: url || "" });
     close();
   } catch (e) {
     clearInterval(timer);
@@ -78,7 +78,7 @@ const handleSave = async () => {
                 class="text-[9px] font-black uppercase tracking-widest text-gray-600 ml-2"
                 >Visual Core Integration</label
               >
-              <UploadFile
+              <WavespeedStyleAssetsUploadFile
                 v-model="selectedFile"
                 :progress="uploadProgress"
                 @open-crop="isCropping = true"

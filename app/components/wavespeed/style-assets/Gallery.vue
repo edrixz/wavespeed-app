@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 
-const simpleStore = useSimplePresetStore();
-const { presets, isLoading } = storeToRefs(simpleStore);
+const styleAssetsStore = useStyleAssetsStore();
+const { styleAssets, isLoading } = storeToRefs(styleAssetsStore);
 
 const searchQuery = ref("");
 const showCreateDialog = ref(false);
@@ -10,10 +10,10 @@ const selectedPreset = ref<any | null>(null);
 const isWaitingForImages = ref(true);
 const isSearchFocused = ref(false);
 
-const filteredPresets = computed(() => {
-  if (!searchQuery.value.trim()) return presets.value;
+const filteredStyleAssets = computed(() => {
+  if (!searchQuery.value.trim()) return styleAssets.value;
   const q = searchQuery.value.toLowerCase();
-  return presets.value.filter(
+  return styleAssets.value.filter(
     (p) =>
       p.title.toLowerCase().includes(q) || p.prompt.toLowerCase().includes(q),
   );
@@ -21,7 +21,7 @@ const filteredPresets = computed(() => {
 
 onMounted(async () => {
   isWaitingForImages.value = true;
-  await simpleStore.fetchPresets();
+  await styleAssetsStore.fetchStyleAssets();
   setTimeout(() => {
     isWaitingForImages.value = false;
   }, 800);
@@ -40,7 +40,7 @@ onMounted(async () => {
             <div
               class="p-2 rounded bg-[#1A1A1A] border border-white/10 text-[10px] font-bold text-gray-400"
             >
-              {{ presets.length }}
+              {{ styleAssets.length }}
             </div>
           </div>
 
@@ -100,19 +100,19 @@ onMounted(async () => {
         <template v-else>
           <TransitionGroup name="list" tag="div" class="flex gap-4">
             <div
-              v-for="(item, index) in filteredPresets"
+              v-for="(item, index) in filteredStyleAssets"
               :key="item.id"
               class="snap-start flex-none transition-all duration-500"
               :style="{ transitionDelay: `${index * 30}ms` }"
             >
               <div class="w-[150px] h-full group">
-                <Card :item="item" @select="selectedPreset = item" />
+                <WavespeedStyleAssetsCard :item="item" @select="selectedPreset = item" />
               </div>
             </div>
           </TransitionGroup>
 
           <div
-            v-if="filteredPresets.length === 0"
+            v-if="filteredStyleAssets.length === 0"
             class="w-full flex flex-col items-center justify-center py-10 opacity-40 gap-3 min-w-[300px]"
           >
             <div
@@ -130,8 +130,8 @@ onMounted(async () => {
       </div>
     </div>
 
-    <CreateModal v-model="showCreateDialog" />
-    <DetailModal v-model="selectedPreset" />
+    <WavespeedStyleAssetsCreateModal v-model="showCreateDialog" />
+    <WavespeedStyleAssetsDetailModal v-model="selectedPreset" />
   </div>
 </template>
 

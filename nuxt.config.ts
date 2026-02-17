@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   components: [
     {
       path: "~/components",
-      pathPrefix: false, // Cho phép sử dụng tên file làm tên component mà không cần tiền tố thư mục
+      pathPrefix: true,
     },
   ],
 

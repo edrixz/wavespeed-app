@@ -1,20 +1,17 @@
-// stores/simplePresetStore.ts
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import type { Database, SimplePreset } from "~/types";
+// stores/styleStore.ts
+import type { Database, StyleAsset } from "~/types";
 
-export const useSimplePresetStore = defineStore("simplePreset", () => {
+export const useStyleAssetsStore = defineStore("styleAssetsStore", () => {
   const supabase = useSupabaseClient<Database>();
   const user = useSupabaseUser();
-  const settings = useSettingsForm();
+  const form = useUseWavespeedSeedreamForm();
   const toast = useToast();
 
-  const presets = ref<SimplePreset[]>([]);
+  const styleAssets = ref<StyleAsset[]>([]);
   const isLoading = ref(false);
   const isSaving = ref(false);
 
-  // Lấy dữ liệu danh sách [cite: 2025-12-19]
-  const fetchPresets = async () => {
+  const fetchStyleAssets = async () => {
     if (!user.value) return;
     isLoading.value = true;
     try {
@@ -23,16 +20,15 @@ export const useSimplePresetStore = defineStore("simplePreset", () => {
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      presets.value = data as any as SimplePreset[];
+      styleAssets.value = data as StyleAsset[];
     } catch (err: any) {
-      console.error("Fetch Error:", err.message);
+      toast.error("Fetch Error:", err.message);
     } finally {
       isLoading.value = false;
     }
   };
 
-  // Lưu mới sử dụng .sub
-  const savePreset = async (payload: {
+  const saveStyleAsset = async (payload: {
     title: string;
     thumbnail: string;
     prompt: string;
@@ -62,7 +58,7 @@ export const useSimplePresetStore = defineStore("simplePreset", () => {
 
       if (error) throw error;
       if (data?.[0]) {
-        presets.value.unshift(data[0] as any as SimplePreset);
+        styleAssets.value.unshift(data[0] as StyleAsset);
         return { success: true };
       }
     } catch (err: any) {
@@ -72,24 +68,23 @@ export const useSimplePresetStore = defineStore("simplePreset", () => {
     }
   };
 
-  const applyPreset = (preset: SimplePreset) => {
-    settings.prompt.value = preset.prompt;
-    settings.negative_prompt.value = preset.negative_prompt || "";
+  const applyStyleAsset = (preset: StyleAsset) => {
+    form.prompt.value = preset.prompt;
+    form.negative_prompt.value = preset.negative_prompt || "";
     const [w, h] = (preset.size || "1024*1024").split("*");
-    settings.width.value = parseInt(w!);
-    settings.height.value = parseInt(h!);
-    if (settings.isBuilderMode.value) settings.toggleBuilderMode();
+    form.width.value = parseInt(w!);
+    form.height.value = parseInt(h!);
     toast.success(`Applied: ${preset.title}`);
   };
 
-  const deletePreset = async (id: string) => {
+  const deleteStyleAsset = async (id: string) => {
     try {
       const { error } = await supabase
         .from("simple_presets")
         .delete()
         .eq("id", id);
       if (error) throw error;
-      presets.value = presets.value.filter((p) => p.id !== id);
+      styleAssets.value = styleAssets.value.filter((s) => s.id !== id);
       toast.success("Preset removed.");
       return { success: true };
     } catch (err: any) {
@@ -99,12 +94,12 @@ export const useSimplePresetStore = defineStore("simplePreset", () => {
   };
 
   return {
-    presets,
+    styleAssets,
     isLoading,
     isSaving,
-    fetchPresets,
-    savePreset,
-    deletePreset,
-    applyPreset,
+    fetchStyleAssets,
+    saveStyleAsset,
+    deleteStyleAsset,
+    applyStyleAsset,
   };
 });

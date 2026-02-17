@@ -7,7 +7,7 @@ export const usePayloadMapper = () => {
   const imageStore = useImageStore();
   const { images, filesToUpload } = storeToRefs(imageStore);
 
-  const payloadStore = useWavespeedPayloadStore();
+  const payloadStore = useSeedreamPayloadStore();
   const {
     modelVersion,
     prompt,

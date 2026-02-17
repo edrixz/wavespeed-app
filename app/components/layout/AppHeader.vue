@@ -26,9 +26,9 @@ defineEmits(["open-menu"]);
     </div>
 
     <div class="flex items-center gap-2 sm:gap-4">
-      <Notification />
+      <LayoutPartsNotification />
 
-      <UserMenu />
+      <LayoutPartsUserMenu />
     </div>
   </header>
 </template>
