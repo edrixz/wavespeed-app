@@ -6,6 +6,24 @@
   body {
     @apply bg-gray-900 text-gray-100 font-sans antialiased;
   }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  html,
+  body {
+    /* Ngăn chặn zoom bằng thao tác chạm (pinch-to-zoom) */
+    touch-action: pan-x pan-y;
+    /* Ngăn chặn chọn văn bản nếu bạn muốn GUI giống App thuần túy */
+    -webkit-text-size-adjust: 100%;
+  }
 }
 
 @layer components {
