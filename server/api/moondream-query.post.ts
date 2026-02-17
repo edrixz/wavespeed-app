@@ -1,4 +1,4 @@
-import {
+import type {
   MoondreamRequestBody,
   MoondreamResponse,
 } from "~/types/api/moondream-query";

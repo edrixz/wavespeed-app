@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { schema } from "~/consts";
+import { schema } from "~/consts/gemini/schema";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
