@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 
-const styleAssetsStore = useStyleAssetsStore();
-const { styleAssets, isLoading } = storeToRefs(styleAssetsStore);
+const promptPresetStore = useSeedreamPromptPresetStore();
+const { promptPresets, isLoading } = storeToRefs(promptPresetStore);
 
 const searchQuery = ref("");
 const showCreateDialog = ref(false);
@@ -11,9 +11,9 @@ const isWaitingForImages = ref(true);
 const isSearchFocused = ref(false);
 
 const filteredStyleAssets = computed(() => {
-  if (!searchQuery.value.trim()) return styleAssets.value;
+  if (!searchQuery.value.trim()) return promptPresets.value;
   const q = searchQuery.value.toLowerCase();
-  return styleAssets.value.filter(
+  return promptPresets.value.filter(
     (p) =>
       p.title.toLowerCase().includes(q) || p.prompt.toLowerCase().includes(q),
   );
@@ -21,7 +21,7 @@ const filteredStyleAssets = computed(() => {
 
 onMounted(async () => {
   isWaitingForImages.value = true;
-  await styleAssetsStore.fetchStyleAssets();
+  await promptPresetStore.fetchPreset();
   setTimeout(() => {
     isWaitingForImages.value = false;
   }, 800);
@@ -35,12 +35,12 @@ onMounted(async () => {
         <div class="flex items-center justify-between gap-3 w-full">
           <div class="flex items-center gap-3">
             <h2 class="text-2xl font-black text-white tracking-tight">
-              Style Assets
+              Prompt Presets
             </h2>
             <div
               class="p-2 rounded bg-[#1A1A1A] border border-white/10 text-[10px] font-bold text-gray-400"
             >
-              {{ styleAssets.length }}
+              {{ promptPresets.length }}
             </div>
           </div>
 
@@ -106,7 +106,10 @@ onMounted(async () => {
               :style="{ transitionDelay: `${index * 30}ms` }"
             >
               <div class="w-[150px] h-full group">
-                <WavespeedStyleAssetsCard :item="item" @select="selectedPreset = item" />
+                <WavespeedPromptPresetCard
+                  :item="item"
+                  @select="selectedPreset = item"
+                />
               </div>
             </div>
           </TransitionGroup>
@@ -130,8 +133,8 @@ onMounted(async () => {
       </div>
     </div>
 
-    <WavespeedStyleAssetsCreateModal v-model="showCreateDialog" />
-    <WavespeedStyleAssetsDetailModal v-model="selectedPreset" />
+    <WavespeedPromptPresetCreateModal v-model="showCreateDialog" />
+    <WavespeedPromptPresetDetailModal v-model="selectedPreset" />
   </div>
 </template>
 

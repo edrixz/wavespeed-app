@@ -19,6 +19,15 @@ export const useSeedreamPayloadStore = defineStore(
       negative_prompt.value = DEFAULT_NEGATIVE_PROMPT;
     };
 
+    const resetToDefault = () => {
+      resetPrompt();
+      width.value = 2752;
+      height.value = 4096;
+      enableSafetyChecker.value = false;
+      enableSyncMode.value = false;
+      enableBase64Output.value = false;
+    };
+
     return {
       modelVersion,
       prompt,
@@ -29,6 +38,7 @@ export const useSeedreamPayloadStore = defineStore(
       enableSyncMode,
       enableBase64Output,
       resetPrompt,
+      resetToDefault,
     };
   },
 );

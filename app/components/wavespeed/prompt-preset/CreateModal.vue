@@ -11,7 +11,7 @@ const {
   localPreviewUrl,
   cropperRef,
 } = storeToRefs(uploadStore);
-const store = useStyleAssetsStore();
+const store = useSeedreamPromptPresetStore();
 const { uploadImage } = useUploadToSupabase();
 
 const form = ref({
@@ -32,7 +32,7 @@ const handleSave = async () => {
   try {
     let url = selectedFile.value ? await uploadImage(selectedFile.value) : "";
     clearInterval(timer);
-    await store.saveStyleAsset({ ...form.value, thumbnail: url || "" });
+    await store.savePreset({ ...form.value, thumbnail: url || "" });
     close();
   } catch (e) {
     clearInterval(timer);
@@ -45,7 +45,7 @@ const handleSave = async () => {
     <Transition name="modal-ios">
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-[1000] bg-[#050505] flex flex-col overflow-hidden sm:m-4 sm:rounded-[40px] border border-white/5 shadow-2xl"
+        class="fixed inset-0 z-[1001] bg-[#050505] flex flex-col overflow-hidden sm:m-4 sm:rounded-[40px] border border-white/5 shadow-2xl"
       >
         <header
           class="p-6 border-b border-white/5 flex items-center justify-between bg-black/50 backdrop-blur-xl z-20"
@@ -78,7 +78,7 @@ const handleSave = async () => {
                 class="text-[9px] font-black uppercase tracking-widest text-gray-600 ml-2"
                 >Visual Core Integration</label
               >
-              <WavespeedStyleAssetsUploadFile
+              <WavespeedPromptPresetUploadFile
                 v-model="selectedFile"
                 :progress="uploadProgress"
                 @open-crop="isCropping = true"

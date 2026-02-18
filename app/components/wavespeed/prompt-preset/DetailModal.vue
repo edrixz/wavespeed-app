@@ -2,7 +2,7 @@
 const props = defineProps<{ modelValue: any }>();
 const emit = defineEmits(["update:modelValue"]);
 
-const store = useStyleAssetsStore();
+const store = useSeedreamPromptPresetStore();
 const countdown = ref(0);
 const timer = ref<any>(null);
 
@@ -15,13 +15,13 @@ watch(
 );
 
 const handleApply = (item: any) => {
-  store.applyStyleAsset(item);
+  store.applyPreset(item);
   emit("update:modelValue", null);
 };
 
 const startDelete = (id: string) => {
   if (countdown.value > 0) {
-    store.deleteStyleAsset(id);
+    store.deletePreset(id);
     emit("update:modelValue", null);
   } else {
     countdown.value = 5;

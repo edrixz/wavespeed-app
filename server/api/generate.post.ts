@@ -20,9 +20,6 @@ export default defineEventHandler(async (event) => {
     ENDPOINTS[modelVersion as keyof typeof ENDPOINTS] || ENDPOINTS["v4.5"];
 
   try {
-    console.log(`[${modelVersion.toUpperCase()}] `);
-    console.log(`[${targetUrl}] `);
-
     const response = await $fetch(targetUrl, {
       method: "POST",
       headers: {
@@ -33,17 +30,16 @@ export default defineEventHandler(async (event) => {
     });
     return response;
   } catch (error: any) {
-    // --- QUAN TRỌNG: Log chi tiết lỗi ra Terminal để debug ---
+    // --- Log chi tiết lỗi ra Terminal để debug ---
     console.error(
       "❌ WAVESPEED API ERROR:",
       JSON.stringify(error.data, null, 2),
     );
 
-    // Trả lỗi chi tiết về Client thay vì lỗi chung chung
     throw createError({
       statusCode: error.statusCode || 500,
       statusMessage: error.data?.message || error.message || "Unknown Error",
-      data: error.data, // Gửi kèm data lỗi
+      data: error.data,
     });
   }
 });

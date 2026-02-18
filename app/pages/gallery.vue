@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { useGalleryStore } from "~/stores/common/ui/gallery-store";
-import type { SimplePreset } from "~/types";
+import type { PromptPreset } from "~/types";
 import CommonMenuLongPressContext from "~/components/common/menu/LongPressContext.vue";
 
 definePageMeta({ layout: "default" });
 
 // --- 1. INIT STORES & REFS ---
 const galleryStore = useGalleryStore();
-const simpleStore = useSimplePresetStore();
+const promptPreset = useSeedreamPromptPresetStore();
 const toast = useToast();
 
 const menuRef = ref<InstanceType<typeof CommonMenuLongPressContext> | null>(
-  null
+  null,
 );
 const activeTab = ref<"session" | "favorites" | "presets">("session");
 const isPrivacyMode = ref(true); // Trạng thái Privacy Mode
@@ -34,7 +34,7 @@ const currentActionIds = computed(() => {
 });
 
 // --- 3. DATA ADAPTER ---
-interface GalleryViewItem extends SimplePreset {
+interface GalleryViewItem extends PromptPreset {
   isFavorite: boolean;
   type: "session" | "preset";
   originalData: any;
@@ -43,7 +43,7 @@ interface GalleryViewItem extends SimplePreset {
 const displayedItems = computed<GalleryViewItem[]>(() => {
   if (activeTab.value === "presets") {
     // Mapping Presets
-    return (simpleStore.presets || []).map((p: SimplePreset) => ({
+    return (promptPreset.promptPresets || []).map((p: PromptPreset) => ({
       ...p,
       isFavorite: false,
       type: "preset",
@@ -100,7 +100,7 @@ const handleTouchEndAction = async () => {
 
     switch (selectedType) {
       case "preset":
-        simpleStore.savePreset({
+        promptPreset.savePreset({
           title: `Style ${new Date().getTime().toString().slice(-4)}`,
           prompt: viewItem.prompt,
           thumbnail: viewItem.thumbnail,
@@ -112,7 +112,9 @@ const handleTouchEndAction = async () => {
         if (viewItem.type === "session") {
           rawItem.isFavorite = !rawItem.isFavorite;
           toast.success(
-            rawItem.isFavorite ? "Added to Favorites" : "Removed from Favorites"
+            rawItem.isFavorite
+              ? "Added to Favorites"
+              : "Removed from Favorites",
           );
         }
         break;
@@ -123,7 +125,7 @@ const handleTouchEndAction = async () => {
 
       case "delete":
         if (viewItem.type === "preset") {
-          await simpleStore.deletePreset(viewItem.id);
+          await promptPreset.deletePreset(viewItem.id);
           toast.success("Preset deleted");
         }
         break;

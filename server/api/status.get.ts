@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
         headers: {
           Authorization: `Bearer ${config.wavespeedApiKey}`,
         },
-      }
+      },
     );
     return response;
   } catch (error: any) {

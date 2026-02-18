@@ -43,14 +43,14 @@ const validateAndLogin = async () => {
     </div>
 
     <form @submit.prevent="validateAndLogin" class="space-y-4">
-      <InputWithIcon
+      <PartsFormInputWithIcon
         v-model="username"
         icon="lucide:user"
         placeholder="Tên đăng nhập"
         required
       />
 
-      <InputWithIcon
+      <PartsFormInputWithIcon
         v-model="password"
         type="password"
         icon="lucide:lock"
@@ -67,13 +67,13 @@ const validateAndLogin = async () => {
         </p>
       </div>
 
-      <ButtonPrimary
+      <PartsButtonPrimary
         type="submit"
         :loading="isLoading"
         :disabled="!isFormValid"
       >
         {{ isLoading ? "Đang kiểm tra..." : "Đăng nhập ngay" }}
-      </ButtonPrimary>
+      </PartsButtonPrimary>
     </form>
 
     <div class="text-center space-y-4">

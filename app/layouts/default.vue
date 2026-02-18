@@ -25,7 +25,7 @@ watch(
     <LayoutAppSidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
 
     <div class="flex-1 flex flex-col min-w-0">
-      <LayoutAppHeader @open-menu="isSidebarOpen = true" />
+      <LayoutAppHeader @open-menu="isSidebarOpen = !isSidebarOpen" />
 
       <main class="flex-1 overflow-y-auto overflow-x-hidden">
         <div class="p-4 lg:p-8 max-w-7xl mx-auto">

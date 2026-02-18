@@ -32,7 +32,7 @@ const { isVersionV45, toggleVersionMode } = useUseWavespeedSeedreamForm();
 
         <ImageUploader />
 
-        <WavespeedStyleAssetsGallery />
+        <WavespeedPromptPresetGallery />
 
         <WavespeedSeedreamForm />
 

@@ -22,7 +22,7 @@ export const useUploadImageStore = defineStore("uploadImage", () => {
     cropperRef.value = undefined;
   };
 
-  // LOGIC PROGRESS SIÊU MƯỢT (Ease-out)
+  // LOGIC PROGRESS
   const startFakeProgress = () => {
     uploadProgress.value = 0;
     const timer = setInterval(() => {
@@ -47,7 +47,6 @@ export const useUploadImageStore = defineStore("uploadImage", () => {
     }, "image/jpeg");
   };
 
-  // Trả ra các biến/hàm cần dùng
   return {
     selectedFile,
     uploadProgress,

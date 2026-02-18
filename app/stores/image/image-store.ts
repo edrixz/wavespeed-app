@@ -4,7 +4,6 @@ import { DEFAULT_IMAGE_URL } from "~/consts/common/image";
 import type { ImageItem } from "~/types";
 
 export const useImageStore = defineStore("images", () => {
-  // --- STATE ---
   const images = ref<ImageItem[]>([
     {
       id: "default-img",
@@ -14,7 +13,6 @@ export const useImageStore = defineStore("images", () => {
     },
   ]);
 
-  // --- INTERNAL HELPERS (Không export, chỉ dùng nội bộ) ---
   const generateId = () =>
     `img_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 
@@ -31,15 +29,14 @@ export const useImageStore = defineStore("images", () => {
     }
   };
 
-  // --- ACTIONS (Hành động sửa đổi dữ liệu) ---
-  /** Thêm mới danh sách file vào store */
+  // Thêm mới danh sách file vào store
   const addFiles = (files: File[]) => {
     files.forEach((file) => {
       images.value.push(createItem(file));
     });
   };
 
-  /** Thay thế ảnh tại vị trí cụ thể (dùng cho Crop/Edit) */
+  // Thay thế ảnh tại vị trí cụ thể
   const replaceFileAt = (index: number, file: File) => {
     const oldItem = images.value[index];
     if (!oldItem) return;
@@ -54,7 +51,7 @@ export const useImageStore = defineStore("images", () => {
     };
   };
 
-  /** Xóa ảnh tại vị trí index */
+  // Xóa ảnh tại vị trí index
   const removeAt = (index: number) => {
     const item = images.value[index];
     if (item) {
@@ -63,14 +60,13 @@ export const useImageStore = defineStore("images", () => {
     }
   };
 
-  /** Xóa toàn bộ ảnh (Dùng khi reset form hoặc logout) */
+  // Xóa toàn bộ ảnh
   const clearAll = () => {
     images.value.forEach(revokeItem); // Cleanup tất cả URL
     images.value = [];
   };
 
-  // --- GETTERS (Computed) ---
-  /** Lấy danh sách File object thuần túy để gửi API */
+  // Lấy danh sách File object thuần túy để gửi API
   const filesToUpload = computed(() =>
     images.value.filter((i) => i.file !== null).map((i) => i.file as File),
   );
