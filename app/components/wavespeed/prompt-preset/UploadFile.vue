@@ -6,7 +6,7 @@ const props = defineProps<{
   progress: number;
 }>();
 
-const emit = defineEmits(["update:modelValue", "open-crop"]);
+const emit = defineEmits(["update:modelValue"]);
 
 const fileInput = ref<HTMLInputElement | null>(null);
 const localPreviewUrl = ref<string>("");
@@ -18,7 +18,7 @@ watch(
     if (newFile) localPreviewUrl.value = URL.createObjectURL(newFile);
     else localPreviewUrl.value = "";
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const handleFileChange = (e: Event) => {
@@ -80,65 +80,45 @@ const triggerFileInput = () => fileInput.value?.click();
       v-else
       class="relative rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-xl group"
     >
-      <div class="aspect-[4/3] relative overflow-hidden bg-black">
+      <div
+        @click="triggerFileInput"
+        class="aspect-[4/3] relative overflow-hidden bg-black cursor-pointer"
+      >
         <img
           :src="localPreviewUrl"
-          class="w-full h-full object-cover transition-all duration-500"
+          class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:opacity-80"
           :class="{ 'opacity-40 grayscale': progress > 0 && progress < 100 }"
         />
 
         <div
-          v-if="progress === 0 || progress === 100"
-          class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3"
+          class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
         >
-          <button
-            @click="$emit('open-crop')"
-            class="w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center shadow-lg active:scale-90 transition-all"
+          <span
+            class="bg-black/50 text-white text-[10px] px-2 py-1 rounded-md backdrop-blur-sm"
           >
-            <svg
-              class="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-            >
-              <path d="M6 2v14a2 2 0 0 0 2 2h14" />
-              <path d="M18 22V8a2 2 0 0 0-2-2H2" />
-            </svg>
-          </button>
-          <button
-            @click="triggerFileInput"
-            class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 text-white flex items-center justify-center backdrop-blur-md active:scale-90 transition-all"
-          >
-            <svg
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2.5"
-            >
-              <path
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-          </button>
-          <button
-            @click="emit('update:modelValue', null)"
-            class="w-10 h-10 rounded-xl bg-red-500/20 border border-red-500/30 text-red-500 flex items-center justify-center backdrop-blur-md active:scale-90 transition-all"
-          >
-            <svg
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2.5"
-            >
-              <path
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-              />
-            </svg>
-          </button>
+            Change Image
+          </span>
         </div>
+
+        <button
+          @click.stop="emit('update:modelValue', null)"
+          class="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 hover:bg-red-500/80 text-white flex items-center justify-center backdrop-blur-md transition-all z-10"
+          title="Remove image"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            stroke-width="2.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
       </div>
 
       <div class="p-4 bg-white/[0.02] border-t border-white/5 space-y-3">
@@ -157,9 +137,9 @@ const triggerFileInput = () => fileInput.value?.click();
               {{ modelValue.name }}
             </p>
           </div>
-          <span class="text-[8px] font-black text-gray-500"
-            >{{ (modelValue.size / 1024 / 1024).toFixed(2) }} MB</span
-          >
+          <span class="text-[8px] font-black text-gray-500">
+            {{ (modelValue.size / 1024 / 1024).toFixed(2) }} MB
+          </span>
         </div>
 
         <div class="space-y-1.5">
@@ -179,8 +159,8 @@ const triggerFileInput = () => fileInput.value?.click();
                 progress === 100
                   ? "Success"
                   : progress > 0
-                  ? "Uploading"
-                  : "Ready"
+                    ? "Uploading"
+                    : "Ready"
               }}
             </span>
             <span class="text-gray-500">{{ Math.round(progress) }}%</span>

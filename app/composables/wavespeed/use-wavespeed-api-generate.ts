@@ -26,7 +26,7 @@ export const useWavespeedApiGenerate = () => {
 
     // 1. KHỞI TẠO NHÓM LOG
     loggerStore.startGroup(
-      `Dreamer Process - ${new Date().toLocaleTimeString()}`,
+      `Starting Process - ${new Date().toLocaleTimeString()}`,
     );
     setStatus("Starting processing...", "info");
 
@@ -55,10 +55,13 @@ export const useWavespeedApiGenerate = () => {
 
       handleSuccess("Complete! Image is ready.");
     } catch (error: any) {
-      handleError(error);
+      if (error instanceof Error) {
+        handleError(error.message);
+      } else {
+        handleError("An unknown error occurred");
+      }
     } finally {
       isProcessing.value = false;
-      // 2. KẾT THÚC NHÓM LOG
       loggerStore.endGroup();
     }
   };

@@ -18,7 +18,7 @@ const form = ref({
   title: "",
   prompt: "",
   negative_prompt: "",
-  size: "1024*1024",
+  size: "2752*4096",
 });
 
 const close = () => {
