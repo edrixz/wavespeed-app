@@ -14,20 +14,41 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <button
-    :type="type"
-    :disabled="disabled || loading"
-    class="w-full py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all duration-200 bg-blue-600 text-white hover:bg-blue-500 active:scale-95 shadow-2xl shadow-blue-500/20 disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed disabled:shadow-none disabled:active:scale-100 disabled:opacity-100"
-  >
-    <Icon
-      v-if="loading"
-      name="lucide:loader-2"
-      class="animate-spin"
-      size="16"
-    />
+  <div class="w-full">
+    <button
+      :type="type"
+      :disabled="disabled || loading"
+      class="group relative w-full overflow-hidden rounded-full p-[1.5px] focus:outline-none focus:ring-2 focus:ring-[#A8C7FA] focus:ring-offset-2 focus:ring-offset-[#131314] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
+    >
+      <div
+        v-if="!disabled"
+        class="absolute inset-0 flex items-center justify-center pointer-events-none"
+      >
+        <div
+          class="aspect-square min-w-[200%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,#3b82f6_20%,#ffffff_35%,#60a5fa_50%,#ffffff_65%,#3b82f6_80%,transparent_100%)]"
+        />
+      </div>
 
-    <Icon v-else-if="icon" :name="icon" size="16" />
+      <span
+        class="relative flex h-full w-full items-center justify-center rounded-full bg-[#1E1F20] px-8 py-3 text-sm font-medium text-[#E3E3E3] backdrop-blur-3xl transition-colors duration-300 group-hover:bg-[#131314] group-hover:text-white"
+      >
+        <Icon
+          v-if="loading"
+          name="lucide:loader-2"
+          class="mr-2 h-4 w-4 animate-spin text-[#A8C7FA]"
+          size="16"
+        />
 
-    <slot />
-  </button>
+        <div v-else class="flex items-center gap-2">
+          <Icon
+            v-if="icon"
+            :name="icon"
+            size="16"
+            class="transition-transform duration-300 group-hover:scale-110 group-hover:text-[#A8C7FA]"
+          />
+          <slot />
+        </div>
+      </span>
+    </button>
+  </div>
 </template>
