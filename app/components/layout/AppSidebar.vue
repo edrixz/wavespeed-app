@@ -4,6 +4,7 @@ defineEmits(["close"]);
 
 const menuItems = [
   { name: "Seedream AI", icon: "lucide:sparkles", path: "/" },
+  { name: "Grok AI", icon: "grok", path: "/grok" },
   { name: "Gallery", icon: "lucide:image", path: "/gallery" },
   { name: "System Logs", icon: "lucide:history", path: "/history-logs" },
   { name: "Settings", icon: "lucide:settings", path: "/settings" },
@@ -35,7 +36,8 @@ const menuItems = [
 
         <NuxtLink :to="item.path" class="nav-item" active-class="active">
           <div class="icon-wrapper">
-            <Icon :name="item.icon" size="20" />
+            <PartsIconsGrok v-if="item.icon === 'grok'" />
+            <Icon v-else :name="item.icon" size="20" />
           </div>
           <span class="font-medium text-[14px]">{{ item.name }}</span>
         </NuxtLink>

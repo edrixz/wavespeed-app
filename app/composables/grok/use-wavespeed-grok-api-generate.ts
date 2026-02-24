@@ -1,22 +1,22 @@
-export const useWavespeedApiGenerate = () => {
+export const useWavespeedGrokApiGenerate = () => {
   const galleryStore = useGalleryStore();
   const { setStatus } = useLogger();
   const loggerStore = useLoggerStore();
-  const { buildPayload, submitTask } = usePayloadMapper();
+  const { buildPayload, submitTask } = useWavespeedGrokPayloadMapper();
   const { pollTask } = usePolling();
   const { handleError, handleSuccess } = useResponseHandler();
 
   const imageStore = useImagesStore();
   const { images } = storeToRefs(imageStore);
 
-  const payloadStore = useSeedreamPayloadStore();
+  const payloadStore = useGrokPayloadStore();
   const { prompt } = storeToRefs(payloadStore);
 
   const isProcessing = ref(false);
   const resultImage = ref<string | null>(null);
 
   const handleGenerate = async () => {
-    if (images.value.length === 0) {
+    if (!images.value.length) {
       setStatus("Please select at least 1 reference image!", "error");
       return;
     }
@@ -49,8 +49,6 @@ export const useWavespeedApiGenerate = () => {
 
       galleryStore.addGeneratedItem(finalUrl, {
         prompt: payloadStore.prompt,
-        negative_prompt: payloadStore.negative_prompt,
-        size: `${payloadStore.width}*${payloadStore.height}`,
       });
 
       handleSuccess("Complete! Image is ready.");

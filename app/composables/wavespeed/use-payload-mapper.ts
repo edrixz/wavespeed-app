@@ -4,7 +4,7 @@ export const usePayloadMapper = () => {
   const { setStatus } = useLogger();
   const { uploadMultipleFiles } = useFileUpload();
 
-  const imageStore = useImageStore();
+  const imageStore = useImagesStore();
   const { images, filesToUpload } = storeToRefs(imageStore);
 
   const payloadStore = useSeedreamPayloadStore();

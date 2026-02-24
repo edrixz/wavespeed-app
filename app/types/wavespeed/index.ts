@@ -1,2 +1,2 @@
 export * from "./seedream-edit";
-export * from "./responses";
+export * from "./grok-edit";

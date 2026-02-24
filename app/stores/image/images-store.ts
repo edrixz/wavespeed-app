@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import { DEFAULT_IMAGE_URL } from "~/consts/common/image";
 import type { ImageItem } from "~/types";
 
-export const useImageStore = defineStore("images", () => {
+export const useImagesStore = defineStore("images", () => {
   const images = ref<ImageItem[]>([
     {
       id: "default-img",

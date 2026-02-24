@@ -1,5 +1,5 @@
 export const useImageUploader = () => {
-  const imageStore = useImageStore();
+  const imageStore = useImagesStore();
   const { addFiles, replaceFileAt, removeAt } = imageStore;
 
   const {

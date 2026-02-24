@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { useImageUploader } from "~/composables/image/use-image-uploader";
 
-const imageStore = useImageStore();
+const props = defineProps<{
+  uploadMulti?: boolean;
+}>();
+
+const imageStore = useImagesStore();
 const { images } = storeToRefs(imageStore);
 
 const {
@@ -30,6 +34,7 @@ const {
     </div>
 
     <input
+      v-if="uploadMulti"
       ref="addInputRef"
       type="file"
       multiple
@@ -72,6 +77,7 @@ const {
       </div>
 
       <button
+        v-if="uploadMulti"
         @click="addImage"
         class="aspect-square flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-600 bg-gray-800/30 text-gray-400 hover:text-blue-400 hover:border-blue-500 hover:bg-gray-800 transition-all group"
       >
