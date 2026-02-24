@@ -47,9 +47,19 @@ const themeClasses = computed(() => {
         v-model="modelValue"
         :rows="rows"
         :placeholder="placeholder"
-        class="w-full rounded-xl p-4 text-sm font-mono leading-relaxed outline-none transition-all resize-none border"
+        class="w-full rounded-xl p-4 text-sm font-mono leading-relaxed outline-none transition-all resize-none border no-scrollbar"
         :class="themeClasses.textarea"
       />
     </div>
   </div>
 </template>
+
+<style scoped>
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>

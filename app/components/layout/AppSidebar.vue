@@ -3,7 +3,7 @@ defineProps<{ isOpen: boolean }>();
 defineEmits(["close"]);
 
 const menuItems = [
-  { name: "Dreamer", icon: "lucide:sparkles", path: "/" },
+  { name: "Seedream AI", icon: "lucide:sparkles", path: "/" },
   { name: "Gallery", icon: "lucide:image", path: "/gallery" },
   { name: "System Logs", icon: "lucide:history", path: "/history-logs" },
   { name: "Settings", icon: "lucide:settings", path: "/settings" },
@@ -12,35 +12,18 @@ const menuItems = [
 
 <template>
   <aside
-    class="fixed inset-y-0 left-0 z-[500] w-[280px] bg-[#131314] flex flex-col transition-transform duration-300 lg:static lg:translate-x-0"
+    class="fixed inset-y-0 left-0 z-[1001] w-[280px] bg-[#131314] flex flex-col transition-transform duration-300 lg:static lg:translate-x-0"
     :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
   >
-    <div class="h-16 lg:h-[72px] flex items-center px-6 gap-3">
-      <div
-        class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white"
+    <div class="h-12 flex items-center px-6 pl-12">
+      <span
+        class="text-[22px] font-normal text-[#E3E3E3] tracking-tight transition-all duration-700 delay-150"
+        :class="
+          isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+        "
       >
-        <Icon name="lucide:waves" size="20" />
-      </div>
-      <span class="text-[22px] font-normal text-[#E3E3E3] tracking-tight">
-        Wavespeed
+        SPEED AI
       </span>
-
-      <button @click="$emit('close')" class="ml-auto lg:hidden text-[#C4C7C5]">
-        <Icon name="lucide:x" size="24" />
-      </button>
-    </div>
-
-    <div class="px-4 mt-2 mb-6">
-      <button
-        class="flex items-center gap-3 bg-[#A8C7FA] hover:bg-[#D3E3FD] text-[#041E49] w-full px-4 py-3.5 rounded-[16px] transition-colors font-medium text-sm shadow-sm group"
-      >
-        <Icon
-          name="lucide:plus"
-          size="20"
-          class="group-hover:rotate-90 transition-transform"
-        />
-        <span>New Project</span>
-      </button>
     </div>
 
     <nav class="flex-1 px-3 space-y-1">

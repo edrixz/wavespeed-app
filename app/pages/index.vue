@@ -18,7 +18,7 @@ const { isVersionV45, toggleVersionMode } = useUseWavespeedSeedreamForm();
         <div>
           <div class="flex items-center justify-between">
             <h2 class="text-xl font-black text-white uppercase tracking-tight">
-              SPEED AI
+              SEEDREAM
             </h2>
             <PartsButtonSwitch
               @toggle="toggleVersionMode"

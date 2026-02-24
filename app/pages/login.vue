@@ -75,22 +75,5 @@ const validateAndLogin = async () => {
         {{ isLoading ? "Đang kiểm tra..." : "Đăng nhập ngay" }}
       </PartsButtonPrimary>
     </form>
-
-    <div class="text-center space-y-4">
-      <p
-        class="text-[9px] text-gray-600 uppercase tracking-widest cursor-pointer hover:text-white transition-colors"
-      >
-        Quên mật khẩu?
-      </p>
-      <div class="h-px bg-white/5 w-full"></div>
-      <p class="text-[9px] text-gray-500 uppercase tracking-widest">
-        Chưa có tài khoản?
-        <span
-          class="text-blue-500 font-bold ml-1 cursor-pointer hover:underline"
-        >
-          Đăng ký
-        </span>
-      </p>
-    </div>
   </div>
 </template>
