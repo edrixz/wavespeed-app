@@ -4,7 +4,7 @@ definePageMeta({ layout: "default" });
 const { canNotGenerate, isProcessing, resultImage, handleGenerate } =
   useWavespeedApiGenerate();
 
-const { isVersionV45, toggleVersionMode } = useUseWavespeedSeedreamForm();
+const { versionOptions, modelVersion } = useUseWavespeedSeedreamForm();
 </script>
 
 <template>
@@ -20,17 +20,15 @@ const { isVersionV45, toggleVersionMode } = useUseWavespeedSeedreamForm();
             <h2 class="text-xl font-black text-white uppercase tracking-tight">
               SEEDREAM
             </h2>
-            <PartsButtonSwitch
-              @toggle="toggleVersionMode"
-              :is-enable="isVersionV45"
-            >
-              <template #opt1>v4</template>
-              <template #opt2>v4.5</template>
-            </PartsButtonSwitch>
+            <PartsDropdownList
+              v-model="modelVersion"
+              :options="versionOptions"
+              class="max-w-[100px]"
+            />
           </div>
         </div>
 
-        <ImageUploader upload-multi/>
+        <ImageUploader upload-multi />
 
         <WavespeedPromptPresetGallery />
 

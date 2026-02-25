@@ -14,6 +14,8 @@ export default defineEventHandler(async (event) => {
   const ENDPOINTS = {
     v4: "https://api.wavespeed.ai/api/v3/bytedance/seedream-v4/edit",
     "v4.5": "https://api.wavespeed.ai/api/v3/bytedance/seedream-v4.5/edit",
+    "v5-lite":
+      "https://api.wavespeed.ai/api/v3/bytedance/seedream-v5.0-lite/edit",
   };
 
   const targetUrl =

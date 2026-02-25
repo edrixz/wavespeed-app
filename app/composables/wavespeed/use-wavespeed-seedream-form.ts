@@ -13,11 +13,11 @@ export const useUseWavespeedSeedreamForm = () => {
     enableBase64Output,
   } = storeToRefs(payloadStore);
 
-  const isVersionV45 = computed(() => modelVersion.value === "v4.5");
-
-  const toggleVersionMode = () => {
-    modelVersion.value = modelVersion.value === "v4" ? "v4.5" : "v4";
-  };
+  const versionOptions = [
+    { label: "v4", value: "v4" },
+    { label: "v4.5", value: "v4.5" },
+    { label: "v5 lite", value: "v5-lite" },
+  ];
 
   // --- LOGIC: Reset ---
   const resetToDefault = () => {
@@ -28,7 +28,8 @@ export const useUseWavespeedSeedreamForm = () => {
 
   return {
     // State
-    isVersionV45,
+    modelVersion,
+    versionOptions,
     prompt,
     negative_prompt,
     width,
@@ -39,6 +40,5 @@ export const useUseWavespeedSeedreamForm = () => {
 
     // Computed & Methods
     resetToDefault,
-    toggleVersionMode,
   };
 };
