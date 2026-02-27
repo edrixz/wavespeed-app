@@ -6,7 +6,7 @@ const { ratioList, applyRatio, isActiveRatio, getButtonStyle } = useRatio();
 
 <template>
   <div class="space-y-3">
-    <span class="text-xs font-medium text-[#C4C7C5] ml-1">Aspect Ratio</span>
+    <span class="text-xs font-medium text-gray-500 dark:text-[#C4C7C5] ml-1">Aspect Ratio</span>
 
     <div class="flex flex-wrap gap-2">
       <button
@@ -16,16 +16,16 @@ const { ratioList, applyRatio, isActiveRatio, getButtonStyle } = useRatio();
         class="group flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-200 text-xs font-medium"
         :class="[
           isActiveRatio(ratio.w, ratio.h)
-            ? 'bg-[#A8C7FA] border-[#A8C7FA] text-[#041E49]' /* Active: Style Code Wiki */
-            : 'bg-transparent border-[#444746] text-[#C4C7C5] hover:bg-[#444746]/30 hover:border-[#8E918F]' /* Inactive */,
+            ? 'bg-blue-600 border-blue-600 text-white dark:bg-[#A8C7FA] dark:border-[#A8C7FA] dark:text-[#041E49]' /* Active: Style Code Wiki */
+            : 'bg-transparent border-black/10 text-gray-600 hover:bg-black/5 hover:border-black/20 dark:border-[#444746] dark:text-[#C4C7C5] dark:hover:bg-[#444746]/30 dark:hover:border-[#8E918F]' /* Inactive */,
         ]"
       >
         <span
           class="block border rounded-[1px] transition-colors"
           :class="
             isActiveRatio(ratio.w, ratio.h)
-              ? 'border-[#041E49]'
-              : 'border-[#C4C7C5]'
+              ? 'border-white dark:border-[#041E49]'
+              : 'border-gray-400 dark:border-[#C4C7C5]'
           "
           :style="getButtonStyle(ratio.w, ratio.h)"
         ></span>

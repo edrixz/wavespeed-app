@@ -17,7 +17,7 @@ withDefaults(defineProps<Props>(), {
   <button
     :type="type"
     :disabled="disabled || loading"
-    class="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-gray-300 hover:text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100 flex items-center justify-center gap-2"
+    class="w-full py-4 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 border border-black/5 dark:border-white/10 hover:border-black/10 dark:hover:border-white/20 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100 flex items-center justify-center gap-2"
   >
     <Icon
       v-if="loading"

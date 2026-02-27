@@ -34,11 +34,11 @@ onMounted(async () => {
       <div class="flex flex-col justify-between">
         <div class="flex items-center justify-between gap-3 w-full">
           <div class="flex items-center gap-3">
-            <h2 class="text-2xl font-black text-white tracking-tight">
+            <h2 class="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
               Prompt Presets
             </h2>
             <div
-              class="p-2 rounded bg-[#1A1A1A] border border-white/10 text-[10px] font-bold text-gray-400"
+              class="p-2 rounded bg-black/5 dark:bg-[#1A1A1A] border border-black/10 dark:border-white/10 text-[10px] font-bold text-gray-500 dark:text-gray-400"
             >
               {{ promptPresets.length }}
             </div>
@@ -46,7 +46,7 @@ onMounted(async () => {
 
           <button
             @click="showCreateDialog = true"
-            class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-500 active:scale-95 transition-all duration-200 border border-white/5"
+            class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-500 active:scale-95 transition-all duration-200 border border-black/5 dark:border-white/5 shadow-md"
           >
             <Icon name="lucide:plus" size="18" />
           </button>
@@ -68,7 +68,7 @@ onMounted(async () => {
               name="lucide:search"
               size="12"
               class="transition-colors duration-300"
-              :class="isSearchFocused ? 'text-white' : 'text-gray-500'"
+              :class="isSearchFocused ? 'text-neutral-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'"
             />
           </div>
           <input
@@ -77,7 +77,7 @@ onMounted(async () => {
             placeholder="Search..."
             @focus="isSearchFocused = true"
             @blur="isSearchFocused = false"
-            class="w-full bg-[#1A1A1A] hover:bg-[#252525] focus:bg-[#0A0A0A] border border-white/5 focus:border-white/20 rounded-lg py-2.5 pl-9 pr-4 text-[11px] text-white placeholder-gray-600 outline-none transition-all duration-300"
+            class="w-full bg-black/5 hover:bg-black/10 focus:bg-white dark:bg-[#1A1A1A] dark:hover:bg-[#252525] dark:focus:bg-[#0A0A0A] border border-black/10 focus:border-black/20 dark:border-white/5 dark:focus:border-white/20 rounded-lg py-2.5 pl-9 pr-4 text-[11px] text-neutral-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-600 outline-none transition-all duration-300 shadow-sm"
           />
         </div>
       </div>
@@ -91,9 +91,9 @@ onMounted(async () => {
           <div
             v-for="i in 5"
             :key="i"
-            class="flex-none w-[150px] aspect-3/4 rounded-2xl bg-[#121212] border border-white/5 relative overflow-hidden snap-start"
+            class="flex-none w-[150px] aspect-3/4 rounded-[32px] bg-black/5 dark:bg-[#121212] border border-black/5 dark:border-white/5 relative overflow-hidden snap-start"
           >
-            <div class="absolute inset-0 shimmer-flat"></div>
+            <div class="absolute inset-0 shimmer-flat dark:opacity-100 opacity-50"></div>
           </div>
         </template>
 
@@ -119,9 +119,9 @@ onMounted(async () => {
             class="w-full flex flex-col items-center justify-center py-10 opacity-40 gap-3 min-w-[300px]"
           >
             <div
-              class="w-12 h-12 rounded-xl bg-[#1A1A1A] border border-white/5 flex items-center justify-center"
+              class="w-12 h-12 rounded-xl bg-black/5 dark:bg-[#1A1A1A] border border-black/10 dark:border-white/5 flex items-center justify-center"
             >
-              <Icon name="lucide:search" size="20" class="text-gray-500" />
+              <Icon name="lucide:search" size="20" class="text-gray-400 dark:text-gray-500" />
             </div>
             <p
               class="text-[10px] font-bold uppercase tracking-widest text-gray-500"

@@ -10,7 +10,6 @@ const props = defineProps<{
   options: Option[];
 }>();
 
-// Vue 3.4+
 const model = defineModel<string>({ required: true });
 
 const isOpen = ref(false);
@@ -31,12 +30,15 @@ const selectedLabel = computed(() => {
 
 <template>
   <div class="version-select">
-    <div class="select-wrapper" @click="toggleOpen">
-      <span class="selected">{{ selectedLabel }}</span>
+    <div
+      class="flex items-center justify-between rounded-xl px-3.5 py-2.5 cursor-pointer transition-all duration-200 bg-white dark:bg-[#1e1e1e] border border-black/10 dark:border-[#333] hover:border-black/20 hover:bg-neutral-50 dark:hover:border-[#555] dark:hover:bg-[#252525]"
+      @click="toggleOpen"
+    >
+      <span class="font-medium text-neutral-900 dark:text-white">{{ selectedLabel }}</span>
 
       <svg
-        class="arrow"
-        :class="{ open: isOpen }"
+        class="w-4 h-4 text-gray-400 dark:text-[#aaa] transition-transform duration-200"
+        :class="{ 'rotate-180': isOpen }"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
         fill="currentColor"
@@ -50,11 +52,17 @@ const selectedLabel = computed(() => {
     </div>
 
     <transition name="fade">
-      <ul v-if="isOpen" class="dropdown">
+      <ul
+        v-if="isOpen"
+        class="absolute w-full mt-1.5 rounded-xl overflow-hidden z-10 bg-white dark:bg-[#1e1e1e] border border-black/10 dark:border-[#333] shadow-[0_10px_25px_rgba(0,0,0,0.1)] dark:shadow-[0_10px_25px_rgba(0,0,0,0.4)]"
+      >
         <li
           v-for="option in options"
           :key="option.value"
-          :class="{ active: option.value === model }"
+          class="px-3.5 py-2.5 cursor-pointer text-gray-600 dark:text-[#ccc] transition-colors duration-150 hover:bg-neutral-50 dark:hover:bg-[#2a2a2a]"
+          :class="{
+            'bg-neutral-100 text-neutral-900 dark:bg-[#333] dark:text-white': option.value === model
+          }"
           @click.stop="select(option.value)"
         >
           {{ option.label }}
@@ -71,74 +79,7 @@ const selectedLabel = computed(() => {
   font-family: Inter, sans-serif;
 }
 
-.label {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 6px;
-  color: #888;
-}
 
-.select-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 10px 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.select-wrapper:hover {
-  border-color: #555;
-  background: #252525;
-}
-
-.selected {
-  color: #fff;
-  font-weight: 500;
-}
-
-.arrow {
-  width: 16px;
-  height: 16px;
-  color: #aaa;
-  transition: transform 0.2s ease;
-}
-
-.arrow.open {
-  transform: rotate(180deg);
-}
-
-.dropdown {
-  position: absolute;
-  width: 100%;
-  margin-top: 6px;
-  background: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  z-index: 10;
-}
-
-.dropdown li {
-  padding: 10px 14px;
-  cursor: pointer;
-  color: #ccc;
-  transition: background 0.15s ease;
-}
-
-.dropdown li:hover {
-  background: #2a2a2a;
-}
-
-.dropdown li.active {
-  background: #333;
-  color: #fff;
-}
 
 .fade-enter-active,
 .fade-leave-active {

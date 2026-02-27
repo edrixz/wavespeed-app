@@ -5,7 +5,7 @@ defineEmits(["toggle"]);
 
 <template>
   <div
-    class="relative flex items-center p-1 bg-white/5 border border-white/10 rounded-full w-fit cursor-pointer select-none"
+    class="relative flex items-center p-1 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-full w-fit cursor-pointer select-none"
     @click="$emit('toggle')"
   >
     <div
@@ -15,14 +15,14 @@ defineEmits(["toggle"]);
 
     <div
       class="relative z-10 px-4 py-1.5 text-xs font-bold transition-colors duration-300 text-center min-w-12"
-      :class="!isEnable ? 'text-white' : 'text-gray-400 hover:text-gray-200'"
+      :class="!isEnable ? 'text-white' : 'text-gray-500 dark:text-gray-400 hover:text-neutral-900 dark:hover:text-gray-200'"
     >
       <slot name="opt1" />
     </div>
 
     <div
       class="relative z-10 px-4 py-1.5 text-xs font-bold transition-colors duration-300 text-center min-w-12"
-      :class="isEnable ? 'text-white' : 'text-gray-400 hover:text-gray-200'"
+      :class="isEnable ? 'text-white' : 'text-gray-500 dark:text-gray-400 hover:text-neutral-900 dark:hover:text-gray-200'"
     >
       <slot name="opt2" />
     </div>

@@ -38,22 +38,22 @@ const startDelete = (id: string) => {
     <Transition name="ios-modal">
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-99999 bg-[#050505] flex flex-col h-dvh w-screen touch-none"
+        class="fixed inset-0 z-99999 bg-white dark:bg-[#050505] flex flex-col h-dvh w-screen touch-none transition-colors"
       >
         <div class="absolute inset-0 z-0 pointer-events-none ambient-layer">
           <img
             :src="modelValue.thumbnail"
             class="w-full h-full object-cover scale-150 blur-[80px] opacity-30 saturate-150"
           />
-          <div class="absolute inset-0 bg-black/60"></div>
+          <div class="absolute inset-0 bg-white/60 dark:bg-black/60 transition-colors"></div>
         </div>
 
         <div
-          class="relative z-10 flex flex-col h-full max-h-full w-full overflow-hidden sm:m-6 sm:rounded-[32px] sm:border sm:border-white/10 bg-black/20 backdrop-blur-sm main-card will-change-transform"
+          class="relative z-10 flex flex-col h-full max-h-full w-full overflow-hidden sm:m-6 sm:rounded-[32px] sm:border sm:border-black/10 sm:dark:border-white/10 bg-white/40 dark:bg-black/20 backdrop-blur-sm main-card will-change-transform shadow-2xl transition-colors"
         >
           <button
-            @click="$emit('update:modelValue', null)"
-            class="absolute top-4 right-4 z-100 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white/70 hover:bg-white hover:text-black transition-all active:scale-90 ui-element"
+            @click="$emit('update:modelValue', false)"
+            class="absolute top-4 right-4 z-100 w-8 h-8 flex items-center justify-center rounded-full bg-white/60 dark:bg-black/40 backdrop-blur-md border border-black/5 dark:border-white/10 text-gray-500 dark:text-white/70 hover:bg-white hover:text-black transition-all active:scale-90 ui-element shadow-sm"
           >
             ✕
           </button>
@@ -64,12 +64,12 @@ const startDelete = (id: string) => {
               class="w-full h-full object-cover hero-img"
             />
             <div
-              class="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-[#080808] to-transparent z-10"
+              class="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-gray-100 dark:from-[#080808] to-transparent z-10 transition-colors"
             ></div>
           </div>
 
           <main
-            class="flex-1 min-h-0 relative z-20 -mt-12 bg-[#080808] rounded-t-[32px] border-t border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] ui-element content-body flex flex-col"
+            class="flex-1 min-h-0 relative z-20 -mt-12 bg-gray-100 dark:bg-[#080808] rounded-t-[32px] border-t border-black/5 dark:border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] ui-element content-body flex flex-col transition-colors duration-300"
           >
             <div class="flex-1 overflow-y-auto no-scrollbar pt-8 px-6 pb-28">
               <div class="max-w-2xl mx-auto space-y-6">
@@ -78,7 +78,7 @@ const startDelete = (id: string) => {
                   style="--delay: 0.1s"
                 >
                   <h1
-                    class="text-2xl font-black uppercase text-white leading-tight tracking-wide"
+                    class="text-2xl font-black uppercase text-neutral-900 dark:text-white leading-tight tracking-wide"
                   >
                     {{ modelValue.title }}
                   </h1>
@@ -91,7 +91,7 @@ const startDelete = (id: string) => {
 
                 <div class="space-y-4">
                   <div
-                    class="p-5 rounded-2xl bg-white/5 border border-white/5 animate-in-up"
+                    class="p-5 rounded-2xl bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 animate-in-up shadow-sm dark:shadow-none"
                     style="--delay: 0.2s"
                   >
                     <div class="flex items-center gap-2 mb-2 opacity-50">
@@ -101,12 +101,12 @@ const startDelete = (id: string) => {
                         class="text-blue-400"
                       />
                       <span
-                        class="text-[9px] font-bold uppercase tracking-widest text-gray-300"
+                        class="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-300"
                         >Prompt</span
                       >
                     </div>
                     <p
-                      class="text-[12px] text-gray-300 font-mono leading-relaxed wrap-break-word whitespace-pre-wrap"
+                      class="text-[12px] text-gray-600 dark:text-gray-300 font-mono leading-relaxed wrap-break-word whitespace-pre-wrap"
                     >
                       {{ modelValue.prompt }}
                     </p>
@@ -114,7 +114,7 @@ const startDelete = (id: string) => {
 
                   <div
                     v-if="modelValue.negative_prompt"
-                    class="p-5 rounded-2xl bg-red-500/2 border border-red-500/5 animate-in-up"
+                    class="p-5 rounded-2xl bg-red-50 dark:bg-red-500/2 border border-red-100 dark:border-red-500/5 animate-in-up shadow-sm dark:shadow-none"
                     style="--delay: 0.3s"
                   >
                     <div class="flex items-center gap-2 mb-2 opacity-50">
@@ -124,12 +124,12 @@ const startDelete = (id: string) => {
                         class="text-red-400"
                       />
                       <span
-                        class="text-[9px] font-bold uppercase tracking-widest text-gray-300"
+                        class="text-[9px] font-bold uppercase tracking-widest text-red-400 dark:text-gray-300"
                         >Negative</span
                       >
                     </div>
                     <p
-                      class="text-[11px] text-red-200/50 font-mono leading-relaxed wrap-break-word whitespace-pre-wrap"
+                      class="text-[11px] text-red-500 dark:text-red-200/50 font-mono leading-relaxed wrap-break-word whitespace-pre-wrap"
                     >
                       {{ modelValue.negative_prompt }}
                     </p>
@@ -146,7 +146,7 @@ const startDelete = (id: string) => {
             style="--delay: 0.4s"
           >
             <div
-              class="max-w-xl mx-auto p-1.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/10 shadow-2xl flex items-center justify-between gap-2 pointer-events-auto"
+              class="max-w-xl mx-auto p-1.5 rounded-full bg-white/60 dark:bg-white/10 backdrop-blur-xl border border-black/10 dark:border-white/10 shadow-2xl flex items-center justify-between gap-2 pointer-events-auto transition-colors"
             >
               <button
                 @click="startDelete(modelValue.id)"
@@ -164,7 +164,7 @@ const startDelete = (id: string) => {
               </button>
               <button
                 @click="handleApply(modelValue)"
-                class="flex-1 h-12 bg-white text-black rounded-full flex items-center justify-center gap-2 text-[11px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-lg"
+                class="flex-1 h-12 bg-neutral-900 dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center gap-2 text-[11px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-lg hover:shadow-xl dark:shadow-white/20"
               >
                 <span>Activate</span>
                 <Icon name="lucide:arrow-right" size="14" />

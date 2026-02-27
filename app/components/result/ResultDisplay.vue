@@ -41,27 +41,27 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="flex-1 rounded-2xl border border-gray-800 p-1 min-h-[500px] flex items-center justify-center relative overflow-hidden transition-all duration-700 group bg-[#050505] shadow-2xl"
+    class="flex-1 rounded-2xl border border-black/5 dark:border-gray-800 p-1 min-h-[500px] flex items-center justify-center relative overflow-hidden transition-all duration-700 group bg-white dark:bg-[#050505] shadow-xl dark:shadow-2xl"
     :class="{ 'border-blue-500/30 ring-1 ring-blue-500/20': loading }"
   >
     <div
       v-if="loading || image"
-      class="absolute top-0 left-0 right-0 z-50 p-3 bg-black/40 backdrop-blur-md border-b border-white/5 flex flex-col gap-2"
+      class="absolute top-0 left-0 right-0 z-50 p-3 bg-white/40 dark:bg-black/40 backdrop-blur-md border-b border-black/5 dark:border-white/5 flex flex-col gap-2 transition-colors"
     >
       <div class="flex justify-between items-center px-1">
         <div class="flex items-center gap-2">
           <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
           <span
-            class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400/80"
+            class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400/80"
           >
             {{ loading ? "AI Engine Active" : "Neural Output" }}
           </span>
         </div>
-        <span class="text-[10px] font-mono text-gray-500"
+        <span class="text-[10px] font-mono text-gray-600 dark:text-gray-500"
           >{{ Math.floor(progress) }}%</span
         >
       </div>
-      <div class="h-[2px] w-full bg-white/5 overflow-hidden rounded-full">
+      <div class="h-[2px] w-full bg-black/5 dark:bg-white/5 overflow-hidden rounded-full transition-colors">
         <div
           class="h-full bg-linear-to-r from-blue-600 via-cyan-400 to-blue-600 transition-all duration-500 ease-out shadow-[0_0_8px_rgba(56,189,248,0.6)]"
           :style="{ width: `${progress}%` }"
@@ -85,7 +85,7 @@ onUnmounted(() => {
 
     <div
       v-if="loading"
-      class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black"
+      class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/90 dark:bg-black backdrop-blur-sm transition-colors"
     >
       <div
         class="absolute inset-0 z-20 pointer-events-none overflow-hidden opacity-20"
@@ -141,15 +141,15 @@ onUnmounted(() => {
       class="text-center z-10 group-hover:scale-105 transition-transform duration-500"
     >
       <div class="relative inline-block mb-6">
-        <Icon name="lucide:wand-sparkles" class="w-16 h-16 text-gray-800" />
+        <Icon name="lucide:wand-sparkles" class="w-16 h-16 text-gray-300 dark:text-gray-800 transition-colors" />
         <div
           class="absolute -top-2 -right-2 w-4 h-4 bg-blue-500 rounded-full blur-md animate-pulse"
         ></div>
       </div>
-      <h3 class="text-gray-400 font-black uppercase tracking-[0.4em] text-sm">
+      <h3 class="text-neutral-400 dark:text-gray-400 font-black uppercase tracking-[0.4em] text-sm transition-colors">
         Waiting for spark
       </h3>
-      <p class="text-gray-600 text-[10px] mt-2 uppercase tracking-widest">
+      <p class="text-gray-400 dark:text-gray-600 text-[10px] mt-2 uppercase tracking-widest transition-colors">
         Select images and build your prompt
       </p>
     </div>
@@ -159,7 +159,7 @@ onUnmounted(() => {
       :href="image"
       target="_blank"
       download="wavespeed-ai.png"
-      class="absolute bottom-6 right-6 z-40 bg-white/10 hover:bg-blue-600 text-white px-6 py-3 rounded-2xl transition-all flex items-center gap-3 text-[10px] font-black uppercase tracking-widest backdrop-blur-xl border border-white/10 hover:border-blue-400 shadow-2xl active:scale-95"
+      class="absolute bottom-6 right-6 z-40 bg-black/5 dark:bg-white/10 hover:bg-blue-600 dark:hover:bg-blue-600 text-neutral-800 dark:text-white hover:text-white px-6 py-3 rounded-2xl transition-all flex items-center gap-3 text-[10px] font-black uppercase tracking-widest backdrop-blur-xl border border-black/10 dark:border-white/10 hover:border-blue-400 shadow-xl active:scale-95"
     >
       <Icon name="lucide:download" size="14" />
       Download

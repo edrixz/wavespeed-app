@@ -45,11 +45,11 @@ const triggerFileInput = () => fileInput.value?.click();
     <div
       v-if="!modelValue"
       @click="triggerFileInput"
-      class="group border-2 border-dashed border-white/10 rounded-2xl p-8 transition-all cursor-pointer hover:border-blue-500/40 hover:bg-white/2 active:scale-[0.98]"
+      class="group border-2 border-dashed border-black/10 dark:border-white/10 rounded-2xl p-8 transition-all cursor-pointer hover:border-blue-500/40 hover:bg-black/5 dark:hover:bg-white/2 active:scale-[0.98]"
     >
       <div class="flex flex-col items-center gap-3">
         <div
-          class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-blue-600/10 transition-all duration-300"
+          class="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center group-hover:bg-blue-600/10 transition-all duration-300"
         >
           <svg
             class="w-5 h-5 text-gray-500 group-hover:text-blue-500"
@@ -66,7 +66,7 @@ const triggerFileInput = () => fileInput.value?.click();
           </svg>
         </div>
         <div class="text-center">
-          <p class="text-[10px] font-bold text-white tracking-wide">
+          <p class="text-[10px] font-bold text-neutral-900 dark:text-white tracking-wide">
             Click to upload
           </p>
           <p class="text-[8px] text-gray-500 mt-1 uppercase">
@@ -78,11 +78,11 @@ const triggerFileInput = () => fileInput.value?.click();
 
     <div
       v-else
-      class="relative rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-xl group"
+      class="relative rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] shadow-xl group transition-colors"
     >
       <div
         @click="triggerFileInput"
-        class="aspect-4/3 relative overflow-hidden bg-black cursor-pointer"
+        class="aspect-4/3 relative overflow-hidden bg-gray-100 dark:bg-black cursor-pointer transition-colors"
       >
         <img
           :src="localPreviewUrl"
@@ -94,7 +94,7 @@ const triggerFileInput = () => fileInput.value?.click();
           class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
         >
           <span
-            class="bg-black/50 text-white text-[10px] px-2 py-1 rounded-md backdrop-blur-sm"
+            class="bg-white/80 dark:bg-black/50 text-neutral-900 dark:text-white text-[10px] px-2 py-1 rounded-md backdrop-blur-sm"
           >
             Change Image
           </span>
@@ -102,7 +102,7 @@ const triggerFileInput = () => fileInput.value?.click();
 
         <button
           @click.stop="emit('update:modelValue', null)"
-          class="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 hover:bg-red-500/80 text-white flex items-center justify-center backdrop-blur-md transition-all z-10"
+          class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 dark:bg-black/50 hover:bg-red-500/80 hover:text-white text-gray-700 dark:text-white flex items-center justify-center backdrop-blur-md transition-all z-10"
           title="Remove image"
         >
           <svg
@@ -121,7 +121,7 @@ const triggerFileInput = () => fileInput.value?.click();
         </button>
       </div>
 
-      <div class="p-4 bg-white/2 border-t border-white/5 space-y-3">
+      <div class="p-4 bg-gray-50/50 dark:bg-white/2 border-t border-black/5 dark:border-white/5 space-y-3 transition-colors">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2 overflow-hidden">
             <div
@@ -133,7 +133,7 @@ const triggerFileInput = () => fileInput.value?.click();
                 />
               </svg>
             </div>
-            <p class="text-[9px] font-bold text-gray-300 truncate">
+            <p class="text-[9px] font-bold text-gray-600 dark:text-gray-300 truncate">
               {{ modelValue.name }}
             </p>
           </div>
@@ -143,7 +143,7 @@ const triggerFileInput = () => fileInput.value?.click();
         </div>
 
         <div class="space-y-1.5">
-          <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+          <div class="h-1 w-full bg-black/10 dark:bg-white/5 rounded-full overflow-hidden">
             <div
               class="h-full bg-blue-500 transition-all duration-300"
               :style="{ width: progress + '%' }"

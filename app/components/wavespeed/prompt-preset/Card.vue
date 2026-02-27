@@ -14,7 +14,7 @@ const toggleVisibility = (e: Event) => {
 <template>
   <div
     @click="$emit('select', item)"
-    class="flex-none w-[140px] h-[220px] rounded-[32px] relative overflow-hidden group cursor-pointer snap-start border border-white/5 bg-[#0d0d0d] shadow-2xl transition-all duration-500 hover:border-blue-500/40"
+    class="flex-none w-[140px] h-[220px] rounded-[32px] relative overflow-hidden group cursor-pointer snap-start border border-black/10 dark:border-white/5 bg-white dark:bg-[#0d0d0d] shadow-xl dark:shadow-2xl transition-all duration-500 hover:border-blue-500/40"
   >
     <div class="absolute inset-0 transition-all duration-700">
       <img
@@ -29,24 +29,24 @@ const toggleVisibility = (e: Event) => {
       />
       <div
         v-else
-        class="w-full h-full bg-linear-to-br from-gray-900 to-black"
+        class="w-full h-full bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-black"
       ></div>
 
-      <div v-if="!isVisible" class="absolute inset-0 bg-black/20 z-10"></div>
+      <div v-if="!isVisible" class="absolute inset-0 bg-white/20 dark:bg-black/20 z-10 transition-colors"></div>
     </div>
 
     <button
       @click="toggleVisibility"
-      class="absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-blue-600 transition-all active:scale-90 shadow-xl"
+      class="absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-white/60 dark:bg-black/40 backdrop-blur-md border border-black/5 dark:border-white/10 flex items-center justify-center text-gray-600 dark:text-white/70 hover:text-white hover:bg-blue-600 dark:hover:bg-blue-600 transition-all active:scale-90 shadow-lg dark:shadow-xl"
     >
       <Icon :name="isVisible ? 'lucide:eye' : 'lucide:eye-off'" size="14" />
     </button>
 
     <div
-      class="absolute inset-x-0 bottom-0 pt-16 pb-4 px-4 bg-linear-to-t from-black via-black/90 to-transparent backdrop-blur-[1px] z-20"
+      class="absolute inset-x-0 bottom-0 pt-16 pb-4 px-4 bg-linear-to-t from-white via-white/90 to-transparent dark:from-black dark:via-black/90 backdrop-blur-[1px] z-20 transition-colors duration-300"
     >
       <h4
-        class="text-white font-black text-[9px] uppercase tracking-wider truncate mb-1"
+        class="text-neutral-900 dark:text-white font-black text-[9px] uppercase tracking-wider truncate mb-1"
       >
         {{ item.title }}
       </h4>
