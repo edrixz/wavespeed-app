@@ -70,19 +70,20 @@ const formatTime = (ts: number) => {
 </script>
 
 <template>
-  <div class="relative" ref="containerRef">
-    <button
-      @click="isOpen = !isOpen"
-      class="relative p-2.5 rounded-xl text-gray-400 transition-all outline-none hover:text-neutral-900 hover:bg-black/5 dark:hover:text-white dark:hover:bg-white/5"
-      :class="{ 'text-neutral-900 bg-black/5 dark:text-white dark:bg-white/5': isOpen }"
-    >
-      <Icon name="lucide:bell" size="20" />
-
+  <div class="relative flex items-center h-full" ref="containerRef">
+    <div class="relative inline-flex items-center">
+      <UButton
+        icon="i-lucide-bell"
+        color="neutral"
+        variant="ghost"
+        @click="isOpen = !isOpen"
+        :class="{ 'bg-gray-50 dark:bg-gray-800': isOpen }"
+      />
       <span
         v-if="hasUnread"
-        class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#0a0a0a]"
+        class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-900 pointer-events-none"
       ></span>
-    </button>
+    </div>
 
     <Transition name="slide-fade">
       <div
