@@ -13,13 +13,13 @@ watch(
 
 <template>
   <div
-    class="flex h-screen bg-[#131314] text-[#E3E3E3] font-sans overflow-hidden relative"
+    class="flex h-screen bg-neutral-50 text-neutral-900 dark:bg-[#131314] dark:text-[#E3E3E3] font-sans overflow-hidden relative transition-colors"
   >
     <CommonToastContainer />
 
     <button
       @click="isSidebarOpen = !isSidebarOpen"
-      class="lg:hidden fixed top-2 left-2 z-[1100] p-2.5 rounded-md backdrop-blur-md border border-white/5 text-gray-400 hover:text-white transition-all duration-300"
+      class="lg:hidden fixed top-2 left-2 z-1100 p-2.5 rounded-md backdrop-blur-md border border-white/5 text-gray-400 hover:text-white transition-all duration-300"
     >
       <div class="relative w-2 h-2 flex items-center justify-center">
         <Icon
@@ -47,20 +47,20 @@ watch(
 
     <div
       v-if="isSidebarOpen"
-      class="fixed inset-0 bg-[#131314]/80 backdrop-blur-sm z-50 lg:hidden"
+      class="fixed inset-0 bg-neutral-50/80 dark:bg-[#131314]/80 backdrop-blur-sm z-50 lg:hidden transition-colors"
       @click="isSidebarOpen = false"
     />
 
     <LayoutAppSidebar :is-open="isSidebarOpen" @close="isSidebarOpen = false" />
 
-    <div class="flex-1 flex flex-col min-w-0 bg-[#131314] relative">
+    <div class="flex-1 flex flex-col min-w-0 bg-neutral-50 dark:bg-[#131314] relative transition-colors">
       <div
-        class="flex-1 flex flex-col h-full lg:rounded-tl-[24px] lg:my-2 lg:mr-2 bg-[#1E1F20] overflow-hidden border border-[#444746]/30 shadow-2xl relative"
+        class="flex-1 flex flex-col h-full lg:rounded-tl-[24px] lg:my-2 lg:mr-2 bg-white dark:bg-[#1E1F20] overflow-hidden border border-black/10 dark:border-[#444746]/30 shadow-2xl relative transition-colors"
       >
-        <LayoutAppHeader class="z-[1000]" />
+        <LayoutAppHeader class="z-1000" />
 
         <main
-          class="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth bg-[#0d0d0d]"
+          class="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth bg-neutral-100 dark:bg-[#0d0d0d] transition-colors"
         >
           <div class="p-2 pt-20 lg:pt-24 max-w-[1200px] mx-auto w-full">
             <slot />

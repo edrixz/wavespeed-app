@@ -30,7 +30,7 @@ withDefaults(defineProps<Props>(), {
       </div>
 
       <span
-        class="relative flex h-full w-full items-center justify-center rounded-full bg-[#1E1F20] px-8 py-3 text-sm font-medium text-[#E3E3E3] backdrop-blur-3xl transition-colors duration-300 group-hover:bg-[#131314] group-hover:text-white"
+        class="relative flex h-full w-full items-center justify-center rounded-full bg-white dark:bg-[#1E1F20] px-8 py-3 text-sm font-medium text-neutral-900 dark:text-[#E3E3E3] backdrop-blur-3xl transition-colors duration-300 group-hover:bg-neutral-100 dark:group-hover:bg-[#131314] group-hover:text-black dark:group-hover:text-white"
       >
         <Icon
           v-if="loading"

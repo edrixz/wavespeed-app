@@ -140,7 +140,7 @@ const handleTouchEndAction = async () => {
     <header class="px-4 pt-4 animate-fade-in-down space-y-6">
       <div class="flex justify-between items-end">
         <div>
-          <h1 class="text-2xl font-black uppercase text-white">Library</h1>
+          <h1 class="text-2xl font-black uppercase text-neutral-900 dark:text-white">Library</h1>
           <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">
             Your Creative Assets
           </p>
@@ -153,7 +153,7 @@ const handleTouchEndAction = async () => {
             :class="
               isPrivacyMode
                 ? 'bg-blue-500 border-blue-400 text-white'
-                : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
+                : 'bg-black/5 border-black/10 dark:bg-white/5 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'
             "
           >
             <Icon
@@ -162,7 +162,7 @@ const handleTouchEndAction = async () => {
             />
           </button>
 
-          <div class="px-3 py-1 bg-white/5 rounded-full border border-white/10">
+          <div class="px-3 py-1 bg-black/5 dark:bg-white/5 rounded-full border border-black/10 dark:border-white/10">
             <span class="text-[10px] font-bold text-blue-500">
               {{ displayedItems.length }} ITEMS
             </span>
@@ -171,7 +171,7 @@ const handleTouchEndAction = async () => {
       </div>
 
       <div
-        class="p-1 bg-white/5 rounded-2xl border border-white/5 flex relative"
+        class="p-1 bg-black/5 dark:bg-white/5 rounded-2xl border border-black/5 dark:border-white/5 flex relative"
       >
         <button
           v-for="tab in tabs"
@@ -180,8 +180,8 @@ const handleTouchEndAction = async () => {
           class="flex-1 py-2.5 rounded-xl flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 relative z-10"
           :class="
             activeTab === tab.id
-              ? 'bg-white text-black shadow-lg scale-100'
-              : 'text-gray-500 hover:text-white hover:bg-white/5'
+              ? 'bg-white dark:bg-white text-black shadow-lg scale-100'
+              : 'text-gray-500 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
           "
         >
           <Icon :name="tab.icon" size="14" /> {{ tab.label }}
@@ -197,8 +197,8 @@ const handleTouchEndAction = async () => {
         v-if="displayedItems.length === 0"
         class="col-span-full py-20 flex flex-col items-center justify-center opacity-40"
       >
-        <Icon name="lucide:box" size="40" class="mb-4 text-white/20" />
-        <p class="text-[10px] uppercase tracking-widest text-white/40">
+        <Icon name="lucide:box" size="40" class="mb-4 text-gray-300 dark:text-white/20" />
+        <p class="text-[10px] uppercase tracking-widest text-gray-400 dark:text-white/40">
           No items found in {{ activeTab }}
         </p>
       </div>
@@ -213,7 +213,7 @@ const handleTouchEndAction = async () => {
         }"
       >
         <div
-          class="w-full h-full rounded-4xl overflow-hidden border border-white/5 bg-[#0d0d0d] transition-all will-change-transform relative"
+          class="w-full h-full rounded-4xl overflow-hidden border border-black/10 dark:border-white/5 bg-neutral-100 dark:bg-[#0d0d0d] transition-all will-change-transform relative"
           :style="{
             transitionDuration:
               isHolding && currentHoldingItem?.id === item.id ? '0.6s' : '0.4s',
@@ -241,9 +241,9 @@ const handleTouchEndAction = async () => {
           />
           <div
             v-else
-            class="w-full h-full bg-white/5 flex items-center justify-center"
+            class="w-full h-full bg-black/5 dark:bg-white/5 flex items-center justify-center"
           >
-            <Icon name="lucide:image-off" size="24" class="text-white/20" />
+            <Icon name="lucide:image-off" size="24" class="text-gray-300 dark:text-white/20" />
           </div>
 
           <div
@@ -253,7 +253,7 @@ const handleTouchEndAction = async () => {
             "
             class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none animate-fade-in"
           >
-            <Icon name="lucide:lock" size="24" class="text-white/30" />
+            <Icon name="lucide:lock" size="24" class="text-gray-400 dark:text-white/30" />
           </div>
 
           <template
@@ -267,7 +267,7 @@ const handleTouchEndAction = async () => {
               class="absolute top-4 right-4 z-20 animate-fade-in"
             >
               <div
-                class="w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 shadow-lg"
+                class="w-8 h-8 rounded-full bg-white/90 dark:bg-black/40 backdrop-blur-md flex items-center justify-center border border-black/10 dark:border-white/10 shadow-lg"
               >
                 <Icon
                   name="lucide:heart"
@@ -282,7 +282,7 @@ const handleTouchEndAction = async () => {
               class="absolute bottom-4 left-4 z-20 animate-fade-in"
             >
               <div
-                class="flex px-3 py-1 rounded-full bg-blue-600/80 backdrop-blur-md border border-white/10 shadow-lg"
+                class="flex px-3 py-1 rounded-full bg-blue-600/90 dark:bg-blue-600/80 backdrop-blur-md border border-black/10 dark:border-white/10 shadow-lg"
               >
                 <span
                   class="text-[8px] font-black text-white uppercase tracking-widest"

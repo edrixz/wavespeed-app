@@ -55,7 +55,7 @@ const onInput = (event: Event) => {
         :placeholder="placeholder"
         :required="required"
         @input="onInput"
-        class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-white outline-none focus:border-blue-500 transition-all placeholder:text-gray-600"
+        class="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-4 rounded-2xl text-neutral-900 dark:text-white outline-none focus:border-blue-500 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-600"
         :class="[
           icon ? 'pl-12' : 'pl-4', // Padding trái tùy thuộc có icon không
           type === 'password' ? 'pr-12' : 'pr-4', // Padding phải nếu là password

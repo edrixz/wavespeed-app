@@ -61,7 +61,7 @@ const getGroupStatusIcon = (status: string) => {
       class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4"
     >
       <div>
-        <h1 class="text-2xl font-black uppercase tracking-wider text-white">
+        <h1 class="text-2xl font-black uppercase tracking-wider text-neutral-900 dark:text-white">
           System Logs
         </h1>
         <p class="text-xs text-gray-500 uppercase tracking-[0.2em] mt-1">
@@ -69,7 +69,7 @@ const getGroupStatusIcon = (status: string) => {
         </p>
       </div>
       <ButtonSecondary
-        class="!w-auto !py-2 !px-4"
+        class="w-auto! py-2! px-4!"
         icon="lucide:trash-2"
         @click="loggerStore.clearMessages"
       >
@@ -78,31 +78,31 @@ const getGroupStatusIcon = (status: string) => {
     </div>
 
     <div
-      class="bg-[#0d0d0d] border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl"
+      class="bg-white dark:bg-[#0d0d0d] border border-black/5 dark:border-white/5 rounded-4xl overflow-hidden shadow-xl dark:shadow-2xl transition-colors"
     >
       <div class="overflow-x-auto">
         <table class="w-full text-left border-separate border-spacing-0">
           <thead>
-            <tr class="bg-white/5">
+            <tr class="bg-black/5 dark:bg-white/5">
               <th
-                class="p-5 text-[10px] font-black uppercase text-gray-500 tracking-widest border-b border-white/5"
+                class="p-5 text-[10px] font-black uppercase text-gray-500 tracking-widest border-b border-black/5 dark:border-white/5"
               >
                 Timestamp
               </th>
               <th
-                class="p-5 text-[10px] font-black uppercase text-gray-500 tracking-widest border-b border-white/5"
+                class="p-5 text-[10px] font-black uppercase text-gray-500 tracking-widest border-b border-black/5 dark:border-white/5"
               >
                 Type
               </th>
               <th
-                class="p-5 text-[10px] font-black uppercase text-gray-500 tracking-widest border-b border-white/5"
+                class="p-5 text-[10px] font-black uppercase text-gray-500 tracking-widest border-b border-black/5 dark:border-white/5"
               >
                 Message / Process
               </th>
             </tr>
           </thead>
 
-          <tbody class="divide-y divide-white/5">
+          <tbody class="divide-y divide-black/5 dark:divide-white/5">
             <tr v-if="loggerStore.messages.length === 0">
               <td
                 colspan="3"
@@ -158,7 +158,7 @@ const getGroupStatusIcon = (status: string) => {
                 <td class="p-5">
                   <div class="flex justify-between items-center">
                     <span
-                      class="text-xs font-black uppercase tracking-widest text-white"
+                      class="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-white"
                     >
                       {{ group.name }}
                       <span
@@ -184,7 +184,7 @@ const getGroupStatusIcon = (status: string) => {
                   <tr
                     v-for="item in group.items"
                     :key="item.id"
-                    class="bg-black/20 border-l border-blue-500/20"
+                    class="bg-neutral-50 dark:bg-black/20 border-l border-blue-500/20"
                   >
                     <td class="p-4 pl-10 text-[9px] font-mono text-gray-600">
                       {{ new Date(item.timestamp).toLocaleTimeString() }}
@@ -217,7 +217,7 @@ const getGroupStatusIcon = (status: string) => {
             <tr
               v-for="log in groupedMessages.orphans"
               :key="log.id"
-              class="hover:bg-white/[0.02]"
+              class="hover:bg-black/5 dark:hover:bg-white/2"
             >
               <td
                 class="p-5 text-[10px] font-mono text-gray-500 border-l border-transparent"
@@ -234,7 +234,7 @@ const getGroupStatusIcon = (status: string) => {
                   {{ log.type }}
                 </span>
               </td>
-              <td class="p-5 text-xs text-gray-300 font-medium italic">
+              <td class="p-5 text-xs text-gray-600 dark:text-gray-300 font-medium italic">
                 {{ log.message }}
               </td>
             </tr>

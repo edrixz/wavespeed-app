@@ -18,9 +18,7 @@ onMounted(() => {
 </template>
 
 <style>
-/* Đảm bảo nền luôn đồng nhất từ Server để tránh nháy class */
 body {
-  background-color: #050505;
   margin: 0;
 }
 </style>

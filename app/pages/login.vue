@@ -34,7 +34,7 @@ const validateAndLogin = async () => {
 <template>
   <div class="space-y-8 w-full max-w-[360px]">
     <div class="text-center">
-      <h1 class="text-2xl font-black uppercase tracking-[0.4em] text-white">
+      <h1 class="text-2xl font-black uppercase tracking-[0.4em] text-neutral-900 dark:text-white">
         Wavespeed
       </h1>
       <p class="text-[9px] text-gray-500 uppercase mt-2 tracking-widest">

@@ -37,13 +37,13 @@ if (process.client) {
   <div class="relative" ref="menuRef">
     <button
       @click="toggleMenu"
-      class="flex items-center gap-3 p-1 rounded-full hover:bg-white/5 transition-all outline-none"
+      class="flex items-center gap-3 p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all outline-none"
     >
       <div
         class="w-9 h-9 lg:w-10 lg:h-10 rounded-full bg-linear-to-br from-blue-600 to-purple-600 p-[1.5px] shadow-lg shadow-blue-500/10"
       >
         <div
-          class="w-full h-full rounded-full bg-[#0a0a0a] flex items-center justify-center text-[11px] font-black text-white"
+          class="w-full h-full rounded-full bg-white dark:bg-[#0a0a0a] flex items-center justify-center text-[11px] font-black text-neutral-900 dark:text-white transition-colors"
         >
           {{ user?.email?.charAt(0).toUpperCase() }}
         </div>
@@ -59,15 +59,15 @@ if (process.client) {
     <Transition name="slide-fade">
       <div
         v-if="isOpen"
-        class="absolute right-0 mt-3 w-64 bg-[#111111] border border-white/5 rounded-2xl shadow-2xl p-2 z-100 backdrop-blur-xl"
+        class="absolute right-0 mt-3 w-64 bg-white dark:bg-[#111111] border border-black/5 dark:border-white/5 rounded-2xl shadow-xl dark:shadow-2xl p-2 z-100 backdrop-blur-xl transition-colors"
       >
-        <div class="px-4 py-3 border-b border-white/5 mb-2">
+        <div class="px-4 py-3 border-b border-black/5 dark:border-white/5 mb-2">
           <p
             class="text-[10px] text-gray-500 font-bold uppercase tracking-widest"
           >
             Signed in as
           </p>
-          <p class="text-xs font-bold text-white truncate mt-0.5">
+          <p class="text-xs font-bold text-neutral-900 dark:text-white truncate mt-0.5">
             {{ user?.email }}
           </p>
         </div>
@@ -75,20 +75,20 @@ if (process.client) {
         <div class="space-y-1">
           <NuxtLink
             to="/settings"
-            class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest text-gray-400 transition-all hover:bg-white/5 hover:text-white"
+            class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 transition-all hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white"
             @click="isOpen = false"
           >
             <Icon name="lucide:settings" size="16" />
             <span>Settings</span>
           </NuxtLink>
 
-          <NuxtLink to="/billing" class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest text-gray-400 transition-all hover:bg-white/5 hover:text-white" @click="isOpen = false">
+          <NuxtLink to="/billing" class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 transition-all hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white" @click="isOpen = false">
             <Icon name="lucide:credit-card" size="16" />
             <span>Billing</span>
           </NuxtLink>
         </div>
 
-        <div class="h-px bg-white/5 my-2"></div>
+        <div class="h-px bg-black/5 dark:bg-white/5 my-2"></div>
 
         <button
           @click="handleLogout"

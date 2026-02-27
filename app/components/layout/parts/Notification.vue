@@ -73,8 +73,8 @@ const formatTime = (ts: number) => {
   <div class="relative" ref="containerRef">
     <button
       @click="isOpen = !isOpen"
-      class="relative p-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all outline-none"
-      :class="{ 'text-white bg-white/5': isOpen }"
+      class="relative p-2.5 rounded-xl text-gray-400 transition-all outline-none hover:text-neutral-900 hover:bg-black/5 dark:hover:text-white dark:hover:bg-white/5"
+      :class="{ 'text-neutral-900 bg-black/5 dark:text-white dark:bg-white/5': isOpen }"
     >
       <Icon name="lucide:bell" size="20" />
 
@@ -87,10 +87,10 @@ const formatTime = (ts: number) => {
     <Transition name="slide-fade">
       <div
         v-if="isOpen"
-        class="fixed inset-x-4 top-12 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-3 w-auto sm:w-80 bg-[#111111] border border-white/5 rounded-4xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-100 overflow-hidden backdrop-blur-2xl"
+        class="fixed inset-x-4 top-12 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-3 w-auto sm:w-80 bg-white dark:bg-[#111111] border border-black/5 dark:border-white/5 rounded-4xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-100 overflow-hidden backdrop-blur-2xl transition-colors"
       >
         <div
-          class="p-5 border-b border-white/5 flex justify-between items-center bg-white/2"
+          class="p-5 border-b border-black/5 dark:border-white/5 flex justify-between items-center bg-black/5 dark:bg-white/5"
         >
           <h3
             class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500"
@@ -125,7 +125,7 @@ const formatTime = (ts: number) => {
           <div
             v-for="log in importantNotifications"
             :key="log.id"
-            class="p-4 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors cursor-default group"
+            class="p-4 border-b border-black/5 dark:border-white/5 last:border-0 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-default group"
           >
             <div class="flex gap-4">
               <div
@@ -143,7 +143,7 @@ const formatTime = (ts: number) => {
               <div class="flex-1 min-w-0">
                 <div class="flex justify-between items-start gap-2">
                   <p
-                    class="text-[11px] font-bold text-gray-300 leading-snug group-hover:text-white transition-colors"
+                    class="text-[11px] font-bold text-gray-600 dark:text-gray-300 leading-snug group-hover:text-neutral-900 dark:group-hover:text-white transition-colors"
                   >
                     {{ log.message }}
                   </p>
@@ -156,7 +156,7 @@ const formatTime = (ts: number) => {
                   </span>
                   <span
                     v-if="log.groupName"
-                    class="text-[8px] bg-white/5 text-gray-500 px-1.5 py-0.5 rounded uppercase font-bold"
+                    class="text-[8px] bg-black/5 dark:bg-white/5 text-gray-500 px-1.5 py-0.5 rounded uppercase font-bold"
                   >
                     {{ log.groupName }}
                   </span>
@@ -169,7 +169,7 @@ const formatTime = (ts: number) => {
         <NuxtLink
           to="/history-logs"
           @click="isOpen = false"
-          class="block p-4 text-center text-[9px] font-black uppercase tracking-[0.3em] text-gray-500 hover:text-white hover:bg-white/5 transition-all border-t border-white/5"
+          class="block p-4 text-center text-[9px] font-black uppercase tracking-[0.3em] text-gray-500 hover:text-neutral-900 dark:hover:text-white transition-all border-t border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5"
         >
           Check System Logs
         </NuxtLink>

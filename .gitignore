@@ -18,8 +18,10 @@ logs
 .fleet
 .idea
 
+# Text files
+*.txt
+
 # Local env files
 .env
 .env.*
 !.env.example
-lint_output.txt
