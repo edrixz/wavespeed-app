@@ -1,11 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "@nuxt/ui";
 
 @layer base {
   body {
-    /* Google Dark Background & Font */
-    @apply bg-[#131314] text-[#E3E3E3] font-sans antialiased;
+    background-color: #131314;
+    color: #E3E3E3;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   input[type="text"],
@@ -22,26 +24,59 @@
   h2,
   h3,
   h4,
-  h5,
   h6 {
-    @apply tracking-tight text-[#E3E3E3];
+    letter-spacing: -0.025em;
+    color: #E3E3E3;
   }
 }
 
 @layer components {
   /* Google Input Style */
   .input-field {
-    @apply bg-[#1E1F20] border border-[#444746] text-[#E3E3E3] text-sm rounded-[4px] 
-           focus:ring-2 focus:ring-[#A8C7FA] focus:border-[#A8C7FA] block w-full p-3 transition-all
-           placeholder:text-[#8E918F];
+    background-color: #1E1F20;
+    border: 1px solid #444746;
+    color: #E3E3E3;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: 4px;
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .input-field:focus {
+    box-shadow: 0 0 0 2px #A8C7FA;
+    border-color: #A8C7FA;
+  }
+  .input-field::placeholder {
+    color: #8E918F;
   }
 
   /* Material 3 Button */
   .btn-primary {
-    @apply px-6 py-2.5 rounded-full bg-[#A8C7FA] hover:bg-[#D3E3FD] text-[#041E49] font-medium transition-colors shadow-none hover:shadow-md;
+    padding: 0.625rem 1.5rem;
+    border-radius: 9999px;
+    background-color: #A8C7FA;
+    color: #041E49;
+    font-weight: 500;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+  }
+  .btn-primary:hover {
+    background-color: #D3E3FD;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
   .btn-secondary {
-    @apply px-6 py-2.5 rounded-full border border-[#8E918F] text-[#A8C7FA] hover:bg-[#A8C7FA]/10 font-medium transition-colors;
+    padding: 0.625rem 1.5rem;
+    border-radius: 9999px;
+    border: 1px solid #8E918F;
+    color: #A8C7FA;
+    background-color: transparent;
+    font-weight: 500;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-secondary:hover {
+    background-color: rgba(168, 199, 250, 0.1);
   }
 }

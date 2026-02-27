@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const toastStore = useToastStore();
+const toastStore = useSystemToastStore();
 
 const icons: Record<string, string> = {
   success: "✓",
@@ -19,13 +19,13 @@ const colors: Record<string, string> = {
 <template>
   <Teleport to="body">
     <div
-      class="fixed top-6 right-6 z-[2000] flex flex-col gap-3 w-[calc(100%-3rem)] max-w-[320px] pointer-events-none"
+      class="fixed top-6 right-6 z-2000 flex flex-col gap-4 w-[calc(100%-3rem)] max-w-[320px] pointer-events-none"
     >
       <TransitionGroup name="toast">
         <div
           v-for="toast in toastStore.toasts"
           :key="toast.id"
-          class="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl border backdrop-blur-xl shadow-2xl transition-all duration-500 w-full"
+          class="pointer-events-auto flex items-center gap-4 px-4 py-3 rounded-2xl border backdrop-blur-xl shadow-2xl transition-all duration-500 w-full"
           :class="colors[toast.type]"
         >
           <span

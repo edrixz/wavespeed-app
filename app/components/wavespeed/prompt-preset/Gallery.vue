@@ -91,7 +91,7 @@ onMounted(async () => {
           <div
             v-for="i in 5"
             :key="i"
-            class="flex-none w-[150px] aspect-[3/4] rounded-2xl bg-[#121212] border border-white/5 relative overflow-hidden snap-start"
+            class="flex-none w-[150px] aspect-3/4 rounded-2xl bg-[#121212] border border-white/5 relative overflow-hidden snap-start"
           >
             <div class="absolute inset-0 shimmer-flat"></div>
           </div>

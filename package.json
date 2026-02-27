@@ -13,12 +13,12 @@
   "dependencies": {
     "@google/genai": "^1.33.0",
     "@nuxt/image": "latest",
+    "@nuxt/ui": "^4.5.0",
     "@nuxtjs/supabase": "latest",
-    "@pinia/nuxt": "latest",
     "@vueuse/core": "latest",
     "@vueuse/nuxt": "latest",
     "nuxt": "^4.3.1",
-    "pinia": "latest",
+    "tailwindcss": "^4.2.1",
     "vue": "latest",
     "vue-advanced-cropper": "^2.8.9",
     "vue-router": "latest"
@@ -27,8 +27,9 @@
     "@iconify-json/lucide": "^1.2.84",
     "@nuxt/icon": "^2.2.1",
     "@nuxtjs/google-fonts": "^3.2.0",
-    "@nuxtjs/tailwindcss": "latest",
+    "@pinia/nuxt": "^0.11.3",
     "@types/node": "^24.10.2",
+    "pinia": "^3.0.4",
     "supabase": "^2.70.4"
   }
 }

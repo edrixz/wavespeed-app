@@ -24,9 +24,9 @@ export default defineNuxtConfig({
   },
 
   modules: [
+    "@nuxt/ui",
     "@nuxt/icon",
     "@pinia/nuxt",
-    "@nuxtjs/tailwindcss",
     [
       "@nuxtjs/google-fonts",
       {

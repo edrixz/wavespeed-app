@@ -2,7 +2,7 @@ import type { seedreamEditPayload } from "~/types";
 
 export const usePayloadMapper = () => {
   const { setStatus } = useLogger();
-  const { uploadMultipleFiles } = useFileUpload();
+  const { uploadMultipleFiles } = useSystemFileUpload();
 
   const imageStore = useImagesStore();
   const { images, filesToUpload } = storeToRefs(imageStore);

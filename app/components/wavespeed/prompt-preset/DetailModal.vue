@@ -38,7 +38,7 @@ const startDelete = (id: string) => {
     <Transition name="ios-modal">
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-[99999] bg-[#050505] flex flex-col h-[100dvh] w-screen touch-none"
+        class="fixed inset-0 z-99999 bg-[#050505] flex flex-col h-dvh w-screen touch-none"
       >
         <div class="absolute inset-0 z-0 pointer-events-none ambient-layer">
           <img
@@ -53,18 +53,18 @@ const startDelete = (id: string) => {
         >
           <button
             @click="$emit('update:modelValue', null)"
-            class="absolute top-4 right-4 z-[100] w-8 h-8 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white/70 hover:bg-white hover:text-black transition-all active:scale-90 ui-element"
+            class="absolute top-4 right-4 z-100 w-8 h-8 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white/70 hover:bg-white hover:text-black transition-all active:scale-90 ui-element"
           >
             ✕
           </button>
 
-          <div class="relative w-full h-[38vh] flex-shrink-0 hero-wrapper">
+          <div class="relative w-full h-[38vh] shrink-0 hero-wrapper">
             <img
               :src="modelValue.thumbnail"
               class="w-full h-full object-cover hero-img"
             />
             <div
-              class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#080808] to-transparent z-10"
+              class="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-[#080808] to-transparent z-10"
             ></div>
           </div>
 
@@ -91,7 +91,7 @@ const startDelete = (id: string) => {
 
                 <div class="space-y-4">
                   <div
-                    class="p-5 rounded-2xl bg-white/[0.03] border border-white/5 animate-in-up"
+                    class="p-5 rounded-2xl bg-white/5 border border-white/5 animate-in-up"
                     style="--delay: 0.2s"
                   >
                     <div class="flex items-center gap-2 mb-2 opacity-50">
@@ -106,7 +106,7 @@ const startDelete = (id: string) => {
                       >
                     </div>
                     <p
-                      class="text-[12px] text-gray-300 font-mono leading-relaxed break-words whitespace-pre-wrap"
+                      class="text-[12px] text-gray-300 font-mono leading-relaxed wrap-break-word whitespace-pre-wrap"
                     >
                       {{ modelValue.prompt }}
                     </p>
@@ -114,7 +114,7 @@ const startDelete = (id: string) => {
 
                   <div
                     v-if="modelValue.negative_prompt"
-                    class="p-5 rounded-2xl bg-red-500/[0.02] border border-red-500/5 animate-in-up"
+                    class="p-5 rounded-2xl bg-red-500/2 border border-red-500/5 animate-in-up"
                     style="--delay: 0.3s"
                   >
                     <div class="flex items-center gap-2 mb-2 opacity-50">
@@ -129,7 +129,7 @@ const startDelete = (id: string) => {
                       >
                     </div>
                     <p
-                      class="text-[11px] text-red-200/50 font-mono leading-relaxed break-words whitespace-pre-wrap"
+                      class="text-[11px] text-red-200/50 font-mono leading-relaxed wrap-break-word whitespace-pre-wrap"
                     >
                       {{ modelValue.negative_prompt }}
                     </p>
@@ -150,7 +150,7 @@ const startDelete = (id: string) => {
             >
               <button
                 @click="startDelete(modelValue.id)"
-                class="w-12 h-12 flex-shrink-0 rounded-full flex items-center justify-center transition-all"
+                class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center transition-all"
                 :class="
                   countdown > 0
                     ? 'bg-red-600 text-white animate-pulse'

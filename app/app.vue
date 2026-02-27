@@ -6,13 +6,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <UApp>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
 
-  <div v-if="isReady">
-    <CommonToastContainer />
-  </div>
+    <div v-if="isReady">
+      <CommonToastContainer />
+    </div>
+  </UApp>
 </template>
 
 <style>

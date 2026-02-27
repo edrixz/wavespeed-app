@@ -1,5 +1,4 @@
 export const useUseWavespeedSeedreamForm = () => {
-  const toast = useToast();
   const payloadStore = useSeedreamPayloadStore();
 
   const {

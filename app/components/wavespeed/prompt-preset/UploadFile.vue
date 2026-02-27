@@ -45,7 +45,7 @@ const triggerFileInput = () => fileInput.value?.click();
     <div
       v-if="!modelValue"
       @click="triggerFileInput"
-      class="group border-2 border-dashed border-white/10 rounded-2xl p-8 transition-all cursor-pointer hover:border-blue-500/40 hover:bg-white/[0.02] active:scale-[0.98]"
+      class="group border-2 border-dashed border-white/10 rounded-2xl p-8 transition-all cursor-pointer hover:border-blue-500/40 hover:bg-white/2 active:scale-[0.98]"
     >
       <div class="flex flex-col items-center gap-3">
         <div
@@ -82,7 +82,7 @@ const triggerFileInput = () => fileInput.value?.click();
     >
       <div
         @click="triggerFileInput"
-        class="aspect-[4/3] relative overflow-hidden bg-black cursor-pointer"
+        class="aspect-4/3 relative overflow-hidden bg-black cursor-pointer"
       >
         <img
           :src="localPreviewUrl"
@@ -121,7 +121,7 @@ const triggerFileInput = () => fileInput.value?.click();
         </button>
       </div>
 
-      <div class="p-4 bg-white/[0.02] border-t border-white/5 space-y-3">
+      <div class="p-4 bg-white/2 border-t border-white/5 space-y-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2 overflow-hidden">
             <div

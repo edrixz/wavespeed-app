@@ -45,12 +45,12 @@ const handleSave = async () => {
     <Transition name="modal-ios">
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-[1001] bg-[#050505] flex flex-col overflow-hidden sm:m-4 sm:rounded-[40px] border border-white/5 shadow-2xl"
+        class="fixed inset-0 z-1001 bg-[#050505] flex flex-col overflow-hidden sm:m-4 sm:rounded-[40px] border border-white/5 shadow-2xl"
       >
         <header
           class="p-6 border-b border-white/5 flex items-center justify-between bg-black/50 backdrop-blur-xl z-20"
         >
-          <div class="flex items-center gap-3 animate-item" style="--delay: 1">
+          <div class="flex items-center gap-4 animate-item" style="--delay: 1">
             <div
               class="w-3 h-3 bg-blue-500 rounded-sm rotate-45 shadow-[0_0_15px_rgba(59,130,246,0.6)]"
             ></div>
@@ -94,7 +94,7 @@ const handleSave = async () => {
                 <input
                   v-model="form.title"
                   placeholder="ENTER UNIQUE TITLE..."
-                  class="asset-input"
+                  class="w-full bg-white/5 border border-white/10 p-5 rounded-3xl text-[11px] font-bold text-white outline-none focus:border-blue-500 transition-all uppercase tracking-widest placeholder:text-gray-800"
                 />
               </div>
 
@@ -107,7 +107,7 @@ const handleSave = async () => {
                   v-model="form.prompt"
                   rows="5"
                   placeholder="DECODE YOUR STYLE..."
-                  class="asset-textarea bg-blue-500/[0.03] text-blue-100 border-blue-500/10 focus:border-blue-500/40"
+                  class="w-full border p-5 rounded-[32px] text-[10px] font-mono italic outline-none transition-all placeholder:text-gray-800 bg-blue-500/3 text-blue-100 border-blue-500/10 focus:border-blue-500/40"
                 />
               </div>
 
@@ -120,7 +120,7 @@ const handleSave = async () => {
                   v-model="form.negative_prompt"
                   rows="3"
                   placeholder="AVOID THESE ELEMENTS..."
-                  class="asset-textarea bg-red-500/[0.03] text-red-100/30 border-red-500/10 focus:border-red-500/40"
+                  class="w-full border p-5 rounded-[32px] text-[10px] font-mono italic outline-none transition-all placeholder:text-gray-800 bg-red-500/3 text-red-100/30 border-red-500/10 focus:border-red-500/40"
                 />
               </div>
             </div>
@@ -147,7 +147,7 @@ const handleSave = async () => {
         <Transition name="fade">
           <div
             v-if="isCropping"
-            class="absolute inset-0 z-[1100] bg-black flex flex-col"
+            class="absolute inset-0 z-1100 bg-black flex flex-col"
           >
             <div class="flex-1 bg-black">
               <Cropper
@@ -181,13 +181,6 @@ const handleSave = async () => {
 </template>
 
 <style scoped>
-.asset-input {
-  @apply w-full bg-white/[0.03] border border-white/10 p-5 rounded-3xl text-[11px] font-bold text-white outline-none focus:border-blue-500 transition-all uppercase tracking-widest placeholder:text-gray-800;
-}
-.asset-textarea {
-  @apply w-full border p-5 rounded-[32px] text-[10px] font-mono italic outline-none transition-all placeholder:text-gray-800;
-}
-
 /* Modal iOS Style Transition */
 .modal-ios-enter-active {
   transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);

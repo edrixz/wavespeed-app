@@ -118,13 +118,13 @@ const getButtonLayout = (index: number) => {
       <Transition name="fade">
         <div
           v-if="show"
-          class="fixed inset-0 z-[1000] bg-black/60 backdrop-blur-md pointer-events-none"
+          class="fixed inset-0 z-1000 bg-black/60 backdrop-blur-md pointer-events-none"
         ></div>
       </Transition>
     </Teleport>
 
     <Teleport to="body">
-      <div v-if="show" class="fixed inset-0 z-[3000] pointer-events-none">
+      <div v-if="show" class="fixed inset-0 z-3000 pointer-events-none">
         <div
           class="absolute top-0 left-0 p-6 pt-12 flex flex-col items-start gap-2 max-w-[80%]"
         >
@@ -164,7 +164,7 @@ const getButtonLayout = (index: number) => {
     <Teleport to="body">
       <div
         v-if="show"
-        class="fixed inset-0 z-[2000] pointer-events-none overflow-hidden"
+        class="fixed inset-0 z-2000 pointer-events-none overflow-hidden"
       >
         <div
           class="absolute"

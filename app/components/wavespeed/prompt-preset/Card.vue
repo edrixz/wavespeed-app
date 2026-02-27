@@ -29,7 +29,7 @@ const toggleVisibility = (e: Event) => {
       />
       <div
         v-else
-        class="w-full h-full bg-gradient-to-br from-gray-900 to-black"
+        class="w-full h-full bg-linear-to-br from-gray-900 to-black"
       ></div>
 
       <div v-if="!isVisible" class="absolute inset-0 bg-black/20 z-10"></div>
@@ -43,7 +43,7 @@ const toggleVisibility = (e: Event) => {
     </button>
 
     <div
-      class="absolute inset-x-0 bottom-0 pt-16 pb-4 px-4 bg-gradient-to-t from-black via-black/90 to-transparent backdrop-blur-[1px] z-20"
+      class="absolute inset-x-0 bottom-0 pt-16 pb-4 px-4 bg-linear-to-t from-black via-black/90 to-transparent backdrop-blur-[1px] z-20"
     >
       <h4
         class="text-white font-black text-[9px] uppercase tracking-wider truncate mb-1"
@@ -60,7 +60,7 @@ const toggleVisibility = (e: Event) => {
     </div>
 
     <div
-      class="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+      class="absolute inset-0 bg-linear-to-t from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
     ></div>
   </div>
 </template>

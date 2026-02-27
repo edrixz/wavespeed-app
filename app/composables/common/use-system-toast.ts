@@ -1,5 +1,5 @@
-export const useToast = () => {
-  const toastStore = useToastStore();
+export const useSystemToast = () => {
+  const toastStore = useSystemToastStore();
 
   return {
     success: (msg: string, dur?: number) =>

@@ -1,11 +1,10 @@
 // stores/common/auth-store.ts
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useToastStore } from "./ui/toast-store";
 
 export const useAuthStore = defineStore("auth", () => {
   const client = useSupabaseClient();
-  const toastStore = useToastStore();
+  const toastStore = useSystemToastStore();
   const isLoading = ref(false);
 
   const handleLogin = async (username: string, pass: string) => {

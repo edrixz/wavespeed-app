@@ -1,5 +1,5 @@
 export const useUseWavespeedGrokForm = () => {
-  const toast = useToast();
+  const toast = useSystemToast();
   const payloadStore = useGrokPayloadStore();
 
   const { prompt, enableSafetyChecker, enableSyncMode, enableBase64Output } =

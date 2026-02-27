@@ -1,4 +1,4 @@
-export const useFileUpload = () => {
+export const useSystemFileUpload = () => {
   // Upload single file to TmpFiles and get direct URL
   const uploadFile = async (file: File): Promise<string> => {
     const formData = new FormData();

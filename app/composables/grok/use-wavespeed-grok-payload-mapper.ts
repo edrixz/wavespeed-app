@@ -2,7 +2,7 @@ import type { GrokEditPayload } from "~/types";
 
 export const useWavespeedGrokPayloadMapper = () => {
   const { setStatus } = useLogger();
-  const { uploadFile } = useFileUpload();
+  const { uploadFile } = useSystemFileUpload();
 
   const imageStore = useImagesStore();
   const { images, filesToUpload } = storeToRefs(imageStore);

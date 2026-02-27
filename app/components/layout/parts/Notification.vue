@@ -87,10 +87,10 @@ const formatTime = (ts: number) => {
     <Transition name="slide-fade">
       <div
         v-if="isOpen"
-        class="fixed inset-x-4 top-[4rem] sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-3 w-auto sm:w-80 bg-[#111111] border border-white/5 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-[100] overflow-hidden backdrop-blur-2xl"
+        class="fixed inset-x-4 top-12 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-3 w-auto sm:w-80 bg-[#111111] border border-white/5 rounded-4xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-100 overflow-hidden backdrop-blur-2xl"
       >
         <div
-          class="p-5 border-b border-white/5 flex justify-between items-center bg-white/[0.02]"
+          class="p-5 border-b border-white/5 flex justify-between items-center bg-white/2"
         >
           <h3
             class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500"
@@ -125,7 +125,7 @@ const formatTime = (ts: number) => {
           <div
             v-for="log in importantNotifications"
             :key="log.id"
-            class="p-4 border-b border-white/5 last:border-0 hover:bg-white/[0.03] transition-colors cursor-default group"
+            class="p-4 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors cursor-default group"
           >
             <div class="flex gap-4">
               <div

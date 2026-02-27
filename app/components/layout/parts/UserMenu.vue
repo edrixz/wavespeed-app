@@ -40,7 +40,7 @@ if (process.client) {
       class="flex items-center gap-3 p-1 rounded-full hover:bg-white/5 transition-all outline-none"
     >
       <div
-        class="w-9 h-9 lg:w-10 lg:h-10 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 p-[1.5px] shadow-lg shadow-blue-500/10"
+        class="w-9 h-9 lg:w-10 lg:h-10 rounded-full bg-linear-to-br from-blue-600 to-purple-600 p-[1.5px] shadow-lg shadow-blue-500/10"
       >
         <div
           class="w-full h-full rounded-full bg-[#0a0a0a] flex items-center justify-center text-[11px] font-black text-white"
@@ -59,7 +59,7 @@ if (process.client) {
     <Transition name="slide-fade">
       <div
         v-if="isOpen"
-        class="absolute right-0 mt-3 w-64 bg-[#111111] border border-white/5 rounded-2xl shadow-2xl p-2 z-[100] backdrop-blur-xl"
+        class="absolute right-0 mt-3 w-64 bg-[#111111] border border-white/5 rounded-2xl shadow-2xl p-2 z-100 backdrop-blur-xl"
       >
         <div class="px-4 py-3 border-b border-white/5 mb-2">
           <p
@@ -75,14 +75,14 @@ if (process.client) {
         <div class="space-y-1">
           <NuxtLink
             to="/settings"
-            class="dropdown-item"
+            class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest text-gray-400 transition-all hover:bg-white/5 hover:text-white"
             @click="isOpen = false"
           >
             <Icon name="lucide:settings" size="16" />
             <span>Settings</span>
           </NuxtLink>
 
-          <NuxtLink to="/billing" class="dropdown-item" @click="isOpen = false">
+          <NuxtLink to="/billing" class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest text-gray-400 transition-all hover:bg-white/5 hover:text-white" @click="isOpen = false">
             <Icon name="lucide:credit-card" size="16" />
             <span>Billing</span>
           </NuxtLink>
@@ -92,7 +92,7 @@ if (process.client) {
 
         <button
           @click="handleLogout"
-          class="dropdown-item text-red-400 hover:text-red-300 hover:bg-red-500/10"
+          class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all text-red-400 hover:text-red-300 hover:bg-red-500/10"
         >
           <Icon name="lucide:log-out" size="16" />
           <span>Sign Out</span>
@@ -103,10 +103,6 @@ if (process.client) {
 </template>
 
 <style scoped>
-.dropdown-item {
-  @apply flex items-center gap-3 w-full px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest text-gray-400 transition-all hover:bg-white/5 hover:text-white;
-}
-
 /* Animation */
 .slide-fade-enter-active {
   transition: all 0.2s ease-out;

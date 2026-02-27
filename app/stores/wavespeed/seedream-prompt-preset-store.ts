@@ -8,7 +8,7 @@ export const useSeedreamPromptPresetStore = defineStore(
     const supabase = useSupabaseClient<Database>();
     const user = useSupabaseUser();
     const form = useUseWavespeedSeedreamForm();
-    const toast = useToast();
+    const toast = useSystemToast();
 
     const promptPresets = ref<PromptPreset[]>([]);
     const isLoading = ref(false);

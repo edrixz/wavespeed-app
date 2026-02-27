@@ -10,7 +10,7 @@ export interface Toast {
   duration?: number;
 }
 
-export const useToastStore = defineStore("toast", () => {
+export const useSystemToastStore = defineStore("toast", () => {
   const toasts = ref<Toast[]>([]);
 
   /**

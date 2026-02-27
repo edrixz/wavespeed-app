@@ -63,7 +63,7 @@ onUnmounted(() => {
       </div>
       <div class="h-[2px] w-full bg-white/5 overflow-hidden rounded-full">
         <div
-          class="h-full bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 transition-all duration-500 ease-out shadow-[0_0_8px_rgba(56,189,248,0.6)]"
+          class="h-full bg-linear-to-r from-blue-600 via-cyan-400 to-blue-600 transition-all duration-500 ease-out shadow-[0_0_8px_rgba(56,189,248,0.6)]"
           :style="{ width: `${progress}%` }"
         ></div>
       </div>
@@ -79,7 +79,7 @@ onUnmounted(() => {
       />
 
       <div
-        class="absolute inset-0 bg-gradient-to-t from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+        class="absolute inset-0 bg-linear-to-t from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
       ></div>
     </div>
 
@@ -91,7 +91,7 @@ onUnmounted(() => {
         class="absolute inset-0 z-20 pointer-events-none overflow-hidden opacity-20"
       >
         <div
-          class="w-full h-[100px] bg-gradient-to-b from-transparent via-blue-500 to-transparent animate-scan"
+          class="w-full h-[100px] bg-linear-to-b from-transparent via-blue-500 to-transparent animate-scan"
         ></div>
       </div>
 

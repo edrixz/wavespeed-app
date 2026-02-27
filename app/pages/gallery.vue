@@ -8,7 +8,7 @@ definePageMeta({ layout: "default" });
 // --- 1. INIT STORES & REFS ---
 const galleryStore = useGalleryStore();
 const promptPreset = useSeedreamPromptPresetStore();
-const toast = useToast();
+const toast = useSystemToast();
 
 const menuRef = ref<InstanceType<typeof CommonMenuLongPressContext> | null>(
   null,
@@ -206,14 +206,14 @@ const handleTouchEndAction = async () => {
       <div
         v-for="(item, index) in displayedItems"
         :key="item.id"
-        class="relative aspect-[3/4] card-entry-animation"
+        class="relative aspect-3/4 card-entry-animation"
         :style="{
           '--i': index,
           zIndex: isHolding && currentHoldingItem?.id === item.id ? 1500 : 0,
         }"
       >
         <div
-          class="w-full h-full rounded-[2rem] overflow-hidden border border-white/5 bg-[#0d0d0d] transition-all will-change-transform relative"
+          class="w-full h-full rounded-4xl overflow-hidden border border-white/5 bg-[#0d0d0d] transition-all will-change-transform relative"
           :style="{
             transitionDuration:
               isHolding && currentHoldingItem?.id === item.id ? '0.6s' : '0.4s',
