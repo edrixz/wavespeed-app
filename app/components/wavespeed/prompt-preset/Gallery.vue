@@ -9,6 +9,7 @@ const showCreateDialog = ref(false);
 const selectedPreset = ref<any | null>(null);
 const isWaitingForImages = ref(true);
 const isSearchFocused = ref(false);
+const isGlobalBlurVisible = ref(false);
 
 const filteredStyleAssets = computed(() => {
   if (!searchQuery.value.trim()) return promptPresets.value;
@@ -44,12 +45,23 @@ onMounted(async () => {
             </div>
           </div>
 
-          <button
-            @click="showCreateDialog = true"
-            class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-500 active:scale-95 transition-all duration-200 border border-black/5 dark:border-white/5 shadow-md"
-          >
-            <Icon name="lucide:plus" size="18" />
-          </button>
+          <div class="flex items-center gap-2">
+            <!-- Global Blur Toggle Button -->
+            <button
+              @click="isGlobalBlurVisible = !isGlobalBlurVisible"
+              class="w-9 h-9 rounded-full bg-black/5 dark:bg-[#1A1A1A] border border-black/10 dark:border-white/5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center justify-center transition-all duration-200"
+              :title="isGlobalBlurVisible ? 'Hide original images' : 'Show original images'"
+            >
+              <Icon :name="isGlobalBlurVisible ? 'lucide:eye' : 'lucide:eye-off'" size="16" />
+            </button>
+
+            <button
+              @click="showCreateDialog = true"
+              class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-500 active:scale-95 transition-all duration-200 border border-black/5 dark:border-white/5 shadow-md"
+            >
+              <Icon name="lucide:plus" size="18" />
+            </button>
+          </div>
         </div>
 
         <h3
@@ -91,7 +103,7 @@ onMounted(async () => {
           <div
             v-for="i in 5"
             :key="i"
-            class="flex-none w-[150px] aspect-3/4 rounded-[32px] bg-black/5 dark:bg-[#121212] border border-black/5 dark:border-white/5 relative overflow-hidden snap-start"
+            class="flex-none w-[200px] sm:w-[240px] aspect-3/4 rounded-[32px] bg-black/5 dark:bg-[#121212] border border-black/5 dark:border-white/5 relative overflow-hidden snap-start"
           >
             <div class="absolute inset-0 shimmer-flat dark:opacity-100 opacity-50"></div>
           </div>
@@ -105,10 +117,12 @@ onMounted(async () => {
               class="snap-start flex-none transition-all duration-500"
               :style="{ transitionDelay: `${index * 30}ms` }"
             >
-              <div class="w-[150px] h-full group">
-                <WavespeedPromptPresetCard
+              <div class="w-[200px] sm:w-[240px] aspect-3/4 group">
+                <PartsCard
                   :item="item"
+                  :is-visible="isGlobalBlurVisible"
                   @select="selectedPreset = item"
+                  @toggle-visibility="isGlobalBlurVisible = !isGlobalBlurVisible"
                 />
               </div>
             </div>
