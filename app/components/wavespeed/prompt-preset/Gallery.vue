@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { refDebounced } from "@vueuse/core";
 
 const promptPresetStore = useSeedreamPromptPresetStore();
 const { promptPresets, isLoading } = storeToRefs(promptPresetStore);
 
 const searchQuery = ref("");
+const debouncedSearchQuery = refDebounced(searchQuery, 50);
+
 const showCreateDialog = ref(false);
 const selectedPreset = ref<any | null>(null);
 const isWaitingForImages = ref(true);
@@ -12,8 +15,8 @@ const isSearchFocused = ref(false);
 const isGlobalBlurVisible = ref(false);
 
 const filteredStyleAssets = computed(() => {
-  if (!searchQuery.value.trim()) return promptPresets.value;
-  const q = searchQuery.value.toLowerCase();
+  if (!debouncedSearchQuery.value.trim()) return promptPresets.value;
+  const q = debouncedSearchQuery.value.toLowerCase();
   return promptPresets.value.filter(
     (p) =>
       p.title.toLowerCase().includes(q) || p.prompt.toLowerCase().includes(q),
@@ -72,25 +75,29 @@ onMounted(async () => {
       </div>
 
       <div class="flex items-center justify-between gap-3">
-        <div class="relative group transition-all duration-300 w-full">
+        <div class="relative group transition-all w-full md:max-w-xs">
           <div
-            class="absolute inset-y-0 left-3 flex items-center pointer-events-none"
+            class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none"
           >
             <Icon
               name="lucide:search"
-              size="12"
-              class="transition-colors duration-300"
-              :class="isSearchFocused ? 'text-neutral-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'"
+              size="14"
+              class="text-neutral-400 group-focus-within:text-neutral-700 dark:text-gray-500 dark:group-focus-within:text-gray-300 transition-colors"
             />
           </div>
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search..."
-            @focus="isSearchFocused = true"
-            @blur="isSearchFocused = false"
-            class="w-full bg-black/5 hover:bg-black/10 focus:bg-white dark:bg-[#1A1A1A] dark:hover:bg-[#252525] dark:focus:bg-[#0A0A0A] border border-black/10 focus:border-black/20 dark:border-white/5 dark:focus:border-white/20 rounded-lg py-2.5 pl-9 pr-4 text-[11px] text-neutral-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-600 outline-none transition-all duration-300 shadow-sm"
+            placeholder="Search collections..."
+            class="w-full bg-white/50 hover:bg-white/80 focus:bg-white dark:bg-[#1A1A1A]/50 dark:hover:bg-[#1A1A1A]/80 dark:focus:bg-[#1A1A1A] border border-neutral-200/60 focus:border-neutral-300 dark:border-white/5 dark:focus:border-white/10 rounded-2xl py-2 pl-10 pr-4 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-gray-600 outline-none transition-all duration-300 backdrop-blur-sm"
           />
+          <button 
+            v-if="searchQuery" 
+            @click="searchQuery = ''"
+            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-neutral-400 hover:text-neutral-700 dark:text-gray-500 dark:hover:text-gray-300"
+          >
+            <Icon name="lucide:x" size="14" />
+          </button>
         </div>
       </div>
     </div>
@@ -110,12 +117,16 @@ onMounted(async () => {
         </template>
 
         <template v-else>
-          <TransitionGroup name="list" tag="div" class="flex gap-4">
+          <TransitionGroup 
+            name="fade-scale" 
+            tag="div" 
+            class="flex gap-4"
+          >
             <div
               v-for="(item, index) in filteredStyleAssets"
               :key="item.id"
-              class="snap-start flex-none transition-all duration-500"
-              :style="{ transitionDelay: `${index * 30}ms` }"
+              class="snap-start flex-none"
+              :style="{ animationDelay: `${Math.min(index * 30, 300)}ms` }"
             >
               <div class="w-[200px] sm:w-[240px] aspect-3/4 group">
                 <PartsCard
@@ -161,19 +172,27 @@ onMounted(async () => {
   scrollbar-width: none;
 }
 
-.list-move,
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+/* Custom minimal entry animation */
+.fade-scale-enter-active {
+  animation: fadeScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+/* No leave animation to prevent lag */
+.fade-scale-leave-active,
+.fade-scale-move {
+  display: none!important;
+  opacity: 0;
+  transition: none;
 }
 
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateY(10px);
-}
-.list-leave-active {
-  position: absolute;
+@keyframes fadeScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* Shimmer phẳng, không màu mè */
