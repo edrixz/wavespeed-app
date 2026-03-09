@@ -1,7 +1,26 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
+@theme {
+  --shadow-sm: 0 1px 2px 0 var(--app-shadow, rgba(0, 0, 0, 0.05));
+  --shadow: 0 1px 3px 0 var(--app-shadow-strong, rgba(0, 0, 0, 0.1)), 0 1px 2px -1px var(--app-shadow, rgba(0, 0, 0, 0.1));
+  --shadow-md: 0 4px 6px -1px var(--app-shadow-strong, rgba(0, 0, 0, 0.1)), 0 2px 4px -2px var(--app-shadow, rgba(0, 0, 0, 0.1));
+  --shadow-lg: 0 10px 15px -3px var(--app-shadow-strong, rgba(0, 0, 0, 0.1)), 0 4px 6px -4px var(--app-shadow, rgba(0, 0, 0, 0.1));
+  --shadow-xl: 0 20px 25px -5px var(--app-shadow-strong, rgba(0, 0, 0, 0.1)), 0 8px 10px -6px var(--app-shadow, rgba(0, 0, 0, 0.1));
+  --shadow-2xl: 0 25px 50px -12px var(--app-shadow-strong, rgba(0, 0, 0, 0.25));
+}
+
 @layer base {
+  :root {
+    --app-shadow: rgba(59, 130, 246, 0.15); /* Light blue nhạt */
+    --app-shadow-strong: rgba(59, 130, 246, 0.25); /* Light blue đậm hơn chút */
+  }
+
+  .dark {
+    --app-shadow: rgba(0, 0, 0, 0.4); /* Bóng sẫm cho dark theme */
+    --app-shadow-strong: rgba(0, 0, 0, 0.6);
+  }
+
   body {
     background-color: theme('colors.neutral.50', #f9fafb);
     color: theme('colors.neutral.900', #111827);
@@ -71,7 +90,7 @@
   }
   .btn-primary:hover {
     background-color: #D3E3FD;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px -1px var(--app-shadow-strong), 0 2px 4px -1px var(--app-shadow);
   }
 
   .btn-secondary {

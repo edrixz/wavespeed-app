@@ -47,7 +47,7 @@ const { canNotGenerate, isProcessing, resultImage, handleGenerate } =
 
     <!-- Mobile button -->
     <div
-      class="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border-t border-black/5 dark:border-white/5 z-60 safe-area-bottom shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] transition-colors"
+      class="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border-t border-black/5 dark:border-white/5 z-60 safe-area-bottom shadow-[0_-10px_40px_var(--app-shadow)] transition-colors"
     >
       <div class="max-w-md mx-auto">
         <PartsButtonPrimary
@@ -55,7 +55,7 @@ const { canNotGenerate, isProcessing, resultImage, handleGenerate } =
           :loading="isProcessing"
           :disabled="canNotGenerate"
           @click="handleGenerate"
-          class="py-4! rounded-2xl! shadow-blue-600/20!"
+          class="rounded-2xl! shadow-xl!"
         >
           {{ isProcessing ? "Generating..." : "Generate" }}
         </PartsButtonPrimary>
