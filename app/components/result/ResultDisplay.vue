@@ -36,6 +36,10 @@ watch(
   { immediate: true }
 );
 
+const handleClick = (): void => {
+  emit('add-preset');
+};
+
 onUnmounted(() => {
   if (progressTimer) clearInterval(progressTimer);
 });
@@ -160,16 +164,19 @@ onUnmounted(() => {
         />
         
         <!-- Add Preset Button overlay at bottom -->
-        <div class="absolute bottom-10 z-50 flex items-center justify-center w-full">
+        <div class="absolute bottom-10 z-50 left-1/2 -translate-x-1/2">
           <UButton
-            color="primary"
-            variant="solid"
-            icon="i-lucide-bookmark-plus"
+            color="neutral"
+            variant="ghost"
             size="xl"
-            class="rounded-full shadow-2xl shadow-primary-500/30 transition-all hover:scale-105 px-8 font-bold h-14"
-            @click="emit('add-preset')"
+            icon="i-heroicons-plus-circle"
+            :ui="{
+              base: 'transition-all duration-300',
+            }"
+            class="text-white px-8 bg-white/10 dark:bg-gray-900/10 rounded-full backdrop-blur-md border border-white/20 dark:border-gray-800/50 hover:bg-white/20 dark:hover:bg-gray-800/30"
+            @click="handleClick"
           >
-            Add to Presets
+            Add Preset
           </UButton>
         </div>
       </div>
