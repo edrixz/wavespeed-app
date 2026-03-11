@@ -14,7 +14,7 @@ const { prompt, enableSafetyChecker, enableSyncMode, enableBase64Output } =
   />
 
   <div
-    class="grid grid-cols-1 gap-2 p-4 bg-gray-800/20 rounded-2xl border border-white/5"
+    class="grid grid-cols-1 gap-2 p-4 bg-gray-50 dark:bg-gray-800/20 rounded-2xl border border-gray-200 dark:border-white/5"
   >
     <PartsFormBaseCheckboxItem
       label="Safety Checker"

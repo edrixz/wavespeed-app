@@ -27,17 +27,17 @@ const modelValue = defineModel<number>({ required: true });
       <input
         v-model.number="modelValue"
         type="number"
-        class="w-16 bg-transparent text-right text-xs text-blue-600 dark:text-blue-400 font-bold outline-none"
+        class="w-16 bg-transparent text-right text-xs text-blue-500 dark:text-blue-400 font-bold outline-none"
         :step="step"
       />
     </div>
-    <input
-      v-model.number="modelValue"
-      type="range"
+    <USlider
+      v-model="modelValue"
       :min="min"
       :max="max"
       :step="step"
-      class="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-500 transition-colors"
+      color="info"
+      class="w-full"
     />
   </div>
 </template>

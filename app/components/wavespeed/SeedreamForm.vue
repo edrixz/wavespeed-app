@@ -30,14 +30,14 @@ const {
   <PartsAspectRatioList />
 
   <div
-    class="grid grid-cols-2 gap-4 bg-gray-800/30 p-4 rounded-2xl border border-white/5"
+    class="grid grid-cols-2 gap-4 bg-gray-50 dark:bg-gray-800/30 p-4 rounded-2xl border border-gray-200 dark:border-white/5"
   >
     <PartsFormBaseRangeSlider label="Width" v-model="width" />
     <PartsFormBaseRangeSlider label="Height" v-model="height" />
   </div>
 
   <div
-    class="grid grid-cols-1 gap-2 p-4 bg-gray-800/20 rounded-2xl border border-white/5"
+    class="grid grid-cols-1 gap-2 p-4 bg-gray-50 dark:bg-gray-800/20 rounded-2xl border border-gray-200 dark:border-white/5"
   >
     <PartsFormBaseCheckboxItem
       label="Safety Checker"
