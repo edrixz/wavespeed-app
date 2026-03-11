@@ -153,7 +153,7 @@ const triggerFileInput = () => fileInput.value?.click();
             class="flex justify-between items-center text-[8px] font-black uppercase tracking-tighter"
           >
             <span
-              :class="progress === 100 ? 'text-green-500' : 'text-blue-500'"
+              :class="progress === 100 ? 'text-sky-500' : 'text-blue-500'"
             >
               {{
                 progress === 100
