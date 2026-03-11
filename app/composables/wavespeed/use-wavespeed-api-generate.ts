@@ -55,11 +55,7 @@ export const useWavespeedApiGenerate = () => {
 
       handleSuccess("Complete! Image is ready.");
     } catch (error: any) {
-      if (error instanceof Error) {
-        handleError(error.message);
-      } else {
-        handleError("An unknown error occurred");
-      }
+      handleError(error);
     } finally {
       isProcessing.value = false;
       loggerStore.endGroup();
