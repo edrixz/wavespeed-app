@@ -106,10 +106,10 @@ const formatTime = (ts: number) => {
           </button>
         </div>
 
-        <div class="max-h-[350px] overflow-y-auto">
+        <div class="min-h-[180px] max-h-[350px] overflow-y-auto">
           <div
             v-if="importantNotifications.length === 0"
-            class="p-10 text-center space-y-3"
+            class="h-[180px] flex flex-col items-center justify-center gap-3"
           >
             <Icon
               name="lucide:bell-off"

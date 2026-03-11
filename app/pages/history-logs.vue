@@ -7,14 +7,8 @@ definePageMeta({ layout: "default" });
 const loggerStore = useLoggerStore();
 const { groupedMessages, activeGroupId } = storeToRefs(loggerStore);
 
-// State quản lý các nhóm đang được mở
 const expandedGroups = ref<string[]>([]);
 
-/**
- * LOGIC AUTO-EXPAND:
- * Theo dõi activeGroupId. Khi có một task mới bắt đầu (ID khác null),
- * chúng ta tự động push ID đó vào mảng expandedGroups để mở nó ra.
- */
 watch(
   activeGroupId,
   (newId) => {
@@ -25,41 +19,40 @@ watch(
   { immediate: true },
 );
 
-// Toggle đóng/mở group thủ công
 const toggleGroup = (groupId: string) => {
   const index = expandedGroups.value.indexOf(groupId);
-  if (index > -1) {
-    expandedGroups.value.splice(index, 1);
-  } else {
-    expandedGroups.value.push(groupId);
-  }
+  if (index > -1) expandedGroups.value.splice(index, 1);
+  else expandedGroups.value.push(groupId);
 };
 
-const getBadgeClass = (type: string) => {
-  const styles: any = {
-    error: "bg-red-500/10 text-red-500",
-    success: "bg-green-500/10 text-green-500",
-    warning: "bg-yellow-500/10 text-yellow-500",
-    loading: "bg-blue-500/10 text-blue-500",
-    info: "bg-white/5 text-gray-400",
+/** Badge style per log type */
+const getBadgeStyle = (type: string): { bg: string; text: string; icon: string } => {
+  const map: Record<string, { bg: string; text: string; icon: string }> = {
+    error:   { bg: "bg-red-500/15",    text: "text-red-400",    icon: "lucide:x-circle" },
+    success: { bg: "bg-green-500/15",  text: "text-green-400",  icon: "lucide:check-circle" },
+    warning: { bg: "bg-yellow-500/15", text: "text-yellow-400", icon: "lucide:alert-triangle" },
+    loading: { bg: "bg-blue-500/15",   text: "text-blue-400",   icon: "lucide:loader-2" },
+    info:    { bg: "bg-white/5",       text: "text-gray-500",   icon: "lucide:info" },
   };
-  return styles[type] || styles.info;
+  return map[type] ?? { bg: "bg-white/5", text: "text-gray-500", icon: "lucide:info" };
 };
 
+/** Group header status icon + color */
 const getGroupStatusIcon = (status: string) => {
-  if (status === "success")
-    return { name: "lucide:check-circle", color: "text-green-500" };
-  if (status === "error")
-    return { name: "lucide:x-circle", color: "text-red-500" };
-  return { name: "lucide:loader-2", color: "text-blue-500 animate-spin" };
+  if (status === "success") return { name: "lucide:check-circle-2", color: "text-green-400" };
+  if (status === "error")   return { name: "lucide:x-circle",       color: "text-red-400" };
+  return { name: "lucide:loader-2", color: "text-blue-400 animate-spin" };
 };
+
+/** Count errors inside a group */
+const groupErrorCount = (group: any) =>
+  group.items.filter((i: any) => i.type === "error").length;
 </script>
 
 <template>
-  <div class="space-y-6">
-    <div
-      class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4"
-    >
+  <div class="space-y-6 pb-20">
+    <!-- Header -->
+    <div class="px-1 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 animate-fade-in-down">
       <div>
         <h1 class="text-2xl font-black uppercase tracking-wider text-neutral-900 dark:text-white">
           System Logs
@@ -68,196 +61,200 @@ const getGroupStatusIcon = (status: string) => {
           Real-time session activity monitor
         </p>
       </div>
-      <ButtonSecondary
-        class="w-auto! py-2! px-4!"
-        icon="lucide:trash-2"
+      <button
         @click="loggerStore.clearMessages"
+        class="flex items-center gap-2 px-4 py-2 rounded-2xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 hover:text-red-500 hover:border-red-500/30 hover:bg-red-500/5 transition-all duration-200 active:scale-95"
       >
-        Clear Session Logs
-      </ButtonSecondary>
+        <Icon name="lucide:trash-2" size="13" />
+        Clear Logs
+      </button>
     </div>
 
+    <!-- Empty state -->
     <div
-      class="bg-white dark:bg-[#0d0d0d] border border-black/5 dark:border-white/5 rounded-4xl overflow-hidden shadow-xl dark:shadow-2xl transition-colors"
+      v-if="loggerStore.messages.length === 0"
+      class="flex flex-col items-center justify-center py-24 gap-4 opacity-40"
     >
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-separate border-spacing-0">
-          <thead>
-            <tr class="bg-black/5 dark:bg-white/5">
-              <th
-                class="p-5 text-[10px] font-black uppercase text-gray-500 tracking-widest border-b border-black/5 dark:border-white/5"
-              >
-                Timestamp
-              </th>
-              <th
-                class="p-5 text-[10px] font-black uppercase text-gray-500 tracking-widest border-b border-black/5 dark:border-white/5"
-              >
-                Type
-              </th>
-              <th
-                class="p-5 text-[10px] font-black uppercase text-gray-500 tracking-widest border-b border-black/5 dark:border-white/5"
-              >
-                Message / Process
-              </th>
-            </tr>
-          </thead>
+      <Icon name="lucide:terminal" size="40" class="text-gray-400 dark:text-white/20" />
+      <p class="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 font-bold">
+        No activity logs for this session
+      </p>
+    </div>
 
-          <tbody class="divide-y divide-black/5 dark:divide-white/5">
-            <tr v-if="loggerStore.messages.length === 0">
-              <td
-                colspan="3"
-                class="p-20 text-center text-gray-600 italic text-sm"
-              >
-                No activity logs found for this session.
-              </td>
-            </tr>
+    <!-- Log groups timeline -->
+    <div v-else class="space-y-3">
+      <div
+        v-for="group in groupedMessages.groups"
+        :key="group.id"
+        class="rounded-3xl border overflow-hidden transition-all duration-300"
+        :class="
+          group.status === 'processing'
+            ? 'border-blue-500/30 bg-blue-500/5 dark:bg-blue-500/5'
+            : group.status === 'error'
+              ? 'border-red-500/20 bg-white dark:bg-[#0d0d0d]'
+              : 'border-black/5 dark:border-white/5 bg-white dark:bg-[#0d0d0d]'
+        "
+      >
+        <!-- Group header row -->
+        <button
+          class="w-full flex items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-black/3 dark:hover:bg-white/3"
+          @click="toggleGroup(group.id)"
+        >
+          <!-- Status icon -->
+          <div
+            class="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center"
+            :class="
+              group.status === 'processing'
+                ? 'bg-blue-500/15'
+                : group.status === 'error'
+                  ? 'bg-red-500/15'
+                  : 'bg-green-500/15'
+            "
+          >
+            <Icon
+              :name="getGroupStatusIcon(group.status).name"
+              :class="getGroupStatusIcon(group.status).color"
+              size="16"
+            />
+          </div>
 
-            <template v-for="group in groupedMessages.groups" :key="group.id">
-              <tr
-                @click="toggleGroup(group.id)"
-                class="cursor-pointer transition-colors group relative"
-                :class="[
-                  expandedGroups.includes(group.id)
-                    ? 'bg-blue-600/10'
-                    : 'bg-blue-600/5 hover:bg-blue-600/10',
-                ]"
+          <!-- Group info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-xs font-black uppercase tracking-wide text-neutral-900 dark:text-white truncate">
+                {{ group.name }}
+              </span>
+              <span
+                v-if="group.status === 'processing'"
+                class="text-[10px] font-black uppercase tracking-widest text-blue-400 animate-pulse"
               >
+                ● Live
+              </span>
+              <span
+                v-if="groupErrorCount(group) > 0"
+                class="px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 text-[10px] font-black uppercase"
+              >
+                {{ groupErrorCount(group) }} error{{ groupErrorCount(group) > 1 ? 's' : '' }}
+              </span>
+            </div>
+            <div class="flex items-center gap-3 mt-1">
+              <span class="text-xs font-mono text-gray-400">
+                {{ new Date(group.timestamp).toLocaleTimeString() }}
+              </span>
+              <span class="text-xs text-gray-400">
+                · {{ group.items.length }} steps
+              </span>
+            </div>
+          </div>
+
+          <!-- Expand chevron -->
+          <Icon
+            name="lucide:chevron-down"
+            size="15"
+            class="shrink-0 text-gray-400 transition-transform duration-300"
+            :class="{ 'rotate-180': expandedGroups.includes(group.id) }"
+          />
+        </button>
+
+        <!-- Group items - detail list -->
+        <Transition name="group-expand">
+          <div
+            v-show="expandedGroups.includes(group.id)"
+            class="border-t border-black/5 dark:border-white/5"
+          >
+            <div class="divide-y divide-black/5 dark:divide-white/5">
+            <div
+              v-for="item in group.items"
+              :key="item.id"
+              class="flex items-start gap-4 px-5 py-3"
+              :class="item.type === 'error' ? 'bg-red-500/5' : ''"
+            >
+              <!-- Timeline dot + line -->
+              <div class="shrink-0 flex flex-col items-center pt-1 gap-1">
                 <div
-                  v-if="group.status === 'processing'"
-                  class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"
-                ></div>
+                  class="w-5 h-5 rounded-full flex items-center justify-center"
+                  :class="getBadgeStyle(String(item.type)).bg"
+                >
+                  <Icon
+                    :name="getBadgeStyle(String(item.type)).icon || 'lucide:info'"
+                    :class="[getBadgeStyle(String(item.type)).text, item.type === 'loading' ? 'animate-spin' : '']"
+                    size="11"
+                  />
+                </div>
+              </div>
 
-                <td
-                  class="p-5 text-[10px] font-mono"
+              <!-- Content -->
+              <div class="flex-1 min-w-0 pt-0.5">
+                <p
+                  class="text-sm font-medium leading-relaxed"
                   :class="
-                    group.status === 'processing'
-                      ? 'text-blue-400'
-                      : 'text-blue-500/50'
+                    item.type === 'error'
+                      ? 'text-red-400 font-semibold'
+                      : item.type === 'success'
+                        ? 'text-green-400'
+                        : 'text-gray-500 dark:text-gray-400'
                   "
                 >
-                  {{ new Date(group.timestamp).toLocaleTimeString() }}
-                </td>
-                <td class="p-5">
-                  <div class="flex items-center gap-2">
-                    <Icon
-                      :name="getGroupStatusIcon(group.status).name"
-                      :class="getGroupStatusIcon(group.status).color"
-                      size="14"
-                    />
-                    <span
-                      class="text-[8px] font-black uppercase"
-                      :class="
-                        group.status === 'processing'
-                          ? 'text-blue-300'
-                          : 'text-blue-400'
-                      "
-                      >Process</span
-                    >
-                  </div>
-                </td>
-                <td class="p-5">
-                  <div class="flex justify-between items-center">
-                    <span
-                      class="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-white"
-                    >
-                      {{ group.name }}
-                      <span
-                        v-if="group.status === 'processing'"
-                        class="ml-2 text-[8px] text-blue-500 animate-pulse"
-                        >(Active)</span
-                      >
-                    </span>
-                    <Icon
-                      name="lucide:chevron-down"
-                      size="16"
-                      class="text-gray-600 transition-transform duration-300"
-                      :class="{
-                        'rotate-180': expandedGroups.includes(group.id),
-                      }"
-                    />
-                  </div>
-                </td>
-              </tr>
+                  {{ item.message }}
+                </p>
+              </div>
 
-              <TransitionGroup name="list">
-                <template v-if="expandedGroups.includes(group.id)">
-                  <tr
-                    v-for="item in group.items"
-                    :key="item.id"
-                    class="bg-neutral-50 dark:bg-black/20 border-l border-blue-500/20"
-                  >
-                    <td class="p-4 pl-10 text-[9px] font-mono text-gray-600">
-                      {{ new Date(item.timestamp).toLocaleTimeString() }}
-                    </td>
-                    <td class="p-4">
-                      <span
-                        :class="[
-                          'px-2 py-0.5 rounded text-[7px] font-black uppercase',
-                          getBadgeClass(item.type),
-                        ]"
-                      >
-                        {{ item.type }}
-                      </span>
-                    </td>
-                    <td
-                      class="p-4 text-xs"
-                      :class="
-                        item.type === 'error'
-                          ? 'text-red-400'
-                          : 'text-gray-400 italic'
-                      "
-                    >
-                      {{ item.message }}
-                    </td>
-                  </tr>
-                </template>
-              </TransitionGroup>
-            </template>
+              <!-- Timestamp -->
+              <span class="shrink-0 text-[10px] font-mono text-gray-400 pt-1">
+                {{ new Date(item.timestamp).toLocaleTimeString() }}
+              </span>
+            </div>
+            </div>
+          </div>
+        </Transition>
+      </div>
 
-            <tr
-              v-for="log in groupedMessages.orphans"
-              :key="log.id"
-              class="hover:bg-black/5 dark:hover:bg-white/2"
-            >
-              <td
-                class="p-5 text-[10px] font-mono text-gray-500 border-l border-transparent"
-              >
-                {{ new Date(log.timestamp).toLocaleTimeString() }}
-              </td>
-              <td class="p-5">
-                <span
-                  :class="[
-                    'px-2 py-1 rounded-lg text-[8px] font-black uppercase',
-                    getBadgeClass(log.type),
-                  ]"
-                >
-                  {{ log.type }}
-                </span>
-              </td>
-              <td class="p-5 text-xs text-gray-600 dark:text-gray-300 font-medium italic">
-                {{ log.message }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Orphan logs (không thuộc group nào) -->
+      <div
+        v-if="(groupedMessages.orphans?.length ?? 0) > 0"
+        class="rounded-3xl border border-black/5 dark:border-white/5 bg-white dark:bg-[#0d0d0d] overflow-hidden"
+      >
+        <div class="px-5 py-3 border-b border-black/5 dark:border-white/5 bg-black/3 dark:bg-white/3">
+          <span class="text-xs font-black uppercase tracking-widest text-gray-400">Standalone Logs</span>
+        </div>
+        <div
+          v-for="(log, idx) in groupedMessages.orphans"
+          :key="log.id"
+          class="flex items-start gap-4 px-5 py-3"
+          :class="idx < (groupedMessages.orphans?.length ?? 0) - 1 ? 'border-b border-black/5 dark:border-white/5' : ''"
+        >
+          <div class="shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5" :class="getBadgeStyle(log.type).bg">
+            <Icon :name="getBadgeStyle(log.type).icon" :class="getBadgeStyle(log.type).text" size="11" />
+          </div>
+          <p class="flex-1 text-[11px] text-gray-500 dark:text-gray-400 pt-0.5">{{ log.message }}</p>
+          <span class="shrink-0 text-[8px] font-mono text-gray-400 pt-1">
+            {{ new Date(log.timestamp).toLocaleTimeString() }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-table {
-  border-spacing: 0;
+.animate-fade-in-down {
+  animation: fadeInDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Animation cho danh sách log chi tiết */
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.3s ease;
+/* Group expand animation */
+.group-expand-enter-active {
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.list-enter-from,
-.list-leave-to {
+.group-expand-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.group-expand-enter-from,
+.group-expand-leave-to {
   opacity: 0;
-  transform: translateX(-10px);
+  transform: translateY(-6px);
 }
 </style>
