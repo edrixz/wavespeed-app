@@ -66,7 +66,9 @@ const triggerFileInput = () => fileInput.value?.click();
           </svg>
         </div>
         <div class="text-center">
-          <p class="text-[10px] font-bold text-neutral-900 dark:text-white tracking-wide">
+          <p
+            class="text-[10px] font-bold text-neutral-900 dark:text-white tracking-wide"
+          >
             Click to upload
           </p>
           <p class="text-[8px] text-gray-500 mt-1 uppercase">
@@ -121,7 +123,9 @@ const triggerFileInput = () => fileInput.value?.click();
         </button>
       </div>
 
-      <div class="p-4 bg-gray-50/50 dark:bg-white/2 border-t border-black/5 dark:border-white/5 space-y-3 transition-colors">
+      <div
+        class="p-4 bg-gray-50/50 dark:bg-white/2 border-t border-black/5 dark:border-white/5 space-y-3 transition-colors"
+      >
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2 overflow-hidden">
             <div
@@ -133,7 +137,9 @@ const triggerFileInput = () => fileInput.value?.click();
                 />
               </svg>
             </div>
-            <p class="text-[9px] font-bold text-gray-600 dark:text-gray-300 truncate">
+            <p
+              class="text-[9px] font-bold text-gray-600 dark:text-gray-300 truncate"
+            >
               {{ modelValue.name }}
             </p>
           </div>
@@ -143,7 +149,9 @@ const triggerFileInput = () => fileInput.value?.click();
         </div>
 
         <div class="space-y-1.5">
-          <div class="h-1 w-full bg-black/10 dark:bg-white/5 rounded-full overflow-hidden">
+          <div
+            class="h-1 w-full bg-black/10 dark:bg-white/5 rounded-full overflow-hidden"
+          >
             <div
               class="h-full bg-blue-500 transition-all duration-300"
               :style="{ width: progress + '%' }"
@@ -152,9 +160,7 @@ const triggerFileInput = () => fileInput.value?.click();
           <div
             class="flex justify-between items-center text-[8px] font-black uppercase tracking-tighter"
           >
-            <span
-              :class="progress === 100 ? 'text-sky-500' : 'text-blue-500'"
-            >
+            <span :class="progress === 100 ? 'text-sky-500' : 'text-blue-500'">
               {{
                 progress === 100
                   ? "Success"

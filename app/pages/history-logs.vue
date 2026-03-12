@@ -26,21 +26,47 @@ const toggleGroup = (groupId: string) => {
 };
 
 /** Badge style per log type */
-const getBadgeStyle = (type: string): { bg: string; text: string; icon: string } => {
+const getBadgeStyle = (
+  type: string,
+): { bg: string; text: string; icon: string } => {
   const map: Record<string, { bg: string; text: string; icon: string }> = {
-    error:   { bg: "bg-red-500/15",    text: "text-red-400",    icon: "lucide:x-circle" },
-    success: { bg: "bg-green-500/15",  text: "text-green-400",  icon: "lucide:check-circle" },
-    warning: { bg: "bg-yellow-500/15", text: "text-yellow-400", icon: "lucide:alert-triangle" },
-    loading: { bg: "bg-blue-500/15",   text: "text-blue-400",   icon: "lucide:loader-2" },
-    info:    { bg: "bg-white/5",       text: "text-gray-500",   icon: "lucide:info" },
+    error: {
+      bg: "bg-red-500/15",
+      text: "text-red-400",
+      icon: "lucide:x-circle",
+    },
+    success: {
+      bg: "bg-green-500/15",
+      text: "text-green-400",
+      icon: "lucide:check-circle",
+    },
+    warning: {
+      bg: "bg-yellow-500/15",
+      text: "text-yellow-400",
+      icon: "lucide:alert-triangle",
+    },
+    loading: {
+      bg: "bg-blue-500/15",
+      text: "text-blue-400",
+      icon: "lucide:loader-2",
+    },
+    info: { bg: "bg-white/5", text: "text-gray-500", icon: "lucide:info" },
   };
-  return map[type] ?? { bg: "bg-white/5", text: "text-gray-500", icon: "lucide:info" };
+  return (
+    map[type] ?? {
+      bg: "bg-white/5",
+      text: "text-gray-500",
+      icon: "lucide:info",
+    }
+  );
 };
 
 /** Group header status icon + color */
 const getGroupStatusIcon = (status: string) => {
-  if (status === "success") return { name: "lucide:check-circle-2", color: "text-green-400" };
-  if (status === "error")   return { name: "lucide:x-circle",       color: "text-red-400" };
+  if (status === "success")
+    return { name: "lucide:check-circle-2", color: "text-green-400" };
+  if (status === "error")
+    return { name: "lucide:x-circle", color: "text-red-400" };
   return { name: "lucide:loader-2", color: "text-blue-400 animate-spin" };
 };
 
@@ -52,9 +78,13 @@ const groupErrorCount = (group: any) =>
 <template>
   <div class="space-y-6 pb-20">
     <!-- Header -->
-    <div class="px-1 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 animate-fade-in-down">
+    <div
+      class="px-1 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 animate-fade-in-down"
+    >
       <div>
-        <h1 class="text-2xl font-black uppercase tracking-wider text-neutral-900 dark:text-white">
+        <h1
+          class="text-2xl font-black uppercase tracking-wider text-neutral-900 dark:text-white"
+        >
           System Logs
         </h1>
         <p class="text-xs text-gray-500 uppercase tracking-[0.2em] mt-1">
@@ -75,8 +105,14 @@ const groupErrorCount = (group: any) =>
       v-if="loggerStore.messages.length === 0"
       class="flex flex-col items-center justify-center py-24 gap-4 opacity-40"
     >
-      <Icon name="lucide:terminal" size="40" class="text-gray-400 dark:text-white/20" />
-      <p class="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 font-bold">
+      <Icon
+        name="lucide:terminal"
+        size="40"
+        class="text-gray-400 dark:text-white/20"
+      />
+      <p
+        class="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 font-bold"
+      >
         No activity logs for this session
       </p>
     </div>
@@ -121,7 +157,9 @@ const groupErrorCount = (group: any) =>
           <!-- Group info -->
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 flex-wrap">
-              <span class="text-xs font-black uppercase tracking-wide text-neutral-900 dark:text-white truncate">
+              <span
+                class="text-xs font-black uppercase tracking-wide text-neutral-900 dark:text-white truncate"
+              >
                 {{ group.name }}
               </span>
               <span
@@ -134,7 +172,9 @@ const groupErrorCount = (group: any) =>
                 v-if="groupErrorCount(group) > 0"
                 class="px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 text-[10px] font-black uppercase"
               >
-                {{ groupErrorCount(group) }} error{{ groupErrorCount(group) > 1 ? 's' : '' }}
+                {{ groupErrorCount(group) }} error{{
+                  groupErrorCount(group) > 1 ? "s" : ""
+                }}
               </span>
             </div>
             <div class="flex items-center gap-3 mt-1">
@@ -163,47 +203,52 @@ const groupErrorCount = (group: any) =>
             class="border-t border-black/5 dark:border-white/5"
           >
             <div class="divide-y divide-black/5 dark:divide-white/5">
-            <div
-              v-for="item in group.items"
-              :key="item.id"
-              class="flex items-start gap-4 px-5 py-3"
-              :class="item.type === 'error' ? 'bg-red-500/5' : ''"
-            >
-              <!-- Timeline dot + line -->
-              <div class="shrink-0 flex flex-col items-center pt-1 gap-1">
-                <div
-                  class="w-5 h-5 rounded-full flex items-center justify-center"
-                  :class="getBadgeStyle(String(item.type)).bg"
-                >
-                  <Icon
-                    :name="getBadgeStyle(String(item.type)).icon || 'lucide:info'"
-                    :class="[getBadgeStyle(String(item.type)).text, item.type === 'loading' ? 'animate-spin' : '']"
-                    size="11"
-                  />
+              <div
+                v-for="item in group.items"
+                :key="item.id"
+                class="flex items-start gap-4 px-5 py-3"
+                :class="item.type === 'error' ? 'bg-red-500/5' : ''"
+              >
+                <!-- Timeline dot + line -->
+                <div class="shrink-0 flex flex-col items-center pt-1 gap-1">
+                  <div
+                    class="w-5 h-5 rounded-full flex items-center justify-center"
+                    :class="getBadgeStyle(String(item.type)).bg"
+                  >
+                    <Icon
+                      :name="
+                        getBadgeStyle(String(item.type)).icon || 'lucide:info'
+                      "
+                      :class="[
+                        getBadgeStyle(String(item.type)).text,
+                        item.type === 'loading' ? 'animate-spin' : '',
+                      ]"
+                      size="11"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <!-- Content -->
-              <div class="flex-1 min-w-0 pt-0.5">
-                <p
-                  class="text-sm font-medium leading-relaxed"
-                  :class="
-                    item.type === 'error'
-                      ? 'text-red-400 font-semibold'
-                      : item.type === 'success'
-                        ? 'text-green-400'
-                        : 'text-gray-500 dark:text-gray-400'
-                  "
-                >
-                  {{ item.message }}
-                </p>
-              </div>
+                <!-- Content -->
+                <div class="flex-1 min-w-0 pt-0.5">
+                  <p
+                    class="text-sm font-medium leading-relaxed"
+                    :class="
+                      item.type === 'error'
+                        ? 'text-red-400 font-semibold'
+                        : item.type === 'success'
+                          ? 'text-green-400'
+                          : 'text-gray-500 dark:text-gray-400'
+                    "
+                  >
+                    {{ item.message }}
+                  </p>
+                </div>
 
-              <!-- Timestamp -->
-              <span class="shrink-0 text-[10px] font-mono text-gray-400 pt-1">
-                {{ new Date(item.timestamp).toLocaleTimeString() }}
-              </span>
-            </div>
+                <!-- Timestamp -->
+                <span class="shrink-0 text-[10px] font-mono text-gray-400 pt-1">
+                  {{ new Date(item.timestamp).toLocaleTimeString() }}
+                </span>
+              </div>
             </div>
           </div>
         </Transition>
@@ -214,19 +259,37 @@ const groupErrorCount = (group: any) =>
         v-if="(groupedMessages.orphans?.length ?? 0) > 0"
         class="rounded-3xl border border-black/5 dark:border-white/5 bg-white dark:bg-[#0d0d0d] overflow-hidden"
       >
-        <div class="px-5 py-3 border-b border-black/5 dark:border-white/5 bg-black/3 dark:bg-white/3">
-          <span class="text-xs font-black uppercase tracking-widest text-gray-400">Standalone Logs</span>
+        <div
+          class="px-5 py-3 border-b border-black/5 dark:border-white/5 bg-black/3 dark:bg-white/3"
+        >
+          <span
+            class="text-xs font-black uppercase tracking-widest text-gray-400"
+            >Standalone Logs</span
+          >
         </div>
         <div
           v-for="(log, idx) in groupedMessages.orphans"
           :key="log.id"
           class="flex items-start gap-4 px-5 py-3"
-          :class="idx < (groupedMessages.orphans?.length ?? 0) - 1 ? 'border-b border-black/5 dark:border-white/5' : ''"
+          :class="
+            idx < (groupedMessages.orphans?.length ?? 0) - 1
+              ? 'border-b border-black/5 dark:border-white/5'
+              : ''
+          "
         >
-          <div class="shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5" :class="getBadgeStyle(log.type).bg">
-            <Icon :name="getBadgeStyle(log.type).icon" :class="getBadgeStyle(log.type).text" size="11" />
+          <div
+            class="shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
+            :class="getBadgeStyle(log.type).bg"
+          >
+            <Icon
+              :name="getBadgeStyle(log.type).icon"
+              :class="getBadgeStyle(log.type).text"
+              size="11"
+            />
           </div>
-          <p class="flex-1 text-[11px] text-gray-500 dark:text-gray-400 pt-0.5">{{ log.message }}</p>
+          <p class="flex-1 text-[11px] text-gray-500 dark:text-gray-400 pt-0.5">
+            {{ log.message }}
+          </p>
           <span class="shrink-0 text-[8px] font-mono text-gray-400 pt-1">
             {{ new Date(log.timestamp).toLocaleTimeString() }}
           </span>
@@ -241,16 +304,26 @@ const groupErrorCount = (group: any) =>
   animation: fadeInDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Group expand animation */
 .group-expand-enter-active {
-  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .group-expand-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 .group-expand-enter-from,
 .group-expand-leave-to {

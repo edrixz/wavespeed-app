@@ -6,7 +6,9 @@ const { ratioList, applyRatio, isActiveRatio, getButtonStyle } = useRatio();
 
 <template>
   <div class="space-y-3">
-    <span class="text-xs font-medium text-gray-500 dark:text-[#C4C7C5] ml-1">Aspect Ratio</span>
+    <span class="text-xs font-medium text-gray-500 dark:text-[#C4C7C5] ml-1"
+      >Aspect Ratio</span
+    >
 
     <div class="flex flex-wrap gap-2">
       <button

@@ -10,7 +10,6 @@ defineProps<{
 
 <template>
   <div class="absolute inset-x-0 bottom-0 p-5 z-30 flex flex-col justify-end">
-
     <!-- Main Title & Verification -->
     <div class="flex items-center gap-1.5 mb-2.5">
       <h4
@@ -19,7 +18,11 @@ defineProps<{
       >
         {{ title }}
       </h4>
-      <Icon name="lucide:badge-check" size="14" class="text-blue-400 shrink-0" />
+      <Icon
+        name="lucide:badge-check"
+        size="14"
+        class="text-blue-400 shrink-0"
+      />
     </div>
 
     <!-- Tags area -->

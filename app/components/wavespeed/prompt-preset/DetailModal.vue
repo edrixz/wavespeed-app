@@ -45,11 +45,13 @@ const startDelete = (id: string) => {
             :src="modelValue.thumbnail"
             class="w-full h-full object-cover scale-150 blur-[80px] opacity-30 saturate-150"
           />
-          <div class="absolute inset-0 bg-white/60 dark:bg-black/60 transition-colors"></div>
+          <div
+            class="absolute inset-0 bg-white/60 dark:bg-black/60 transition-colors"
+          ></div>
         </div>
 
         <div
-          class="relative z-10 flex flex-col h-full max-h-full w-full overflow-hidden sm:m-6 sm:rounded-[32px] sm:border sm:border-black/10 sm:dark:border-white/10 bg-white/40 dark:bg-black/20 backdrop-blur-sm main-card will-change-transform shadow-2xl transition-colors"
+          class="relative z-10 flex flex-col h-full max-h-full w-full overflow-hidden sm:m-6 sm:rounded-4xl sm:border sm:border-black/10 sm:dark:border-white/10 bg-white/40 dark:bg-black/20 backdrop-blur-sm main-card will-change-transform shadow-2xl transition-colors"
         >
           <button
             @click="$emit('update:modelValue', false)"
@@ -69,7 +71,7 @@ const startDelete = (id: string) => {
           </div>
 
           <main
-            class="flex-1 min-h-0 relative z-20 -mt-12 bg-gray-100 dark:bg-[#080808] rounded-t-[32px] border-t border-black/5 dark:border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] ui-element content-body flex flex-col transition-colors duration-300"
+            class="flex-1 min-h-0 relative z-20 -mt-12 bg-gray-100 dark:bg-[#080808] rounded-t-4xl border-t border-black/5 dark:border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] ui-element content-body flex flex-col transition-colors duration-300"
           >
             <div class="flex-1 overflow-y-auto no-scrollbar pt-8 px-6 pb-28">
               <div class="max-w-2xl mx-auto space-y-6">

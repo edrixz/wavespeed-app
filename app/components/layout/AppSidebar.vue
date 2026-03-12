@@ -13,7 +13,7 @@ const menuItems = [
 
 <template>
   <aside
-    class="fixed inset-y-0 left-0 z-1001 w-[280px] bg-neutral-50 dark:bg-[#131314] flex flex-col transition-all duration-300 lg:static lg:translate-x-0"
+    class="fixed inset-y-0 left-0 z-1001 w-70 bg-neutral-50 dark:bg-[#131314] flex flex-col transition-all duration-300 lg:static lg:translate-x-0"
     :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
   >
     <div class="h-12 flex items-center px-6 pl-12">
@@ -52,8 +52,12 @@ const menuItems = [
           class="w-8 h-8 rounded-full bg-linear-to-tr from-blue-500 to-purple-500"
         ></div>
         <div class="flex flex-col">
-          <span class="text-xs font-medium text-neutral-900 dark:text-[#E3E3E3]">Edrixx Space</span>
-          <span class="text-[10px] text-gray-500 dark:text-[#C4C7C5]">Pro Plan</span>
+          <span class="text-xs font-medium text-neutral-900 dark:text-[#E3E3E3]"
+            >Edrixx Space</span
+          >
+          <span class="text-[10px] text-gray-500 dark:text-[#C4C7C5]"
+            >Pro Plan</span
+          >
         </div>
       </div>
     </div>
@@ -72,7 +76,7 @@ const menuItems = [
   transition: all 0.2s;
 }
 .dark .nav-item {
-  color: #C4C7C5;
+  color: #c4c7c5;
 }
 .nav-item:hover {
   background-color: theme("colors.black/5", rgba(0, 0, 0, 0.05));
@@ -80,7 +84,7 @@ const menuItems = [
 }
 .dark .nav-item:hover {
   background-color: rgba(68, 71, 70, 0.3);
-  color: #E3E3E3;
+  color: #e3e3e3;
 }
 
 /* Active State: Pill shape, background color, bold text */
@@ -89,8 +93,8 @@ const menuItems = [
   color: theme("colors.blue.600", #2563eb);
 }
 .dark .active {
-  background-color: #004A77;
-  color: #A8C7FA;
+  background-color: #004a77;
+  color: #a8c7fa;
 }
 
 /* Icon active state */
@@ -98,6 +102,6 @@ const menuItems = [
   color: theme("colors.blue.600", #2563eb);
 }
 .dark .active .icon-wrapper {
-  color: #A8C7FA;
+  color: #a8c7fa;
 }
 </style>

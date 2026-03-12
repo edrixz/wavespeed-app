@@ -67,7 +67,9 @@ if (process.client) {
           >
             Signed in as
           </p>
-          <p class="text-xs font-bold text-neutral-900 dark:text-white truncate mt-0.5">
+          <p
+            class="text-xs font-bold text-neutral-900 dark:text-white truncate mt-0.5"
+          >
             {{ user?.email }}
           </p>
         </div>
@@ -82,7 +84,11 @@ if (process.client) {
             <span>Settings</span>
           </NuxtLink>
 
-          <NuxtLink to="/billing" class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 transition-all hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white" @click="isOpen = false">
+          <NuxtLink
+            to="/billing"
+            class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 transition-all hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white"
+            @click="isOpen = false"
+          >
             <Icon name="lucide:credit-card" size="16" />
             <span>Billing</span>
           </NuxtLink>

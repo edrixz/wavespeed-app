@@ -34,7 +34,9 @@ const selectedLabel = computed(() => {
       class="flex items-center justify-between rounded-xl px-3.5 py-2.5 cursor-pointer transition-all duration-200 bg-white dark:bg-[#1e1e1e] border border-black/10 dark:border-[#333] hover:border-black/20 hover:bg-neutral-50 dark:hover:border-[#555] dark:hover:bg-[#252525]"
       @click="toggleOpen"
     >
-      <span class="font-medium text-neutral-900 dark:text-white">{{ selectedLabel }}</span>
+      <span class="font-medium text-neutral-900 dark:text-white">
+        {{ selectedLabel }}
+      </span>
 
       <svg
         class="w-4 h-4 text-gray-400 dark:text-[#aaa] transition-transform duration-200"
@@ -61,7 +63,8 @@ const selectedLabel = computed(() => {
           :key="option.value"
           class="px-3.5 py-2.5 cursor-pointer text-gray-600 dark:text-[#ccc] transition-colors duration-150 hover:bg-neutral-50 dark:hover:bg-[#2a2a2a]"
           :class="{
-            'bg-neutral-100 text-neutral-900 dark:bg-[#333] dark:text-white': option.value === model
+            'bg-neutral-100 text-neutral-900 dark:bg-[#333] dark:text-white':
+              option.value === model,
           }"
           @click.stop="select(option.value)"
         >
@@ -78,8 +81,6 @@ const selectedLabel = computed(() => {
   position: relative;
   font-family: Inter, sans-serif;
 }
-
-
 
 .fade-enter-active,
 .fade-leave-active {

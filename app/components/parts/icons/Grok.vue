@@ -19,7 +19,7 @@ const { size = 20 } = props;
     :class="[
       'transition-colors duration-200',
       'text-black dark:text-white', // Use text classes for easier control
-      props.class
+      props.class,
     ]"
   >
     <title id="icon-grok-title">Grok</title>

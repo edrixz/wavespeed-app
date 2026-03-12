@@ -15,7 +15,9 @@ const { canNotGenerate, isProcessing, resultImage, handleGenerate } =
       >
         <div>
           <div class="flex items-center justify-between">
-            <h2 class="text-xl font-black text-neutral-900 dark:text-white uppercase tracking-tight">
+            <h2
+              class="text-xl font-black text-neutral-900 dark:text-white uppercase tracking-tight"
+            >
               Grok AI
             </h2>
           </div>

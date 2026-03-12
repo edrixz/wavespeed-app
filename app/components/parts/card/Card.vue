@@ -4,7 +4,7 @@ import CardCover from "./CardCover.vue";
 import CardBadge from "./CardBadge.vue";
 import CardContent from "./CardContent.vue";
 
-const props = defineProps<{ 
+const props = defineProps<{
   item: any;
   isVisible: boolean;
 }>();
@@ -14,9 +14,9 @@ const emit = defineEmits(["select", "toggle-visibility"]);
 <template>
   <CardBase @click="$emit('select', item)">
     <CardCover :thumbnail="item.thumbnail" :is-visible="isVisible" />
-    
+
     <CardBadge label="Preset" />
-    
+
     <CardContent :title="item.title" :size="item.size" />
   </CardBase>
 </template>

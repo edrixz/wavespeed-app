@@ -7,7 +7,7 @@
 
 <template>
   <div
-    class="relative h-full w-full rounded-[32px] overflow-hidden group cursor-pointer border border-black/10 dark:border-white/5 transition-all duration-500 hover:border-blue-500/40"
+    class="relative h-full w-full rounded-4xl overflow-hidden group cursor-pointer border border-black/10 dark:border-white/5 transition-all duration-500 hover:border-blue-500/40"
   >
     <slot />
   </div>

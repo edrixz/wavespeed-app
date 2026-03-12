@@ -102,12 +102,27 @@ type CardAction = {
 
 const sessionActions: CardAction[] = [
   { id: "save", icon: "lucide:heart", label: "Favorite", variant: "default" },
-  { id: "preset", icon: "lucide:bookmark-plus", label: "Preset", variant: "accent" },
-  { id: "cloud", icon: "lucide:cloud-upload", label: "Upload", variant: "default" },
+  {
+    id: "preset",
+    icon: "lucide:bookmark-plus",
+    label: "Preset",
+    variant: "accent",
+  },
+  {
+    id: "cloud",
+    icon: "lucide:cloud-upload",
+    label: "Upload",
+    variant: "default",
+  },
 ];
 
 const presetActions: CardAction[] = [
-  { id: "cloud", icon: "lucide:cloud-upload", label: "Upload", variant: "default" },
+  {
+    id: "cloud",
+    icon: "lucide:cloud-upload",
+    label: "Upload",
+    variant: "default",
+  },
   { id: "delete", icon: "lucide:trash-2", label: "Delete", variant: "danger" },
 ];
 
@@ -121,7 +136,11 @@ const currentActions = computed<CardAction[]>(() =>
     <header class="px-4 pt-4 animate-fade-in-down space-y-6">
       <div class="flex justify-between items-end">
         <div>
-          <h1 class="text-2xl font-black uppercase text-neutral-900 dark:text-white">Library</h1>
+          <h1
+            class="text-2xl font-black uppercase text-neutral-900 dark:text-white"
+          >
+            Library
+          </h1>
           <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">
             Your Creative Assets
           </p>
@@ -137,10 +156,15 @@ const currentActions = computed<CardAction[]>(() =>
                 : 'bg-black/5 border-black/10 dark:bg-white/5 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'
             "
           >
-            <Icon :name="isPrivacyMode ? 'lucide:eye-off' : 'lucide:eye'" size="14" />
+            <Icon
+              :name="isPrivacyMode ? 'lucide:eye-off' : 'lucide:eye'"
+              size="14"
+            />
           </button>
 
-          <div class="px-3 py-1 bg-black/5 dark:bg-white/5 rounded-full border border-black/10 dark:border-white/10">
+          <div
+            class="px-3 py-1 bg-black/5 dark:bg-white/5 rounded-full border border-black/10 dark:border-white/10"
+          >
             <span class="text-[10px] font-bold text-blue-500">
               {{ displayedItems.length }} ITEMS
             </span>
@@ -176,8 +200,14 @@ const currentActions = computed<CardAction[]>(() =>
         v-if="displayedItems.length === 0"
         class="col-span-full py-20 flex flex-col items-center justify-center opacity-40"
       >
-        <Icon name="lucide:box" size="40" class="mb-4 text-gray-300 dark:text-white/20" />
-        <p class="text-[10px] uppercase tracking-widest text-gray-400 dark:text-white/40">
+        <Icon
+          name="lucide:box"
+          size="40"
+          class="mb-4 text-gray-300 dark:text-white/20"
+        />
+        <p
+          class="text-[10px] uppercase tracking-widest text-gray-400 dark:text-white/40"
+        >
           No items found in {{ activeTab }}
         </p>
       </div>
@@ -206,7 +236,11 @@ const currentActions = computed<CardAction[]>(() =>
             v-else
             class="w-full h-full bg-black/5 dark:bg-white/5 flex items-center justify-center"
           >
-            <Icon name="lucide:image-off" size="24" class="text-gray-300 dark:text-white/20" />
+            <Icon
+              name="lucide:image-off"
+              size="24"
+              class="text-gray-300 dark:text-white/20"
+            />
           </div>
 
           <!-- Privacy overlay -->
@@ -214,7 +248,11 @@ const currentActions = computed<CardAction[]>(() =>
             v-if="isPrivacyMode"
             class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none animate-fade-in"
           >
-            <Icon name="lucide:lock" size="24" class="text-gray-400 dark:text-white/30" />
+            <Icon
+              name="lucide:lock"
+              size="24"
+              class="text-gray-400 dark:text-white/30"
+            />
           </div>
 
           <!-- Action buttons overlay — Transition + v-show: icon stays in DOM (no flicker), CSS handles animation -->
@@ -260,7 +298,8 @@ const currentActions = computed<CardAction[]>(() =>
 /* Action buttons overlay transition (Transition + v-show) */
 .btn-overlay-enter-active,
 .btn-overlay-leave-active {
-  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+  transition:
+    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 .btn-overlay-enter-from,

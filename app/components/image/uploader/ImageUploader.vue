@@ -22,7 +22,9 @@ const {
 <template>
   <div class="w-full">
     <div class="flex justify-between items-end mb-2">
-      <label class="flex items-center gap-1 text-sm font-medium text-neutral-800 dark:text-gray-300 transition-colors">
+      <label
+        class="flex items-center gap-1 text-sm font-medium text-neutral-800 dark:text-gray-300 transition-colors"
+      >
         Reference Images
         <span
           class="text-xs text-gray-500 font-normal"

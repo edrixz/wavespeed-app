@@ -30,12 +30,12 @@ withDefaults(defineProps<Props>(), {
       </div>
 
       <span
-        class="relative flex h-full w-full items-center justify-center rounded-full   px-8 py-3 text-sm font-medium text-neutral-900 dark:text-[#E3E3E3] backdrop-blur-3xl transition-colors duration-300 group-hover:bg-neutral-100 dark:group-hover:bg-[#131314] group-hover:text-black dark:group-hover:text-white"
+        class="relative flex h-full w-full items-center justify-center rounded-full px-8 py-3 text-sm font-medium text-neutral-900 dark:text-[#E3E3E3] backdrop-blur-3xl transition-colors duration-300 group-hover:bg-neutral-100 dark:group-hover:bg-[#131314] group-hover:text-black dark:group-hover:text-white"
         :class="{
           'bg-white dark:bg-[#161616]': !disabled,
           'bg-gray-200 dark:bg-[#1E1F20]': disabled,
         }"
-        >
+      >
         <Icon
           v-if="loading"
           name="lucide:loader-2"
