@@ -3,68 +3,65 @@ import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useClipboard } from "@vueuse/core";
 
+type PromptSections = {
+  subject: string;
+  clothing: string;
+  setting: string;
+  style: string;
+  vibe: string;
+  full: string;
+};
+
 export const useGeminiAnalyzer = () => {
   const imageStore = useImagesStore();
   const { images, filesToUpload } = storeToRefs(imageStore);
   const { uploadImage } = useUploadToSupabase();
   const { setStatus } = useLogger();
+  const { copy } = useClipboard();
 
   const isAnalyzing = ref<boolean>(false);
-  const hasError = ref<boolean>(false);
-
   const analysisResult = ref<string | null>(null);
-  const promptResult = ref<string | null>(null);
+  const promptResult = ref<PromptSections | null>(null);
 
-  // State cho Modal xem chi tiết phân tích
-  const isAnalysisModalOpen = ref<boolean>(false);
+  // Quản lý trạng thái đã copy cho từng phần
+  const copiedState = ref<Record<string, boolean>>({});
 
-  const { copy, copied } = useClipboard();
-
-  const canNotAnalyze = computed<boolean>(
-    () =>
-      isAnalyzing.value ||
-      (images.value.length === 0 && filesToUpload.value.length === 0),
-  );
+  const extractSection = (
+    text: string,
+    startKey: string,
+    endKey: string,
+  ): string => {
+    const startIdx = text.indexOf(startKey);
+    if (startIdx === -1) return "";
+    const contentStart = startIdx + startKey.length;
+    const endIdx = endKey ? text.indexOf(endKey) : text.length;
+    return text.slice(contentStart, endIdx).trim();
+  };
 
   const handleAnalyze = async () => {
-    if (canNotAnalyze.value) return;
-
+    if (isAnalyzing.value) return;
     isAnalyzing.value = true;
-    hasError.value = false;
-    analysisResult.value = null;
     promptResult.value = null;
-    isAnalysisModalOpen.value = false;
+    copiedState.value = {};
 
     try {
-      setStatus("Preparing image...", "loading");
       let finalImageUrl = "";
-
       if (
-        images.value[0] &&
-        images.value[0].url.startsWith("http") &&
+        images.value[0]?.url.startsWith("http") &&
         !images.value[0].url.startsWith("blob:")
       ) {
         finalImageUrl = images.value[0].url;
       } else if (filesToUpload.value.length > 0) {
-        setStatus("Uploading image...", "loading");
-        // Cập nhật tên bucket thành tmp-files
         const uploadedUrl = await uploadImage(
           filesToUpload.value[0]!,
           "tmp-files",
         );
-
-        if (!uploadedUrl) throw new Error("Failed to upload image.");
-        finalImageUrl = uploadedUrl;
+        finalImageUrl = uploadedUrl || "";
       }
 
-      if (!finalImageUrl) throw new Error("No valid image found for analysis.");
-
-      setStatus("Analyzing image with Gemini...", "loading");
       const response: any = await $fetch("/api/gemini/analyze", {
         method: "POST",
-        body: {
-          imageUrl: finalImageUrl,
-        },
+        body: { imageUrl: finalImageUrl },
       });
 
       const rawText = response.data || "";
@@ -72,50 +69,52 @@ export const useGeminiAnalyzer = () => {
 
       if (rawText.includes(splitToken)) {
         const parts = rawText.split(splitToken);
-
-        // Sử dụng Regex để xóa dòng tiêu đề dù AI có gõ có dấu hay không dấu
-        let partA = parts[0]
+        analysisResult.value = parts[0]!
           .replace(/PH(A|Ầ)N A:.*?\n/i, "")
-          .replace("PHAN A: PHAN TICH TIENG VIET", "") // Backup fallback
           .trim();
-        analysisResult.value = partA;
+        const englishText = parts[1]!.replace(/PH(A|Ầ)N B:.*?\n/i, "").trim();
 
-        let partB = parts[1]
-          .replace(/PH(A|Ầ)N B:.*?\n/i, "")
-          .replace("PHAN B: PROMPT TIENG ANH", "") // Backup fallback
-          .trim();
-        promptResult.value = partB;
-      } else {
-        analysisResult.value = rawText;
-        promptResult.value = "";
+        promptResult.value = {
+          subject: extractSection(englishText, "1. THE SUBJECT", "2. CLOTHING"),
+          clothing: extractSection(
+            englishText,
+            "2. CLOTHING AND ACCESSORIES",
+            "3. SETTING",
+          ),
+          setting: extractSection(
+            englishText,
+            "3. SETTING AND ATMOSPHERE",
+            "4. PHOTOGRAPHY",
+          ),
+          style: extractSection(englishText, "4. PHOTOGRAPHY STYLE", "5. VIBE"),
+          vibe: extractSection(englishText, "5. VIBE AND STORY", ""),
+          full: englishText,
+        };
       }
-
-      setStatus("Analysis complete!", "success");
-    } catch (error: any) {
-      hasError.value = true;
-      setStatus(error.message || "An error occurred during analysis.", "error");
-      console.error("[Gemini Analyzer Error]:", error);
+      setStatus("Phân tích hoàn tất!", "success");
+    } catch (e) {
+      setStatus("Lỗi phân tích", "error");
     } finally {
       isAnalyzing.value = false;
     }
   };
 
-  const handleCopyPrompt = () => {
-    if (promptResult.value) {
-      copy(promptResult.value);
-      setStatus("Đã copy prompt!", "success");
-    }
+  const handleCopy = (text: string, key: string) => {
+    if (!text) return;
+    copy(text);
+    copiedState.value[key] = true;
+    setStatus(`Đã copy ${key}!`, "success");
+    setTimeout(() => {
+      copiedState.value[key] = false;
+    }, 2000);
   };
 
   return {
     isAnalyzing,
-    hasError,
     analysisResult,
     promptResult,
-    isAnalysisModalOpen,
-    canNotAnalyze,
     handleAnalyze,
-    handleCopyPrompt,
-    copied,
+    handleCopy,
+    copiedState,
   };
 };
