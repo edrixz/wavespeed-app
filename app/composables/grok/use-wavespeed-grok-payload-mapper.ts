@@ -1,8 +1,9 @@
+// app/composables/grok/use-wavespeed-grok-payload-mapper.ts
 import type { GrokEditPayload } from "~/types";
 
 export const useWavespeedGrokPayloadMapper = () => {
   const { setStatus } = useLogger();
-  const { uploadFile } = useSystemFileUpload();
+  const { uploadImage } = useUploadToSupabase();
 
   const imageStore = useImagesStore();
   const { images, filesToUpload } = storeToRefs(imageStore);
@@ -11,6 +12,10 @@ export const useWavespeedGrokPayloadMapper = () => {
   const { prompt, enableSafetyChecker, enableBase64Output, enableSyncMode } =
     storeToRefs(payloadStore);
 
+  /**
+   * Build payload for Grok generation, including uploading a pending image to Supabase
+   * @returns {Promise<GrokEditPayload>} The formatted payload
+   */
   const buildPayload = async (): Promise<GrokEditPayload> => {
     let finalImageUrl: string = "";
 
@@ -23,11 +28,20 @@ export const useWavespeedGrokPayloadMapper = () => {
       finalImageUrl = images.value[0].url;
     }
 
-    // Upload new files if present
+    // Upload new file to Supabase if present
     if (filesToUpload.value.length > 0) {
-      setStatus("Uploading image...", "loading");
+      setStatus("Uploading image to Supabase...", "loading");
 
-      finalImageUrl = await uploadFile(filesToUpload.value[0]!);
+      const uploadedUrl = await uploadImage(
+        filesToUpload.value[0]!,
+        "tmp-files",
+      );
+
+      if (!uploadedUrl) {
+        throw new Error("Failed to upload image to Supabase.");
+      }
+
+      finalImageUrl = uploadedUrl;
       setStatus("Upload complete.", "success");
     }
 
@@ -40,6 +54,11 @@ export const useWavespeedGrokPayloadMapper = () => {
     };
   };
 
+  /**
+   * Submit the Grok task to the backend API
+   * @param {GrokEditPayload} payload - The generation payload
+   * @returns {Promise<string>} The Task ID
+   */
   const submitTask = async (payload: GrokEditPayload): Promise<string> => {
     const response: any = await $fetch("/api/grok/generate", {
       method: "POST",

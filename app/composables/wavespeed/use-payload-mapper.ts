@@ -1,8 +1,9 @@
+// app/composables/wavespeed/use-payload-mapper.ts
 import type { seedreamEditPayload } from "~/types";
 
 export const usePayloadMapper = () => {
   const { setStatus } = useLogger();
-  const { uploadMultipleFiles } = useSystemFileUpload();
+  const { uploadImage } = useUploadToSupabase();
 
   const imageStore = useImagesStore();
   const { images, filesToUpload } = storeToRefs(imageStore);
@@ -19,6 +20,10 @@ export const usePayloadMapper = () => {
     enableSyncMode,
   } = storeToRefs(payloadStore);
 
+  /**
+   * Build payload for Seedream generation, including uploading pending images to Supabase
+   * @returns {Promise<seedreamEditPayload>} The formatted payload
+   */
   const buildPayload = async (): Promise<seedreamEditPayload> => {
     const finalImageUrls: string[] = [];
 
@@ -28,12 +33,30 @@ export const usePayloadMapper = () => {
         finalImageUrls.push(img.url);
     });
 
-    // Upload new files if present
+    // Upload new files to Supabase if present
     if (filesToUpload.value.length > 0) {
-      setStatus(`Uploading ${filesToUpload.value.length} images...`, "loading");
+      setStatus(
+        `Uploading ${filesToUpload.value.length} images to Supabase...`,
+        "loading",
+      );
 
-      const uploadedUrls = await uploadMultipleFiles(filesToUpload.value);
-      finalImageUrls.push(...uploadedUrls);
+      // Upload multiple files concurrently
+      const uploadPromises = filesToUpload.value.map((file) =>
+        uploadImage(file, "tmp-files"),
+      );
+
+      const uploadedUrls = await Promise.all(uploadPromises);
+
+      // Filter out failed uploads (null values)
+      const validUrls = uploadedUrls.filter(
+        (url): url is string => url !== null,
+      );
+
+      if (validUrls.length !== filesToUpload.value.length) {
+        throw new Error("Some images failed to upload to Supabase.");
+      }
+
+      finalImageUrls.push(...validUrls);
       setStatus("Upload complete.", "success");
     }
 
@@ -48,6 +71,11 @@ export const usePayloadMapper = () => {
     };
   };
 
+  /**
+   * Submit the generation task to the backend API
+   * @param {seedreamEditPayload} payload - The generation payload
+   * @returns {Promise<string>} The Task ID
+   */
   const submitTask = async (payload: seedreamEditPayload): Promise<string> => {
     const response: any = await $fetch("/api/generate", {
       method: "POST",
