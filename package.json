@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.33.0",
+    "@huggingface/transformers": "^3.8.1",
     "@nuxt/image": "latest",
     "@nuxt/ui": "^4.5.0",
     "@nuxtjs/supabase": "latest",
