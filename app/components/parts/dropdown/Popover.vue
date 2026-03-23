@@ -32,6 +32,10 @@ onClickOutside(contentRef, (event) => {
 
 const toggle = () => {
   isOpen.value = !isOpen.value;
+  if (isOpen.value && triggerWrapperRef.value) {
+    // Determine closest scrollable parent (by default nearest block)
+    triggerWrapperRef.value.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
 };
 
 const handleContentClick = () => {
@@ -45,19 +49,22 @@ const popoverStyle = computed(() => {
     return {
       top: `${bottom.value + 6}px`,
       left: `${right.value}px`,
-      transform: 'translateX(-100%)'
+      transform: 'translateX(-100%)',
+      transformOrigin: 'top right'
     };
   } else if (props.placement === 'bottom-center') {
     return {
       top: `${bottom.value + 6}px`,
       left: `${left.value + width.value / 2}px`,
-      transform: 'translateX(-50%)'
+      transform: 'translateX(-50%)',
+      transformOrigin: 'top center'
     };
   } else {
     // bottom-start
     return {
       top: `${bottom.value + 6}px`,
       left: `${left.value}px`,
+      transformOrigin: 'top left'
     };
   }
 });
@@ -71,12 +78,12 @@ const popoverStyle = computed(() => {
 
     <Teleport to="body">
       <transition
-        enter-active-class="transition duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
-        enter-from-class="transform opacity-0 scale-95 translate-y-[-10px]"
-        enter-to-class="transform opacity-100 scale-100 translate-y-0"
-        leave-active-class="transition ease-in duration-100"
-        leave-from-class="transform opacity-100 scale-100 translate-y-0"
-        leave-to-class="transform opacity-0 scale-95 translate-y-[-5px]"
+        enter-active-class="transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        enter-from-class="opacity-0 scale-95 translate-y-[-10px]"
+        enter-to-class="opacity-100 scale-100 translate-y-0"
+        leave-active-class="transition-all duration-150 ease-in"
+        leave-from-class="opacity-100 scale-100 translate-y-0"
+        leave-to-class="opacity-0 scale-95 translate-y-[-10px]"
       >
         <div
           v-if="isOpen"

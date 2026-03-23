@@ -91,6 +91,14 @@ const filteredStyleAssets = computed(() => {
   return result;
 });
 
+const listContainerRef = ref<HTMLElement | null>(null);
+
+watch(filteredStyleAssets, () => {
+  if (listContainerRef.value) {
+    listContainerRef.value.scrollTo({ left: 0, behavior: 'smooth' });
+  }
+});
+
 onMounted(async () => {
   isWaitingForImages.value = true;
   await promptPresetStore.fetchPreset();
@@ -261,6 +269,7 @@ onMounted(async () => {
 
     <div class="relative w-full">
       <div
+        ref="listContainerRef"
         class="flex overflow-x-auto gap-4 px-6 pb-4 pt-2 no-scrollbar snap-x snap-mandatory scroll-smooth min-h-60 items-start"
       >
         <template v-if="isLoading || isWaitingForImages">
