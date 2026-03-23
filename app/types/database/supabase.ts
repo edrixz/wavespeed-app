@@ -65,9 +65,11 @@ export type Database = {
           id: string
           negative_prompt: string | null
           prompt: string
+          rating: number | null
           size: string | null
           thumbnail: string | null
           title: string
+          usage_count: number | null
           user_id: string
         }
         Insert: {
@@ -75,9 +77,11 @@ export type Database = {
           id?: string
           negative_prompt?: string | null
           prompt: string
+          rating?: number | null
           size?: string | null
           thumbnail?: string | null
           title: string
+          usage_count?: number | null
           user_id: string
         }
         Update: {
@@ -85,9 +89,11 @@ export type Database = {
           id?: string
           negative_prompt?: string | null
           prompt?: string
+          rating?: number | null
           size?: string | null
           thumbnail?: string | null
           title?: string
+          usage_count?: number | null
           user_id?: string
         }
         Relationships: []

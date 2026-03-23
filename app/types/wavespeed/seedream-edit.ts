@@ -16,5 +16,7 @@ export type PromptPreset = {
   prompt: string;
   negative_prompt: string | null;
   size: string | null;
+  rating?: number | null;
+  usage_count?: number | null;
   created_at: string | null;
 };

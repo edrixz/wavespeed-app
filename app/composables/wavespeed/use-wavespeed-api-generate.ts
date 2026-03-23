@@ -5,6 +5,7 @@ export const useWavespeedApiGenerate = () => {
   const { buildPayload, submitTask } = usePayloadMapper();
   const { pollTask } = usePolling();
   const { handleError, handleSuccess } = useResponseHandler();
+  const promptPresetStore = useSeedreamPromptPresetStore();
 
   const imageStore = useImagesStore();
   const { images } = storeToRefs(imageStore);
@@ -54,6 +55,11 @@ export const useWavespeedApiGenerate = () => {
       });
 
       handleSuccess("Complete! Image is ready.");
+      
+      // Increment preset usage if one was actively applied
+      if (promptPresetStore.activePresetId) {
+        promptPresetStore.incrementUsageCount(promptPresetStore.activePresetId);
+      }
     } catch (error: any) {
       handleError(error);
     } finally {

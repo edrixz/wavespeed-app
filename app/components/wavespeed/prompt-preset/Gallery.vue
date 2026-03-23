@@ -14,13 +14,81 @@ const isWaitingForImages = ref(true);
 const isSearchFocused = ref(false);
 const isGlobalBlurVisible = ref(false);
 
+const sortOptions = [
+  { value: "newest", label: "Newest Defaults", icon: "lucide:clock" },
+  { value: "rating", label: "Rating", icon: "lucide:star" },
+  { value: "usage", label: "Usage", icon: "lucide:flame" },
+] as const;
+
+type SortValue = typeof sortOptions[number]["value"];
+const sortBy = ref<SortValue>("newest");
+const sortDirection = ref<"desc" | "asc">("desc");
+
+const handleSortSelect = (val: SortValue) => {
+  if (sortBy.value === val && val !== "newest") {
+    sortDirection.value = sortDirection.value === "desc" ? "asc" : "desc";
+  } else {
+    sortBy.value = val;
+    sortDirection.value = "desc";
+  }
+};
+const currentSortOption = computed(() => {
+  const matching = sortOptions.find(o => o.value === sortBy.value);
+  return matching ? matching : sortOptions[0];
+});
+
+const filterRating = ref("all");
+const ratingFilterLabel = computed(() => {
+  if (filterRating.value === "all") return "All Ratings";
+  return `${filterRating.value} Stars`;
+});
+
+const filterUsageMin = ref(0);
+const filterUsageMax = ref(1000);
+
+const handleSaveRating = async ({ id, rating }: { id: string; rating: number }) => {
+  await promptPresetStore.updatePresetRating(id, rating);
+};
+
 const filteredStyleAssets = computed(() => {
-  if (!debouncedSearchQuery.value.trim()) return promptPresets.value;
-  const q = debouncedSearchQuery.value.toLowerCase();
-  return promptPresets.value.filter(
-    (p) =>
-      p.title.toLowerCase().includes(q) || p.prompt.toLowerCase().includes(q),
-  );
+  let result = promptPresets.value;
+
+  // 1. Search filter
+  if (debouncedSearchQuery.value.trim()) {
+    const q = debouncedSearchQuery.value.toLowerCase();
+    result = result.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) || p.prompt.toLowerCase().includes(q)
+    );
+  }
+
+  // 2. Rating filter
+  if (filterRating.value !== "all") {
+    const ratingTarget = parseInt(filterRating.value);
+    result = result.filter(p => (p.rating || 0) === ratingTarget);
+  }
+
+  // 3. Usage filter
+  result = result.filter(p => {
+    const usage = p.usage_count || 0;
+    return usage >= filterUsageMin.value && usage <= filterUsageMax.value;
+  });
+
+  // 4. Sort
+  result = [...result].sort((a, b) => {
+    if (sortBy.value === 'rating') {
+      const diff = (b.rating || 0) - (a.rating || 0);
+      if (diff !== 0) return sortDirection.value === 'desc' ? diff : -diff;
+    } else if (sortBy.value === 'usage') {
+      const diff = (b.usage_count || 0) - (a.usage_count || 0);
+      if (diff !== 0) return sortDirection.value === 'desc' ? diff : -diff;
+    }
+    // Newest is default or fallback
+    const getTimestamp = (d: string | null) => d ? new Date(d).getTime() : 0;
+    return getTimestamp(b.created_at) - getTimestamp(a.created_at);
+  });
+
+  return result;
 });
 
 onMounted(async () => {
@@ -34,7 +102,7 @@ onMounted(async () => {
 
 <template>
   <div class="w-full space-y-2">
-    <div class="grid grid-rows-2">
+    <div class="flex flex-col gap-4">
       <div class="flex flex-col justify-between">
         <div class="flex items-center justify-between gap-3 w-full">
           <div class="flex items-center gap-3">
@@ -83,8 +151,8 @@ onMounted(async () => {
         </h3>
       </div>
 
-      <div class="flex items-center justify-between gap-3">
-        <div class="relative group transition-all w-full md:max-w-xs">
+      <div class="flex items-center justify-between gap-3 flex-col sm:flex-row sm:items-center">
+        <div class="relative group transition-all w-full md:max-w-xs shrink-0">
           <div
             class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none"
           >
@@ -107,6 +175,86 @@ onMounted(async () => {
           >
             <Icon name="lucide:x" size="14" />
           </button>
+        </div>
+
+        <!-- Filters & Sorting using Custom Popovers -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto pb-1 sm:pb-0 shrink-0">
+          <PartsDropdownPopover placement="bottom-start" :closeOnClick="true" contentClass="w-56 p-1">
+            <template #trigger="{ isOpen }">
+              <button class="bg-white/50 hover:bg-white/80 dark:bg-[#1A1A1A]/50 dark:hover:bg-[#1A1A1A]/80 border border-neutral-200/60 dark:border-white/5 rounded-2xl px-3 py-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-neutral-900 dark:text-white outline-none transition-all flex items-center gap-2 whitespace-nowrap">
+                <Icon :name="currentSortOption.icon" size="14" class="opacity-70" />
+                <span class="truncate max-w-[100px]">{{ currentSortOption.label }}</span>
+                <Icon v-if="sortBy !== 'newest'" :name="sortDirection === 'desc' ? 'lucide:arrow-down' : 'lucide:arrow-up'" size="12" class="opacity-50" />
+                <Icon name="lucide:chevron-down" size="12" :class="{ 'rotate-180': isOpen }" class="transition-transform opacity-50 ml-1" />
+              </button>
+            </template>
+            <template #content>
+              <button v-for="opt in sortOptions" :key="opt.value" @click="handleSortSelect(opt.value)"
+                      class="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-neutral-100 dark:hover:bg-white/5 flex items-center justify-between transition-colors text-neutral-800 dark:text-neutral-200 group">
+                 <div class="flex items-center gap-2">
+                    <Icon :name="opt.icon" size="14" class="opacity-50 group-hover:opacity-100 transition-opacity" />
+                    <span class="font-medium">{{ opt.label }}</span>
+                 </div>
+                 <div class="flex items-center gap-1" v-if="sortBy === opt.value">
+                   <Icon v-if="opt.value !== 'newest'" :name="sortDirection === 'desc' ? 'lucide:arrow-down' : 'lucide:arrow-up'" size="14" class="text-blue-500" />
+                   <Icon v-else name="lucide:check" size="14" class="text-blue-500" />
+                 </div>
+              </button>
+            </template>
+          </PartsDropdownPopover>
+
+          <!-- Rating Popover -->
+          <PartsDropdownPopover placement="bottom-start" :closeOnClick="true" contentClass="w-48 p-1">
+            <template #trigger="{ isOpen }">
+              <button class="bg-white/50 hover:bg-white/80 dark:bg-[#1A1A1A]/50 dark:hover:bg-[#1A1A1A]/80 border border-neutral-200/60 dark:border-white/5 rounded-2xl px-3 py-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-neutral-900 dark:text-white outline-none transition-all flex items-center gap-2 whitespace-nowrap">
+                <Icon name="lucide:star" size="14" class="opacity-70" :class="{'text-yellow-400 opacity-100': filterRating !== 'all'}" />
+                <span>{{ ratingFilterLabel }}</span>
+                <Icon name="lucide:chevron-down" size="12" :class="{ 'rotate-180': isOpen }" class="transition-transform opacity-50" />
+              </button>
+            </template>
+            <template #content>
+               <button @click="filterRating = 'all'"
+                       class="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-neutral-100 dark:hover:bg-white/5 flex justify-between items-center transition-colors text-neutral-800 dark:text-neutral-200 mb-1">
+                  <span class="font-medium">All Ratings</span>
+                  <Icon v-if="filterRating === 'all'" name="lucide:check" size="14" class="text-blue-500" />
+               </button>
+               <button v-for="i in 5" :key="i" @click="filterRating = String(6 - i)" 
+                       class="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-neutral-100 dark:hover:bg-white/5 flex justify-between items-center transition-colors text-neutral-800 dark:text-neutral-200">
+                  <div class="flex gap-0.5 text-yellow-400">
+                     <Icon v-for="j in (6 - i)" :key="j" name="lucide:star" size="14" class="fill-current" />
+                  </div>
+                  <Icon v-if="filterRating === String(6 - i)" name="lucide:check" size="14" class="text-blue-500" />
+               </button>
+            </template>
+          </PartsDropdownPopover>
+          
+          <!-- Usage Range Popover -->
+          <PartsDropdownPopover placement="bottom-end" :closeOnClick="false" contentClass="w-64 p-4 flex flex-col gap-3">
+            <template #trigger="{ isOpen }">
+              <button class="bg-white/50 hover:bg-white/80 dark:bg-[#1A1A1A]/50 dark:hover:bg-[#1A1A1A]/80 border border-neutral-200/60 dark:border-white/5 rounded-2xl px-3 py-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-neutral-900 dark:text-white outline-none transition-all flex items-center gap-2 whitespace-nowrap">
+                <Icon name="lucide:flame" size="14" class="opacity-70" :class="{'text-orange-400 opacity-100': filterUsageMin > 0 || filterUsageMax < 1000}" />
+                <span>{{ filterUsageMin }} - {{ filterUsageMax }} Uses</span>
+                <Icon name="lucide:settings-2" size="12" class="opacity-50" />
+              </button>
+            </template>
+            <template #content="{ close }">
+               <h4 class="text-xs font-bold text-neutral-500 dark:text-gray-400 uppercase tracking-widest">Usage Range Filter</h4>
+               <div class="flex items-center gap-3">
+                  <div class="flex flex-col gap-1 w-full">
+                     <label class="text-[10px] opacity-70 font-semibold uppercase tracking-wider">Min</label>
+                     <input type="number" min="0" v-model="filterUsageMin" class="w-full bg-black/5 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-lg px-2 py-1.5 text-sm font-medium outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-[#2A2A2A] transition-all" />
+                  </div>
+                  <span class="text-xs opacity-50 mt-4">-</span>
+                  <div class="flex flex-col gap-1 w-full">
+                     <label class="text-[10px] opacity-70 font-semibold uppercase tracking-wider">Max</label>
+                     <input type="number" :min="filterUsageMin" v-model="filterUsageMax" class="w-full bg-black/5 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-lg px-2 py-1.5 text-sm font-medium outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-[#2A2A2A] transition-all" />
+                  </div>
+               </div>
+               <div class="flex justify-end mt-1">
+                  <button @click="close" class="text-xs bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-500 font-medium active:scale-95 transition-transform shadow-md">Apply View</button>
+               </div>
+            </template>
+          </PartsDropdownPopover>
         </div>
       </div>
     </div>
@@ -143,6 +291,7 @@ onMounted(async () => {
                   @toggle-visibility="
                     isGlobalBlurVisible = !isGlobalBlurVisible
                   "
+                  @save-rating="handleSaveRating"
                 />
               </div>
             </div>
