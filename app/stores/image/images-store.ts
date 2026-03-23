@@ -36,7 +36,17 @@ export const useImagesStore = defineStore("images", () => {
     });
   };
 
-  // Thay thế ảnh tại vị trí cụ thể
+  // Thêm mới ảnh từ URL có sẵn từ Subjects
+  const addUrl = (url: string) => {
+    images.value.push({
+      id: generateId(),
+      url,
+      file: null,
+      type: "SERVER",
+    });
+  };
+
+  // Thay thế ảnh tại vị trí cụ thể bằng file
   const replaceFileAt = (index: number, file: File) => {
     const oldItem = images.value[index];
     if (!oldItem) return;
@@ -48,6 +58,21 @@ export const useImagesStore = defineStore("images", () => {
     images.value[index] = {
       ...createItem(file),
       id: oldItem.id,
+    };
+  };
+
+  // Thay thế ảnh tại vị trí cụ thể bằng URL
+  const replaceUrlAt = (index: number, url: string) => {
+    const oldItem = images.value[index];
+    if (!oldItem) return;
+
+    revokeItem(oldItem);
+
+    images.value[index] = {
+      id: oldItem.id,
+      url,
+      file: null,
+      type: "SERVER",
     };
   };
 
@@ -75,7 +100,9 @@ export const useImagesStore = defineStore("images", () => {
     images,
     filesToUpload,
     addFiles,
+    addUrl,
     replaceFileAt,
+    replaceUrlAt,
     removeAt,
     clearAll,
   };
