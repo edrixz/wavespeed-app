@@ -6,12 +6,14 @@ interface Props {
   placeholder?: string;
   variant?: "blue" | "red";
   rows?: number;
+  readonly?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: "blue",
   rows: 10,
   placeholder: "",
+  readonly: false,
 });
 
 const modelValue = defineModel<string>({ required: true });
@@ -49,6 +51,7 @@ const themeClasses = computed(() => {
         v-model="modelValue"
         :rows="rows"
         :placeholder="placeholder"
+        :readonly="readonly"
         class="w-full rounded-xl p-4 text-sm font-mono leading-relaxed outline-none transition-all resize-none border no-scrollbar"
         :class="themeClasses.textarea"
       />

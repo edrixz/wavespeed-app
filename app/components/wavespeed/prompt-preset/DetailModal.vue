@@ -9,9 +9,11 @@ const timer = ref<any>(null);
 const isEditing = ref(false);
 const editForm = ref({
   title: "",
-  size: "",
+  width: 1024,
+  height: 1024,
   prompt: "",
   negativePrompt: "",
+  rating: 0,
 });
 
 watch(
@@ -23,12 +25,40 @@ watch(
   },
 );
 
+const currentWidth = computed(() => {
+  if (isEditing.value) return editForm.value.width;
+  const [w] = (props.modelValue?.size || "1024*1024").split("*");
+  return parseInt(w) || 1024;
+});
+
+const currentHeight = computed(() => {
+  if (isEditing.value) return editForm.value.height;
+  const [, h] = (props.modelValue?.size || "1024*1024").split("*");
+  return parseInt(h) || 1024;
+});
+
+const currentPrompt = computed(() => {
+  return isEditing.value ? editForm.value.prompt : props.modelValue?.prompt || "";
+});
+
+const currentNegativePrompt = computed(() => {
+  return isEditing.value ? editForm.value.negativePrompt : props.modelValue?.negative_prompt || "";
+});
+
+const currentRating = computed({
+  get: () => isEditing.value ? editForm.value.rating : props.modelValue?.rating || 0,
+  set: (val: number) => { if (isEditing.value) editForm.value.rating = val; }
+});
+
 const startEdit = () => {
+  const [w, h] = (props.modelValue.size || "1024*1024").split("*");
   editForm.value = {
     title: props.modelValue.title || "",
-    size: props.modelValue.size || "",
+    width: parseInt(w) || 1024,
+    height: parseInt(h) || 1024,
     prompt: props.modelValue.prompt || "",
     negativePrompt: props.modelValue.negative_prompt || "",
+    rating: props.modelValue.rating || 0
   };
   isEditing.value = true;
 };
@@ -38,17 +68,25 @@ const cancelEdit = () => {
 };
 
 const saveEdit = async () => {
+  const sizeStr = `${editForm.value.width}*${editForm.value.height}`;
+  
   const result = await store.updatePresetDetails(props.modelValue.id, {
     title: editForm.value.title,
-    size: editForm.value.size,
+    size: sizeStr,
     prompt: editForm.value.prompt,
     negative_prompt: editForm.value.negativePrompt
   });
+  
+  if (editForm.value.rating !== (props.modelValue.rating || 0)) {
+    await store.updatePresetRating(props.modelValue.id, editForm.value.rating);
+  }
+
   if (result.success) {
     props.modelValue.title = editForm.value.title;
-    props.modelValue.size = editForm.value.size;
+    props.modelValue.size = sizeStr;
     props.modelValue.prompt = editForm.value.prompt;
     props.modelValue.negative_prompt = editForm.value.negativePrompt;
+    props.modelValue.rating = editForm.value.rating;
     isEditing.value = false;
   }
 };
@@ -114,102 +152,56 @@ const startDelete = (id: string) => {
           >
             <div class="flex-1 overflow-y-auto no-scrollbar pt-8 px-6 pb-28">
               <div class="max-w-2xl mx-auto space-y-6">
-                <div
-                  class="flex items-start justify-between gap-4 animate-in-up"
-                  style="--delay: 0.1s"
-                >
-                  <h1
-                    v-if="!isEditing"
-                    class="text-2xl font-black uppercase text-neutral-900 dark:text-white leading-tight tracking-wide"
-                  >
-                    {{ modelValue.title }}
-                  </h1>
-                  <input
-                    v-else
-                    v-model="editForm.title"
-                    class="text-2xl font-black uppercase text-neutral-900 dark:text-white leading-tight tracking-wide bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg px-2 py-1 w-full outline-none focus:border-blue-500 transition-colors"
-                  />
-                  <!-- Size container -->
+                <div class="flex items-start justify-between gap-4 animate-in-up" style="--delay: 0.1s">
+                  <div class="flex-1 min-w-0">
+                    <h1 v-if="!isEditing" class="text-2xl font-black uppercase text-neutral-900 dark:text-white leading-tight tracking-wide">
+                      {{ modelValue.title }}
+                    </h1>
+                    <input v-else v-model="editForm.title" class="text-2xl font-black uppercase text-neutral-900 dark:text-white leading-tight tracking-wide bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg px-2 py-1 w-full outline-none focus:border-blue-500 transition-colors" />
+                  </div>
+
+                  <!-- Edit Toggle -->
                   <div class="flex items-center gap-2 shrink-0 h-8">
                     <button v-if="!isEditing" @click="startEdit" class="text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors bg-white/50 hover:bg-white dark:bg-white/5 dark:hover:bg-white/20 px-2 py-1.5 rounded-full" title="Edit Preset">
                       <Icon name="lucide:pencil" size="14" />
                     </button>
-                    <span
-                      v-if="!isEditing"
-                      class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-bold text-blue-400 uppercase tracking-widest whitespace-nowrap"
-                    >
-                      {{ modelValue.size }}
-                    </span>
-                    <input
-                      v-else
-                      v-model="editForm.size"
-                      placeholder="e.g. 1024*1024"
-                      class="px-2 py-1 h-full rounded bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[9px] font-bold text-neutral-900 dark:text-gray-300 uppercase tracking-widest whitespace-nowrap outline-none w-24 focus:border-blue-500 transition-colors"
-                    />
                   </div>
                 </div>
 
-                <div class="space-y-4">
-                  <div
-                    class="p-5 rounded-2xl bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 animate-in-up shadow-sm dark:shadow-none transition-colors"
-                    style="--delay: 0.2s"
-                    :class="isEditing ? 'border-blue-500/30 dark:border-blue-500/30 bg-black/5' : ''"
-                  >
-                    <div class="flex items-center gap-2 mb-2 opacity-50">
-                      <Icon
-                        name="lucide:sparkles"
-                        size="12"
-                        class="text-blue-400"
-                      />
-                      <span
-                        class="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-300"
-                        >Prompt</span
-                      >
-                    </div>
-                    <p
-                      v-if="!isEditing"
-                      class="text-[12px] text-gray-600 dark:text-gray-300 font-mono leading-relaxed wrap-break-word whitespace-pre-wrap"
-                    >
-                      {{ modelValue.prompt }}
-                    </p>
-                    <textarea
-                      v-else
-                      v-model="editForm.prompt"
-                      rows="5"
-                      class="w-full text-[12px] text-gray-600 dark:text-gray-300 font-mono leading-relaxed bg-black/5 dark:bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 outline-none focus:border-blue-500 transition-colors resize-y"
-                    ></textarea>
+                <div class="space-y-6">
+
+                  <div class="animate-in-up shadow-sm dark:shadow-none transition-colors" style="--delay: 0.2s">
+                    <PartsFormBasePromptTextArea v-if="isEditing" v-model="editForm.prompt" label="Prompt" placeholder="Enter prompt here..." :rows="6" />
+                    <PartsFormBasePromptTextArea v-else :model-value="currentPrompt" label="Prompt" :rows="6" readonly />
                   </div>
 
-                  <div
-                    v-if="modelValue.negative_prompt || isEditing"
-                    class="p-5 rounded-2xl bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/10 animate-in-up shadow-sm dark:shadow-none transition-colors"
-                    style="--delay: 0.3s"
-                    :class="isEditing ? 'border-blue-500/30 dark:border-blue-500/30' : ''"
-                  >
-                    <div class="flex items-center gap-2 mb-2 opacity-50">
-                      <Icon
-                        name="lucide:shield-ban"
-                        size="12"
-                        class="text-red-400"
-                      />
-                      <span
-                        class="text-[9px] font-bold uppercase tracking-widest text-red-400 dark:text-gray-300"
-                        >Negative</span
-                      >
+                  <div v-if="currentNegativePrompt || isEditing" class="animate-in-up shadow-sm dark:shadow-none transition-colors" style="--delay: 0.3s">
+                    <PartsFormBasePromptTextArea v-if="isEditing" v-model="editForm.negativePrompt" label="Negative Prompt" variant="red" placeholder="Negative prompt..." :rows="4" />
+                    <PartsFormBasePromptTextArea v-else :model-value="currentNegativePrompt" label="Negative Prompt" variant="red" :rows="4" readonly />
+                  </div>
+
+                  <!-- Size Settings Component -->
+                  <div class="p-5 rounded-2xl bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 animate-in-up shadow-sm dark:shadow-none transition-colors" style="--delay: 0.4s" :class="[!isEditing ? 'pointer-events-none opacity-80' : 'border-blue-500/30 dark:border-blue-500/30 bg-black/5']">
+                    <!-- Ratio selector -->
+                    <PartsAspectRatioList v-if="isEditing" v-model:width="editForm.width" v-model:height="editForm.height" />
+                    <PartsAspectRatioList v-else :width="currentWidth" :height="currentHeight" />
+
+                    <!-- Sliders -->
+                    <div class="mt-4 flex gap-4">
+                      <PartsFormBaseRangeSlider v-if="isEditing" v-model="editForm.width" label="Width" class="flex-1" />
+                      <PartsFormBaseRangeSlider v-else :model-value="currentWidth" label="Width" class="flex-1" />
+                      
+                      <PartsFormBaseRangeSlider v-if="isEditing" v-model="editForm.height" label="Height" class="flex-1" />
+                      <PartsFormBaseRangeSlider v-else :model-value="currentHeight" label="Height" class="flex-1" />
                     </div>
-                    <p
-                      v-if="!isEditing"
-                      class="text-[11px] text-red-500 dark:text-red-200/50 font-mono leading-relaxed wrap-break-word whitespace-pre-wrap"
-                    >
-                      {{ modelValue.negative_prompt }}
-                    </p>
-                    <textarea
-                      v-else
-                      v-model="editForm.negativePrompt"
-                      rows="3"
-                      placeholder="Negative prompt..."
-                      class="w-full text-[11px] text-red-500 dark:text-red-200/50 font-mono leading-relaxed bg-black/5 dark:bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 outline-none focus:border-blue-500 transition-colors resize-y"
-                    ></textarea>
+                  </div>
+
+                  <!-- Rating at the bottom -->
+                  <div class="animate-in-up shadow-sm dark:shadow-none transition-colors p-5 rounded-2xl bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 flex flex-col items-center justify-center gap-3" style="--delay: 0.5s">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">Rating</span>
+                    <div :class="!isEditing ? 'pointer-events-none' : ''">
+                      <PartsRatingStarRating v-model="currentRating" :size="24" />
+                    </div>
                   </div>
 
                   <div class="h-10"></div>

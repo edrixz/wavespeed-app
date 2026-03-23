@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { useRatio } from "~/composables/common/use-ratio";
+import { type Ref } from "vue";
 
-const { ratioList, applyRatio, isActiveRatio, getButtonStyle } = useRatio();
+const width = defineModel<number>("width");
+const height = defineModel<number>("height");
+
+const { ratioList, applyRatio, isActiveRatio, getButtonStyle } = useRatio(width as Ref<number> | undefined, height as Ref<number> | undefined);
 </script>
 
 <template>

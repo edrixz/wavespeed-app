@@ -1,8 +1,12 @@
+import { type Ref } from "vue";
 import { storeToRefs } from "pinia";
 
-export const useRatio = () => {
+export const useRatio = (customWidth?: Ref<number>, customHeight?: Ref<number>) => {
   const payloadStore = useSeedreamPayloadStore();
-  const { width, height } = storeToRefs(payloadStore);
+  const { width: storeWidth, height: storeHeight } = storeToRefs(payloadStore);
+  
+  const width = customWidth || storeWidth;
+  const height = customHeight || storeHeight;
 
   const ratiosData = {
     square: [{ label: "1:1", w: 1, h: 1 }],
