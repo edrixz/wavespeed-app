@@ -1,10 +1,18 @@
 <script setup lang="ts">
+import { ref, watch, computed } from "vue";
+import { useScroll } from "@vueuse/core";
+
 const props = defineProps<{ modelValue: any }>();
 const emit = defineEmits(["update:modelValue"]);
 
 const store = useSeedreamPromptPresetStore();
 const countdown = ref(0);
 const timer = ref<any>(null);
+
+const scrollRef = ref<HTMLElement | null>(null);
+const { y } = useScroll(scrollRef);
+
+const isExpanded = computed(() => isEditing.value || y.value > 10);
 
 const isEditing = ref(false);
 const editForm = ref({
@@ -137,7 +145,10 @@ const startDelete = (id: string) => {
             ✕
           </button>
 
-          <div class="relative w-full h-[38vh] shrink-0 hero-wrapper">
+          <div 
+            class="relative w-full shrink-0 hero-wrapper transition-[height,opacity] duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+            :class="isExpanded ? 'h-0 opacity-0 pointer-events-none' : 'h-[38vh] opacity-100'"
+          >
             <img
               :src="modelValue.thumbnail"
               class="w-full h-full object-cover hero-img"
@@ -148,9 +159,10 @@ const startDelete = (id: string) => {
           </div>
 
           <main
-            class="flex-1 min-h-0 relative z-20 -mt-12 bg-gray-100 dark:bg-[#080808] rounded-t-4xl border-t border-black/5 dark:border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.5)] ui-element content-body flex flex-col transition-colors duration-300"
+            class="flex-1 min-h-0 relative z-20 bg-gray-100 dark:bg-[#080808] rounded-t-4xl border-t border-black/5 dark:border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_40px_rgba(0,0,0,0.5)] ui-element content-body flex flex-col transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+            :class="isExpanded ? '-mt-4' : '-mt-12'"
           >
-            <div class="flex-1 overflow-y-auto no-scrollbar pt-8 px-6 pb-28">
+            <div ref="scrollRef" class="flex-1 overflow-y-auto no-scrollbar pt-8 px-6 pb-28">
               <div class="max-w-2xl mx-auto space-y-6">
                 <div class="flex items-start justify-between gap-4 animate-in-up" style="--delay: 0.1s">
                   <div class="flex-1 min-w-0">
