@@ -5,6 +5,7 @@ import { useClipboard } from "@vueuse/core";
 definePageMeta({ layout: "default" });
 
 const { copy, copied } = useClipboard();
+const { setStatus } = useLogger();
 
 // ======================== STATE ======================== //
 const currentStep = ref(1);
@@ -24,13 +25,38 @@ const removalOptions = [
 // STATE: Step 1 (JSON Lọc)
 const cleanedJsonOutput = ref("");
 const isCleaning = ref(false);
-const cleanErrorMsg = ref("");
 
 // STATE: Step 2 (Văn bản)
 const promptOutput = ref("");
 const isConverting = ref(false);
-const convertErrorMsg = ref("");
 const copiedField = ref("");
+
+// Helper function to extract human-readable error from nested API exceptions
+const parseGeminiError = (err: any): string => {
+  try {
+    const rawMessage = err.data?.statusMessage || err.data?.message || err.message || "";
+    // If it's a JSON string inside the message, parse it
+    if (rawMessage.startsWith("{") && rawMessage.includes("error")) {
+      const parsed = JSON.parse(rawMessage);
+      const apiCode = parsed?.error?.code;
+      const apiStatus = parsed?.error?.status;
+      const apiMsg = parsed?.error?.message;
+      
+      if (apiCode === 429 || apiStatus === "RESOURCE_EXHAUSTED") {
+        return "Quá số lượng truy cập (Rate Limit). Vui lòng chờ vài giây rồi thử lại!";
+      }
+      if (apiMsg) {
+        if (apiMsg.includes("PROHIBITED_CONTENT")) {
+          return "Nội dung phản cảm hoặc bị cấm bởi hệ thống kiểm duyệt kiểm duyệt AI.";
+        }
+        return `Lỗi AI: ${apiMsg}`;
+      }
+    }
+    return rawMessage.substring(0, 100);
+  } catch (e) {
+    return err.message?.substring(0, 100) || "Lỗi không xác định từ máy chủ.";
+  }
+};
 
 // ======================== ACTIONS ======================== //
 
@@ -51,16 +77,17 @@ const goToStep = (targetStep: number) => {
 // STEP 1: Xử lý loại bỏ thành phần JSON trực tiếp (Chỉ xử lý, KHÔNG TỰ ĐỘNG NHẢY STEP)
 const handleCleanJSON = async () => {
   if (!jsonInput.value.trim()) {
-    cleanErrorMsg.value = "Vui lòng nhập định dạng JSON để hệ thống bắt đầu quét.";
+    setStatus("Vui lòng nhập JSON đầu vào trước khi lọc.", "warning");
     return;
   }
 
-  cleanErrorMsg.value = "";
   isCleaning.value = true;
+  setStatus("Đang quét và loại bỏ các mục cấm khỏi JSON...", "loading");
 
   if (selectedRemovals.value.length === 0) {
     cleanedJsonOutput.value = jsonInput.value;
     isCleaning.value = false;
+    setStatus("Bỏ qua bộ lọc (Không có mục nào được chọn).", "success");
     return;
   }
 
@@ -75,12 +102,13 @@ const handleCleanJSON = async () => {
 
     if (response && response.success && response.data) {
       cleanedJsonOutput.value = response.data.trim();
+      setStatus("Đã lọc rác khỏi JSON thành công!", "success");
     } else {
-      cleanErrorMsg.value = "Hệ thống lỗi: JSON không xác định.";
+      setStatus("Hệ thống từ chối lọc: JSON đầu ra rỗng.", "error");
     }
   } catch (err: any) {
-    const errorDetail = err.data?.statusMessage || err.message;
-    cleanErrorMsg.value = errorDetail;
+    const errorHuman = parseGeminiError(err);
+    setStatus("Từ chối lệnh: " + errorHuman, "error");
   } finally {
     isCleaning.value = false;
   }
@@ -91,12 +119,12 @@ const handleConvert = async () => {
   const inputPayload = cleanedJsonOutput.value || jsonInput.value;
 
   if (!inputPayload.trim()) {
-    convertErrorMsg.value = "Không có bất kỳ dữ liệu (JSON) nào hợp lệ để xuất ra chữ! Bạn cần chạy Bước 1 trước hoặc nhập JSON gốc.";
+    setStatus("Không có JSON để xử lý Text.", "warning");
     return;
   }
 
-  convertErrorMsg.value = "";
   isConverting.value = true;
+  setStatus("AI đang biên dịch JSON thành Plain Text...", "loading");
 
   try {
     const response: any = await $fetch("/api/gemini/convert-prompt", {
@@ -106,12 +134,13 @@ const handleConvert = async () => {
 
     if (response && response.success && response.data) {
       promptOutput.value = response.data.trim();
+      setStatus("Chuyển đổi văn bản Prompt thành công mãng nhãn!", "success");
     } else {
-      convertErrorMsg.value = "Lỗi khi trích xuất chữ từ Gemini.";
+      setStatus("Trích xuất chữ thất bại: Lỗi từ hệ thống AI.", "error");
     }
   } catch (err: any) {
-    const errorDetail = err.data?.statusMessage || err.message;
-    convertErrorMsg.value = "Từ chối thực thi: " + errorDetail;
+    const errorHuman = parseGeminiError(err);
+    setStatus("AI xử lý thất bại: " + errorHuman, "error");
   } finally {
     isConverting.value = false;
   }
@@ -242,12 +271,7 @@ const handleConvert = async () => {
           </div>
         </div>
 
-        <div v-if="cleanErrorMsg" class="flex items-center gap-3 text-red-600 dark:text-red-400 text-sm font-semibold bg-red-50 dark:bg-red-500/10 p-4 rounded-xl border border-red-200 dark:border-red-500/20">
-          <Icon name="lucide:alert-circle" class="w-5 h-5 shrink-0" />
-          <p>{{ cleanErrorMsg }}</p>
-        </div>
-
-        <div class="flex justify-start">
+        <div class="flex justify-start pt-2">
           <PartsButtonPrimary
             :loading="isCleaning"
             @click="handleCleanJSON"
@@ -327,12 +351,7 @@ const handleConvert = async () => {
           Hãy luôn kiểm tra lại nội dung phía trên. Nếu vẫn chưa ưng ý, bạn có thể quay lại Bước 1 để loại bỏ thêm các từ khoá thừa.
         </p>
 
-        <div v-if="convertErrorMsg" class="flex items-center gap-3 text-red-600 dark:text-red-400 text-sm font-semibold bg-red-50 dark:bg-red-500/10 p-4 rounded-xl border border-red-200 dark:border-red-500/20 mt-4">
-          <Icon name="lucide:alert-circle" class="w-5 h-5 shrink-0" />
-          <p>{{ convertErrorMsg }}</p>
-        </div>
-
-        <div class="flex justify-end gap-4">
+        <div class="flex justify-end gap-4 pt-4">
           <PartsButtonPrimary
             :loading="isConverting"
             @click="handleConvert"
