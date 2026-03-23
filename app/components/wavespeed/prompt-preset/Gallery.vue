@@ -15,7 +15,7 @@ const isSearchFocused = ref(false);
 const isGlobalBlurVisible = ref(false);
 
 const sortOptions = [
-  { value: "newest", label: "Newest Defaults", icon: "lucide:clock" },
+  { value: "newest", label: "Newest", icon: "lucide:clock" },
   { value: "rating", label: "Rating", icon: "lucide:star" },
   { value: "usage", label: "Usage", icon: "lucide:flame" },
 ] as const;
@@ -39,7 +39,7 @@ const currentSortOption = computed(() => {
 
 const filterRating = ref("all");
 const ratingFilterLabel = computed(() => {
-  if (filterRating.value === "all") return "All Ratings";
+  if (filterRating.value === "all") return "All";
   return `${filterRating.value} Stars`;
 });
 
@@ -48,6 +48,10 @@ const filterUsageMax = ref(1000);
 
 const handleSaveRating = async ({ id, rating }: { id: string; rating: number }) => {
   await promptPresetStore.updatePresetRating(id, rating);
+};
+
+const handleSavePresetDetails = async ({ id, title, prompt, negative_prompt, size }: any) => {
+  await promptPresetStore.updatePresetDetails(id, { title, prompt, negative_prompt, size });
 };
 
 const filteredStyleAssets = computed(() => {
@@ -248,7 +252,7 @@ onMounted(async () => {
             <template #trigger="{ isOpen }">
               <button class="bg-white/50 hover:bg-white/80 dark:bg-[#1A1A1A]/50 dark:hover:bg-[#1A1A1A]/80 border border-neutral-200/60 dark:border-white/5 rounded-2xl px-3 py-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-neutral-900 dark:text-white outline-none transition-all flex items-center gap-2 whitespace-nowrap">
                 <Icon name="lucide:flame" size="14" class="opacity-70" :class="{'text-orange-400 opacity-100': filterUsageMin > 0 || filterUsageMax < 1000}" />
-                <span>{{ filterUsageMin }} - {{ filterUsageMax }} Uses</span>
+                <span>{{ filterUsageMin }} - {{ filterUsageMax }}</span>
                 <Icon name="lucide:settings-2" size="12" class="opacity-50" />
               </button>
             </template>
@@ -308,6 +312,7 @@ onMounted(async () => {
                     isGlobalBlurVisible = !isGlobalBlurVisible
                   "
                   @save-rating="handleSaveRating"
+                  @save-edit="handleSavePresetDetails"
                 />
               </div>
             </div>

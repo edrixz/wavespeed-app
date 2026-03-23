@@ -6,13 +6,52 @@ const store = useSeedreamPromptPresetStore();
 const countdown = ref(0);
 const timer = ref<any>(null);
 
+const isEditing = ref(false);
+const editForm = ref({
+  title: "",
+  size: "",
+  prompt: "",
+  negativePrompt: "",
+});
+
 watch(
   () => props.modelValue,
   () => {
     clearInterval(timer.value);
     countdown.value = 0;
+    isEditing.value = false;
   },
 );
+
+const startEdit = () => {
+  editForm.value = {
+    title: props.modelValue.title || "",
+    size: props.modelValue.size || "",
+    prompt: props.modelValue.prompt || "",
+    negativePrompt: props.modelValue.negative_prompt || "",
+  };
+  isEditing.value = true;
+};
+
+const cancelEdit = () => {
+  isEditing.value = false;
+};
+
+const saveEdit = async () => {
+  const result = await store.updatePresetDetails(props.modelValue.id, {
+    title: editForm.value.title,
+    size: editForm.value.size,
+    prompt: editForm.value.prompt,
+    negative_prompt: editForm.value.negativePrompt
+  });
+  if (result.success) {
+    props.modelValue.title = editForm.value.title;
+    props.modelValue.size = editForm.value.size;
+    props.modelValue.prompt = editForm.value.prompt;
+    props.modelValue.negative_prompt = editForm.value.negativePrompt;
+    isEditing.value = false;
+  }
+};
 
 const handleApply = (item: any) => {
   store.applyPreset(item);
@@ -80,21 +119,41 @@ const startDelete = (id: string) => {
                   style="--delay: 0.1s"
                 >
                   <h1
+                    v-if="!isEditing"
                     class="text-2xl font-black uppercase text-neutral-900 dark:text-white leading-tight tracking-wide"
                   >
                     {{ modelValue.title }}
                   </h1>
-                  <span
-                    class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-bold text-blue-400 uppercase tracking-widest whitespace-nowrap"
-                  >
-                    {{ modelValue.size }}
-                  </span>
+                  <input
+                    v-else
+                    v-model="editForm.title"
+                    class="text-2xl font-black uppercase text-neutral-900 dark:text-white leading-tight tracking-wide bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg px-2 py-1 w-full outline-none focus:border-blue-500 transition-colors"
+                  />
+                  <!-- Size container -->
+                  <div class="flex items-center gap-2 shrink-0 h-8">
+                    <button v-if="!isEditing" @click="startEdit" class="text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors bg-white/50 hover:bg-white dark:bg-white/5 dark:hover:bg-white/20 px-2 py-1.5 rounded-full" title="Edit Preset">
+                      <Icon name="lucide:pencil" size="14" />
+                    </button>
+                    <span
+                      v-if="!isEditing"
+                      class="px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-bold text-blue-400 uppercase tracking-widest whitespace-nowrap"
+                    >
+                      {{ modelValue.size }}
+                    </span>
+                    <input
+                      v-else
+                      v-model="editForm.size"
+                      placeholder="e.g. 1024*1024"
+                      class="px-2 py-1 h-full rounded bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[9px] font-bold text-neutral-900 dark:text-gray-300 uppercase tracking-widest whitespace-nowrap outline-none w-24 focus:border-blue-500 transition-colors"
+                    />
+                  </div>
                 </div>
 
                 <div class="space-y-4">
                   <div
-                    class="p-5 rounded-2xl bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 animate-in-up shadow-sm dark:shadow-none"
+                    class="p-5 rounded-2xl bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 animate-in-up shadow-sm dark:shadow-none transition-colors"
                     style="--delay: 0.2s"
+                    :class="isEditing ? 'border-blue-500/30 dark:border-blue-500/30 bg-black/5' : ''"
                   >
                     <div class="flex items-center gap-2 mb-2 opacity-50">
                       <Icon
@@ -108,16 +167,24 @@ const startDelete = (id: string) => {
                       >
                     </div>
                     <p
+                      v-if="!isEditing"
                       class="text-[12px] text-gray-600 dark:text-gray-300 font-mono leading-relaxed wrap-break-word whitespace-pre-wrap"
                     >
                       {{ modelValue.prompt }}
                     </p>
+                    <textarea
+                      v-else
+                      v-model="editForm.prompt"
+                      rows="5"
+                      class="w-full text-[12px] text-gray-600 dark:text-gray-300 font-mono leading-relaxed bg-black/5 dark:bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 outline-none focus:border-blue-500 transition-colors resize-y"
+                    ></textarea>
                   </div>
 
                   <div
-                    v-if="modelValue.negative_prompt"
-                    class="p-5 rounded-2xl bg-red-50 dark:bg-red-500/2 border border-red-100 dark:border-red-500/5 animate-in-up shadow-sm dark:shadow-none"
+                    v-if="modelValue.negative_prompt || isEditing"
+                    class="p-5 rounded-2xl bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/10 animate-in-up shadow-sm dark:shadow-none transition-colors"
                     style="--delay: 0.3s"
+                    :class="isEditing ? 'border-blue-500/30 dark:border-blue-500/30' : ''"
                   >
                     <div class="flex items-center gap-2 mb-2 opacity-50">
                       <Icon
@@ -131,10 +198,18 @@ const startDelete = (id: string) => {
                       >
                     </div>
                     <p
+                      v-if="!isEditing"
                       class="text-[11px] text-red-500 dark:text-red-200/50 font-mono leading-relaxed wrap-break-word whitespace-pre-wrap"
                     >
                       {{ modelValue.negative_prompt }}
                     </p>
+                    <textarea
+                      v-else
+                      v-model="editForm.negativePrompt"
+                      rows="3"
+                      placeholder="Negative prompt..."
+                      class="w-full text-[11px] text-red-500 dark:text-red-200/50 font-mono leading-relaxed bg-black/5 dark:bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 outline-none focus:border-blue-500 transition-colors resize-y"
+                    ></textarea>
                   </div>
 
                   <div class="h-10"></div>
@@ -144,6 +219,7 @@ const startDelete = (id: string) => {
           </main>
 
           <div
+            v-if="!isEditing"
             class="absolute bottom-4 left-4 right-4 z-40 animate-in-up ui-element pointer-events-none"
             style="--delay: 0.4s"
           >
@@ -170,6 +246,33 @@ const startDelete = (id: string) => {
               >
                 <span>Activate</span>
                 <Icon name="lucide:arrow-right" size="14" />
+              </button>
+            </div>
+          </div>
+
+          <div
+            v-else
+            class="absolute bottom-4 left-4 right-4 z-40 animate-in-up ui-element pointer-events-none"
+            style="--delay: 0.1s"
+          >
+            <div
+              class="max-w-xl mx-auto p-1.5 rounded-full bg-white/60 dark:bg-white/10 backdrop-blur-xl border border-black/10 dark:border-white/10 shadow-2xl flex items-center justify-between gap-2 pointer-events-auto transition-colors"
+            >
+              <button
+                @click="cancelEdit"
+                class="w-24 h-12 shrink-0 rounded-full flex items-center justify-center gap-1.5 hover:bg-black/5 dark:hover:bg-white/10 text-neutral-600 dark:text-white/60 font-bold text-xs transition-all uppercase tracking-wider"
+              >
+                <Icon name="lucide:x" size="14" />
+                Cancel
+              </button>
+              <button
+                @click="saveEdit"
+                :disabled="store.isSaving"
+                class="flex-1 h-12 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-full flex items-center justify-center gap-2 text-[11px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-lg hover:shadow-xl dark:shadow-white/20"
+              >
+                <Icon v-if="store.isSaving" name="lucide:loader-2" size="16" class="animate-spin" />
+                <Icon v-else name="lucide:save" size="16" />
+                <span>Save Changes</span>
               </button>
             </div>
           </div>

@@ -10,7 +10,7 @@ const props = defineProps<{
   item: any;
   isVisible: boolean;
 }>();
-const emit = defineEmits(["select", "toggle-visibility", "save-rating"]);
+const emit = defineEmits(["select", "toggle-visibility", "save-rating", "save-edit"]);
 
 // Rating state
 const currentRating = ref(props.item.rating || 0);

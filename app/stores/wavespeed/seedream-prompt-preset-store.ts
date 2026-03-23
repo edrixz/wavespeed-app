@@ -149,6 +149,32 @@ export const useSeedreamPromptPresetStore = defineStore(
       }
     };
 
+    const updatePresetDetails = async (id: string, updates: { title?: string; prompt?: string; negative_prompt?: string | null; size?: string | null }) => {
+      try {
+        isSaving.value = true;
+        const { error } = await supabase
+          .from("simple_presets")
+          .update(updates)
+          .eq("id", id);
+          
+        if (error) throw error;
+        
+        // Cập nhật nội bộ danh sách
+        const preset = promptPresets.value.find(p => p.id === id);
+        if (preset) {
+          Object.assign(preset, updates);
+        }
+        
+        toast.success("Preset updated successfully.");
+        return { success: true };
+      } catch (err: any) {
+        toast.error("Failed to update preset: " + err.message);
+        return { success: false };
+      } finally {
+        isSaving.value = false;
+      }
+    };
+
     const incrementUsageCount = async (id: string) => {
       // Find the preset to get the current usage_count
       const preset = promptPresets.value.find(p => p.id === id);
@@ -180,6 +206,7 @@ export const useSeedreamPromptPresetStore = defineStore(
       isFetchingMore,
       fetchPreset,
       savePreset,
+      updatePresetDetails,
       deletePreset,
       applyPreset,
       updatePresetRating,
