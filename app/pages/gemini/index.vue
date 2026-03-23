@@ -35,6 +35,15 @@ const geminiTools = [
     path: "/gemini/ai-retouch",
     iconColor: "text-emerald-500",
   },
+  {
+    id: "json-converter",
+    title: "JSON Prompt Converter",
+    description:
+      "Chuyển đổi dữ liệu JSON từ các mô hình AI thành đoạn prompt văn bản thuần túy với cấu trúc chuẩn.",
+    icon: "i-heroicons-code-bracket-square",
+    path: "/gemini/json-converter",
+    iconColor: "text-amber-500",
+  },
 ] as const;
 </script>
 
