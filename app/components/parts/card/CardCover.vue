@@ -10,16 +10,16 @@ defineProps<{
 
 <template>
   <div
-    class="absolute inset-0 transition-all duration-700 bg-neutral-100 dark:bg-neutral-900"
+    class="absolute inset-0 transition-all duration-300 bg-neutral-100 dark:bg-neutral-900"
   >
     <img
       v-if="thumbnail"
       :src="thumbnail"
-      class="w-full h-full object-cover transition-all duration-700"
+      class="w-full h-full object-cover transition-all duration-300 ease-out will-change-[filter,transform]"
       :class="[
         isVisible
-          ? 'blur-0 scale-100'
-          : 'blur-[20px] scale-110 grayscale-[0.5]',
+          ? 'blur-0 scale-100 grayscale-0'
+          : 'blur-xl scale-[1.05] grayscale-[0.5]'
       ]"
     />
     <div
@@ -29,8 +29,8 @@ defineProps<{
 
     <!-- Soft Overlay if not visible -->
     <div
-      v-if="!isVisible"
-      class="absolute inset-0 bg-white/20 dark:bg-black/20 z-10 transition-colors"
+      class="absolute inset-0 bg-white/20 dark:bg-black/20 z-10 transition-opacity duration-300 ease-out"
+      :class="isVisible ? 'opacity-0' : 'opacity-100'"
     ></div>
 
     <!-- Bottom gradient to ensure text readability -->

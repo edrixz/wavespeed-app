@@ -15,20 +15,51 @@ export const useSeedreamPromptPresetStore = defineStore(
     const isSaving = ref(false);
     const activePresetId = ref<string | null>(null);
 
-    const fetchPreset = async () => {
+    const hasMore = ref(true);
+    const currentPage = ref(0);
+    const PAGE_SIZE = 10;
+    const isFetchingMore = ref(false);
+
+    const fetchPreset = async (reset = true) => {
       if (!user.value) return;
-      isLoading.value = true;
+      
+      if (reset) {
+        currentPage.value = 0;
+        hasMore.value = true;
+        isLoading.value = true;
+      } else {
+        if (!hasMore.value || isFetchingMore.value) return;
+        isFetchingMore.value = true;
+      }
+
       try {
+        const from = currentPage.value * PAGE_SIZE;
+        const to = from + PAGE_SIZE - 1;
+
         const { data, error } = await supabase
           .from("simple_presets")
           .select("*")
-          .order("created_at", { ascending: false });
+          .order("created_at", { ascending: false })
+          .range(from, to);
+
         if (error) throw error;
-        promptPresets.value = data as PromptPreset[];
+        
+        if (reset) {
+           promptPresets.value = data as PromptPreset[];
+        } else {
+           promptPresets.value = [...promptPresets.value, ...(data as PromptPreset[])];
+        }
+
+        if (data.length < PAGE_SIZE) {
+           hasMore.value = false;
+        } else {
+           currentPage.value++;
+        }
       } catch (err: any) {
-        toast.error("Fetch Error:", err.message);
+        toast.error("Fetch Error: " + err.message);
       } finally {
         isLoading.value = false;
+        isFetchingMore.value = false;
       }
     };
 
@@ -145,6 +176,8 @@ export const useSeedreamPromptPresetStore = defineStore(
       isLoading,
       isSaving,
       activePresetId,
+      hasMore,
+      isFetchingMore,
       fetchPreset,
       savePreset,
       deletePreset,

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { refDebounced } from "@vueuse/core";
+import { refDebounced, useScroll } from "@vueuse/core";
 
 const promptPresetStore = useSeedreamPromptPresetStore();
-const { promptPresets, isLoading } = storeToRefs(promptPresetStore);
+const { promptPresets, isLoading, hasMore, isFetchingMore } = storeToRefs(promptPresetStore);
 
 const searchQuery = ref("");
 const debouncedSearchQuery = refDebounced(searchQuery, 50);
@@ -92,8 +92,15 @@ const filteredStyleAssets = computed(() => {
 });
 
 const listContainerRef = ref<HTMLElement | null>(null);
+const { arrivedState } = useScroll(listContainerRef, { offset: { right: 300 } });
 
-watch(filteredStyleAssets, () => {
+watch(() => arrivedState.right, (isRight) => {
+  if (isRight && hasMore.value && !isFetchingMore.value) {
+    promptPresetStore.fetchPreset(false);
+  }
+});
+
+watch([sortBy, sortDirection, filterRating, filterUsageMin, filterUsageMax], () => {
   if (listContainerRef.value) {
     listContainerRef.value.scrollTo({ left: 0, behavior: 'smooth' });
   }
@@ -303,6 +310,15 @@ onMounted(async () => {
                   @save-rating="handleSaveRating"
                 />
               </div>
+            </div>
+            
+            <!-- Loading indicator for infinite scroll -->
+            <div
+              v-if="isFetchingMore"
+              key="loading-more"
+              class="w-50 sm:w-60 aspect-3/4 flex-none rounded-4xl bg-black/5 dark:bg-[#121212] border border-black/5 dark:border-white/5 relative overflow-hidden flex items-center justify-center snap-start"
+            >
+              <Icon name="lucide:loader-2" class="animate-spin text-neutral-400 dark:text-neutral-500" size="28" />
             </div>
           </TransitionGroup>
 
