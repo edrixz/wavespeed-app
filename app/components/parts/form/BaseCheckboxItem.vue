@@ -16,6 +16,6 @@ const modelValue = defineModel<boolean>({ required: true });
     >
       {{ label }}
     </span>
-    <UCheckbox v-model="modelValue" color="info" />
+    <input type="checkbox" v-model="modelValue" class="w-4 h-4 text-blue-500 bg-gray-100 dark:bg-white/5 border-gray-300 dark:border-white/20 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 transition-colors cursor-pointer" />
   </label>
 </template>

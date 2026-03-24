@@ -206,19 +206,13 @@ onUnmounted(() => {
 
         <!-- Add Preset Button overlay at bottom -->
         <div class="absolute bottom-10 z-50 left-1/2 -translate-x-1/2">
-          <UButton
-            color="neutral"
-            variant="ghost"
-            size="xl"
-            icon="i-heroicons-plus-circle"
-            :ui="{
-              base: 'transition-all duration-300',
-            }"
-            class="text-white px-8 bg-white/10 dark:bg-gray-900/10 rounded-full backdrop-blur-md border border-white/20 dark:border-gray-800/50 hover:bg-white/20 dark:hover:bg-gray-800/30"
+          <button
+            class="flex items-center gap-2 text-white px-8 py-3.5 text-[11px] font-black uppercase tracking-widest bg-white/10 dark:bg-gray-900/10 rounded-full backdrop-blur-md border border-white/20 dark:border-gray-800/50 hover:bg-white/20 dark:hover:bg-gray-800/30 transition-all duration-300 outline-none cursor-pointer hover:shadow-lg hover:scale-105"
             @click="handleClick"
           >
+            <Icon name="lucide:plus-circle" class="w-5 h-5" />
             Add Preset
-          </UButton>
+          </button>
         </div>
       </div>
     </Transition>

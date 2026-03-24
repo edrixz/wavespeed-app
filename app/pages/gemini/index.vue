@@ -68,18 +68,14 @@ const geminiTools = [
         :to="tool.path"
         class="group block outline-none"
       >
-        <UCard
-          class="h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group"
-          :ui="{
-            root: 'bg-white dark:bg-[#0d0d0d] ring-1 ring-black/5 dark:ring-white/5 group-hover:ring-primary/50 rounded-[1rem] flex flex-col',
-            body: 'flex flex-col h-full flex-1',
-          }"
+        <div
+          class="bg-white dark:bg-[#0d0d0d] p-5 ring-1 ring-black/5 dark:ring-white/5 group-hover:ring-primary/50 rounded-2xl flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
         >
           <div class="flex flex-col h-full space-y-5">
             <div
               class="w-14 h-14 rounded-2xl bg-gray-50 dark:bg-white/5 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
             >
-              <UIcon
+              <Icon
                 :name="tool.icon"
                 class="w-7 h-7"
                 :class="tool.iconColor"
@@ -103,13 +99,13 @@ const geminiTools = [
               class="pt-4 mt-auto border-t border-gray-100 dark:border-white/5 flex items-center justify-between"
             >
               <span class="text-sm font-semibold text-primary">Thử ngay</span>
-              <UIcon
-                name="i-heroicons-arrow-right"
+              <Icon
+                name="lucide:arrow-right"
                 class="w-5 h-5 text-primary opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
               />
             </div>
           </div>
-        </UCard>
+        </div>
       </NuxtLink>
     </div>
   </div>

@@ -63,7 +63,7 @@ const handleItemClick = (item: ActionItem) => {
             @click="handleItemClick(item)"
             class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-neutral-700 dark:text-[#ccc] hover:bg-neutral-100 dark:hover:bg-[#2a2a2a] transition-colors"
           >
-            <UIcon
+            <Icon
               v-if="item.icon"
               :name="item.icon"
               class="w-4 h-4 text-gray-500 dark:text-gray-400"

@@ -49,7 +49,7 @@ const addActions = [
   },
   {
     label: "Choose Subject",
-    icon: "i-heroicons-user",
+    icon: "lucide:user",
     click: () => openSubjectPicker(null),
   },
 ];
@@ -62,7 +62,7 @@ const getReplaceActions = (idx: number) => [
   },
   {
     label: "Replace with Subject",
-    icon: "i-heroicons-user",
+    icon: "lucide:user",
     click: () => openSubjectPicker(idx),
   },
 ];
@@ -154,26 +154,21 @@ const getReplaceActions = (idx: number) => [
     </div>
 
     <!-- Subject Picker Modal -->
-    <UModal v-model:open="isSubjectModalOpen" title="Select a Subject">
-      <template #default>
-        <span class="hidden" />
-      </template>
-
-      <template #body>
+    <PartsModalBaseModal v-model:open="isSubjectModalOpen" title="Select a Subject">
         <div v-if="subjectStore.isLoading" class="flex justify-center py-10">
-          <UIcon name="i-heroicons-arrow-path" class="w-8 h-8 animate-spin text-primary" />
+          <Icon name="lucide:loader-2" class="w-8 h-8 animate-spin text-primary" />
         </div>
         <div v-else-if="subjectStore.subjects.length === 0" class="text-center py-10 opacity-50">
-          <UIcon name="i-heroicons-user-group" class="w-12 h-12 mx-auto mb-3" />
-          <p class="text-sm font-bold uppercase tracking-widest">No subjects yet</p>
-          <p class="text-xs mt-1">Visit Settings to create your subjects.</p>
+          <Icon name="lucide:users" class="w-12 h-12 mx-auto mb-3 text-gray-500" />
+          <p class="text-sm font-bold uppercase tracking-widest text-gray-500">No subjects yet</p>
+          <p class="text-xs mt-1 text-gray-400">Visit Settings to create your subjects.</p>
         </div>
-        <div v-else class="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div v-else class="grid grid-cols-2 md:grid-cols-3 gap-3 w-full">
           <button
             v-for="subject in subjectStore.subjects"
             :key="subject.id"
             @click="selectSubject(subject)"
-            class="group relative aspect-square rounded-xl overflow-hidden border border-black/5 hover:border-primary/50 transition-all shadow-sm hover:shadow"
+            class="group relative aspect-square rounded-xl overflow-hidden border border-black/5 hover:border-primary/50 transition-all shadow-sm hover:shadow outline-none cursor-pointer"
           >
             <img :src="subject.image" class="w-full h-full object-cover" />
             <div
@@ -187,7 +182,6 @@ const getReplaceActions = (idx: number) => [
             </div>
           </button>
         </div>
-      </template>
-    </UModal>
+    </PartsModalBaseModal>
   </div>
 </template>

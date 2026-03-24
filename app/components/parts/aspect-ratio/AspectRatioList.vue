@@ -5,7 +5,10 @@ import { type Ref } from "vue";
 const width = defineModel<number>("width");
 const height = defineModel<number>("height");
 
-const { ratioList, applyRatio, isActiveRatio, getButtonStyle } = useRatio(width as Ref<number> | undefined, height as Ref<number> | undefined);
+const { ratioList, applyRatio, isActiveRatio, getButtonStyle } = useRatio(
+  width.value !== undefined ? (width as Ref<number>) : undefined,
+  height.value !== undefined ? (height as Ref<number>) : undefined
+);
 </script>
 
 <template>

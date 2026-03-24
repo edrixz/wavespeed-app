@@ -40,8 +40,8 @@ const onFile = (e: Event) => {
       >
         <NuxtLink
           to="/gemini"
-          class="p-2 hover:bg-gray-100 rounded-full transition-colors"
-          ><UIcon name="i-heroicons-arrow-left"
+          class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full transition-colors flex items-center justify-center"
+          ><Icon name="lucide:arrow-left" class="w-5 h-5"
         /></NuxtLink>
         <h2>Magic Eraser</h2>
       </div>
@@ -53,29 +53,28 @@ const onFile = (e: Event) => {
             : 'bg-green-50 text-green-600'
         "
       >
-        <UIcon
+        <Icon
           :name="
             isModelLoading
-              ? 'i-heroicons-arrow-path'
-              : 'i-heroicons-check-circle'
+              ? 'lucide:loader-2'
+              : 'lucide:check-circle'
           "
+          class="w-4 h-4"
           :class="isModelLoading && 'animate-spin'"
         />
         {{ isModelLoading ? "Loading AI..." : "AI Ready" }}
       </div>
       <div v-if="uploadedImage" class="space-y-4">
         <div class="flex gap-1 p-1 bg-gray-100 dark:bg-white/5 rounded-xl">
-          <UButton
+          <button
             v-for="t in ['ai', 'brush', 'eraser'] as const"
             :key="t"
-            block
-            :variant="activeTool === t ? 'solid' : 'ghost'"
-            color="neutral"
             @click="activeTool = t"
-            class="flex-1 text-[10px] capitalize"
+            class="flex-1 text-[10px] uppercase font-bold tracking-wider py-2 rounded-lg transition-colors outline-none cursor-pointer"
+            :class="activeTool === t ? 'bg-white dark:bg-[#1a1a1a] shadow-sm text-neutral-900 dark:text-white' : 'bg-transparent text-gray-500 hover:text-gray-900 dark:hover:text-white'"
           >
             {{ t === "ai" ? "Auto" : t === "brush" ? "Brush" : "Eraser" }}
-          </UButton>
+          </button>
         </div>
         <div v-if="activeTool !== 'ai'" class="space-y-2">
           <input
@@ -86,22 +85,17 @@ const onFile = (e: Event) => {
             class="w-full accent-primary"
           />
         </div>
-        <UButton
-          color="neutral"
-          variant="ghost"
+        <button
           @click="clear"
-          class="w-full text-[10px] font-bold"
-          >Clear All</UButton
+          class="w-full text-[10px] uppercase font-bold tracking-widest text-gray-500 hover:text-neutral-900 dark:hover:text-white transition-colors py-2 outline-none cursor-pointer"
+          >Clear All</button
         >
       </div>
-      <UButton
+      <button
         v-else
-        block
-        color="neutral"
-        variant="soft"
-        class="h-20 border-2 border-dashed rounded-xl"
+        class="w-full h-20 border-2 border-dashed border-gray-300 dark:border-white/20 hover:border-blue-500 dark:hover:border-blue-500 rounded-xl flex items-center justify-center text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-blue-500 transition-colors outline-none cursor-pointer"
         @click="fileInput?.click()"
-        >Upload Image</UButton
+        >Upload Image</button
       >
       <input type="file" ref="fileInput" class="hidden" @change="onFile" />
     </div>
@@ -112,8 +106,8 @@ const onFile = (e: Event) => {
         v-if="uploadedImage && isImageProcessing"
         class="absolute inset-0 z-30 bg-white/80 flex flex-col items-center justify-center"
       >
-        <UIcon
-          name="i-heroicons-cpu-chip"
+        <Icon
+          name="lucide:cpu"
           class="w-10 h-10 text-primary animate-pulse"
         />
         <span class="text-[10px] font-black uppercase tracking-widest"

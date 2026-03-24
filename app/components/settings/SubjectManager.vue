@@ -155,12 +155,13 @@ const isBusy = computed(() => isSaving.value || isUploading.value);
           Manage reference subjects for image generation.
         </p>
       </div>
-      <UButton
-        icon="i-heroicons-plus"
-        label="New"
-        color="primary"
+      <button
         @click="openCreate"
-      />
+        class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold uppercase tracking-widest rounded-xl transition-colors outline-none cursor-pointer shadow-sm"
+      >
+        <Icon name="lucide:plus" class="w-4 h-4" />
+        New
+      </button>
     </div>
 
     <!-- Loading skeleton -->
@@ -177,8 +178,8 @@ const isBusy = computed(() => isSaving.value || isUploading.value);
       v-else-if="subjects.length === 0"
       class="flex flex-col items-center justify-center py-16 text-center opacity-40 select-none"
     >
-      <UIcon name="i-heroicons-user-group" class="w-12 h-12 mb-3" />
-      <p class="text-sm font-bold uppercase tracking-widest">
+      <Icon name="lucide:users" class="w-12 h-12 mb-3 text-gray-500" />
+      <p class="text-sm font-bold uppercase tracking-widest text-gray-500">
         No subjects yet
       </p>
     </div>
@@ -216,20 +217,18 @@ const isBusy = computed(() => isSaving.value || isUploading.value);
 
         <!-- Action buttons (always visible) -->
         <div class="flex items-center gap-1 shrink-0">
-          <UButton
-            icon="i-heroicons-pencil-square"
-            size="xs"
-            color="neutral"
-            variant="ghost"
+          <button
             @click.stop="openEdit(subject)"
-          />
-          <UButton
-            icon="i-heroicons-trash"
-            size="xs"
-            color="error"
-            variant="ghost"
+            class="p-1.5 rounded-lg text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors outline-none cursor-pointer"
+          >
+            <Icon name="lucide:edit" class="w-4 h-4" />
+          </button>
+          <button
             @click.stop="confirmDelete(subject)"
-          />
+            class="p-1.5 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors outline-none cursor-pointer"
+          >
+            <Icon name="lucide:trash-2" class="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>
@@ -244,28 +243,19 @@ const isBusy = computed(() => isSaving.value || isUploading.value);
     />
 
     <!-- Create / Edit Modal -->
-    <UModal
-      v-model:open="isModalOpen"
-      :title="isEditing ? 'Edit Subject' : 'New Subject'"
-    >
-      <!-- Hidden trigger (modal controlled by v-model:open) -->
-      <template #default>
-        <span class="hidden" />
-      </template>
-
-      <template #body>
+    <PartsModalBaseModal v-model:open="isModalOpen" :title="isEditing ? 'Edit Subject' : 'New Subject'">
         <div class="space-y-5">
           <!-- Image upload area -->
           <div>
             <label
-              class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300"
+              class="block text-sm font-bold uppercase tracking-widest text-gray-500 mb-2"
             >
               Image
             </label>
             <button
               type="button"
               @click="triggerFileInput"
-              class="w-full aspect-video rounded-xl border-2 border-dashed border-gray-300 dark:border-white/15 hover:border-primary active:border-primary transition-colors overflow-hidden bg-gray-50 dark:bg-white/5 flex items-center justify-center cursor-pointer group"
+              class="w-full aspect-video rounded-xl border-2 border-dashed border-gray-300 dark:border-white/15 hover:border-blue-500 dark:hover:border-blue-500 transition-colors overflow-hidden bg-gray-50 dark:bg-white/5 flex items-center justify-center cursor-pointer group outline-none"
             >
               <img
                 v-if="previewImage"
@@ -273,9 +263,9 @@ const isBusy = computed(() => isSaving.value || isUploading.value);
                 class="w-full h-full object-cover"
               />
               <div v-else class="text-center space-y-2">
-                <UIcon
-                  name="i-heroicons-arrow-up-tray"
-                  class="w-8 h-8 text-gray-400 group-hover:text-primary transition-colors mx-auto"
+                <Icon
+                  name="lucide:upload"
+                  class="w-8 h-8 text-gray-400 group-hover:text-blue-500 transition-colors mx-auto"
                 />
                 <p
                   class="text-xs text-gray-400 uppercase tracking-wider font-bold"
@@ -287,50 +277,46 @@ const isBusy = computed(() => isSaving.value || isUploading.value);
           </div>
 
           <!-- Name input -->
-          <UFormField label="Name" name="name">
-            <UInput
-              v-model="formState.name"
-              placeholder="e.g. Main character"
-              icon="i-heroicons-user"
-              class="w-full"
-            />
-          </UFormField>
+          <div>
+            <label
+              class="block text-sm font-bold uppercase tracking-widest text-gray-500 mb-2"
+            >
+              Name
+            </label>
+            <div class="relative">
+              <Icon name="lucide:user" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                v-model="formState.name"
+                placeholder="e.g. Main character"
+                class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1a1a1a] border border-gray-300 dark:border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600"
+              />
+            </div>
+          </div>
         </div>
-      </template>
 
       <template #footer>
-        <div class="flex justify-end gap-3">
-          <UButton
-            label="Cancel"
-            color="neutral"
-            variant="ghost"
+        <div class="flex justify-end gap-3 w-full">
+          <button
+            class="px-5 py-2.5 rounded-xl font-bold uppercase tracking-widest text-xs text-gray-600 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10 transition-colors outline-none cursor-pointer"
             @click="isModalOpen = false"
-          />
-          <UButton
-            :label="isEditing ? 'Save' : 'Create'"
-            color="primary"
+          >Cancel</button>
+          <PartsButtonPrimary
             :loading="isBusy"
             :disabled="!isFormValid || isBusy"
             @click="handleSubmit"
-          />
+            class="px-5 py-2.5 w-auto!"
+          >
+             {{ isEditing ? 'Save' : 'Create' }}
+          </PartsButtonPrimary>
         </div>
       </template>
-    </UModal>
+    </PartsModalBaseModal>
 
     <!-- Delete confirmation modal -->
-    <UModal
-      v-model:open="isDeleteModalOpen"
-      title="Delete Subject"
-      description="This action cannot be undone. Are you sure?"
-    >
-      <template #default>
-        <span class="hidden" />
-      </template>
-
-      <template #body>
+    <PartsModalBaseModal v-model:open="isDeleteModalOpen" title="Delete Subject" description="This action cannot be undone. Are you sure?">
         <div
           v-if="deleteTarget"
-          class="flex items-center gap-3 p-3 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/30"
+          class="flex items-center gap-3 p-3 mt-4 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/30"
         >
           <img
             :src="deleteTarget.image"
@@ -341,23 +327,19 @@ const isBusy = computed(() => isSaving.value || isUploading.value);
             {{ deleteTarget.name }}
           </p>
         </div>
-      </template>
 
       <template #footer>
-        <div class="flex justify-end gap-3">
-          <UButton
-            label="Cancel"
-            color="neutral"
-            variant="ghost"
+        <div class="flex justify-end gap-3 w-full">
+          <button
+            class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest text-gray-600 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10 transition-colors outline-none cursor-pointer"
             @click="isDeleteModalOpen = false"
-          />
-          <UButton
-            label="Delete"
-            color="error"
+          >Cancel</button>
+          <button
+            class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest text-white bg-red-500 hover:bg-red-600 transition-colors outline-none cursor-pointer shadow-sm"
             @click="executeDelete"
-          />
+          >Delete</button>
         </div>
       </template>
-    </UModal>
+    </PartsModalBaseModal>
   </section>
 </template>

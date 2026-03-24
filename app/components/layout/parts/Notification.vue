@@ -72,13 +72,13 @@ const formatTime = (ts: number) => {
 <template>
   <div class="relative flex items-center h-full" ref="containerRef">
     <div class="relative inline-flex items-center">
-      <UButton
-        icon="i-lucide-bell"
-        color="neutral"
-        variant="ghost"
+      <button
         @click="isOpen = !isOpen"
-        :class="{ 'bg-gray-50 dark:bg-gray-800': isOpen }"
-      />
+        class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer outline-none relative text-gray-700 dark:text-gray-300"
+        :class="{ 'bg-black/5 dark:bg-white/10': isOpen }"
+      >
+         <Icon name="lucide:bell" class="w-5 h-5" />
+      </button>
       <span
         v-if="hasUnread"
         class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-900 pointer-events-none"

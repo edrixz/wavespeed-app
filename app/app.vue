@@ -6,7 +6,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <UApp>
+  <div class="min-h-screen bg-white dark:bg-[#0a0a0a] text-neutral-900 dark:text-gray-100 transition-colors">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -14,7 +14,7 @@ onMounted(() => {
     <div v-if="isReady">
       <CommonToastContainer />
     </div>
-  </UApp>
+  </div>
 </template>
 
 <style>

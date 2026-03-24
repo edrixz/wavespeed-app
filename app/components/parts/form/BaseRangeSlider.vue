@@ -31,13 +31,13 @@ const modelValue = defineModel<number>({ required: true });
         :step="step"
       />
     </div>
-    <USlider
-      v-model="modelValue"
+    <input
+      type="range"
+      v-model.number="modelValue"
       :min="min"
       :max="max"
       :step="step"
-      color="info"
-      class="w-full"
+      class="w-full h-1.5 bg-gray-200 dark:bg-gray-700/50 rounded-lg cursor-pointer accent-blue-500 focus:outline-none"
     />
   </div>
 </template>

@@ -12,13 +12,13 @@ const isDark = computed({
 
 <template>
   <ClientOnly v-if="!colorMode?.forced">
-    <UButton
-      :icon="isDark ? 'i-lucide-moon' : 'i-lucide-sun'"
-      color="neutral"
-      variant="ghost"
-      aria-label="Theme"
+    <button
       @click="isDark = !isDark"
-    />
+      class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-500 dark:text-gray-400 focus:outline-none"
+      aria-label="Toggle Theme"
+    >
+      <Icon :name="isDark ? 'lucide:moon' : 'lucide:sun'" class="w-5 h-5" />
+    </button>
 
     <template #fallback>
       <div class="w-8 h-8" />
