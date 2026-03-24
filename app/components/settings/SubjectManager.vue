@@ -148,10 +148,10 @@ const isBusy = computed(() => isSaving.value || isUploading.value);
 <template>
   <section class="space-y-4">
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between mb-4">
       <div>
-        <h2 class="text-lg font-bold tracking-tight">Subjects</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400">
+        <h2 class="text-xl font-black uppercase tracking-tight text-neutral-900 dark:text-white">Subjects</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
           Manage reference subjects for image generation.
         </p>
       </div>

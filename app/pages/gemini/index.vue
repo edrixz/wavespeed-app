@@ -13,7 +13,7 @@ const geminiTools = [
     title: "Image Analyzer",
     description:
       "Phân tích và trích xuất thông tin chi tiết từ hình ảnh của bạn và trả về theo định dạng chuẩn.",
-    icon: "i-heroicons-document-magnifying-glass",
+    icon: "lucide:scan-search",
     path: "/gemini/image-analyzer",
     iconColor: "text-blue-500",
   },
@@ -22,7 +22,7 @@ const geminiTools = [
     title: "Magic Eraser",
     description:
       "Chọn và xóa bỏ các chủ thể không mong muốn khỏi bức ảnh một cách mượt mà và tự nhiên.",
-    icon: "i-heroicons-sparkles",
+    icon: "lucide:eraser",
     path: "/gemini/magic-eraser",
     iconColor: "text-purple-500",
   },
@@ -31,7 +31,7 @@ const geminiTools = [
     title: "AI Retouch",
     description:
       "Nâng cấp chất lượng, thêm texture chi tiết và điều chỉnh ánh sáng chuyên nghiệp cho ảnh gốc.",
-    icon: "i-heroicons-paint-brush",
+    icon: "lucide:paintbrush",
     path: "/gemini/ai-retouch",
     iconColor: "text-emerald-500",
   },
@@ -40,7 +40,7 @@ const geminiTools = [
     title: "JSON Prompt Converter",
     description:
       "Chuyển đổi dữ liệu JSON từ các mô hình AI thành đoạn prompt văn bản thuần túy với cấu trúc chuẩn.",
-    icon: "i-heroicons-code-bracket-square",
+    icon: "lucide:file-json-2",
     path: "/gemini/json-converter",
     iconColor: "text-amber-500",
   },

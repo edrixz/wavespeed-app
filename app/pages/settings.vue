@@ -5,9 +5,9 @@ definePageMeta({ layout: "default" });
 <template>
   <div class="space-y-6 max-w-4xl mx-auto pb-28 lg:pb-8">
     <!-- Page title -->
-    <div>
-      <h1 class="text-2xl font-black tracking-tight">Settings</h1>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+    <div class="mb-8">
+      <h1 class="text-2xl lg:text-3xl font-black uppercase tracking-tight text-neutral-900 dark:text-white">Settings</h1>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
         Manage your account preferences and resources.
       </p>
     </div>

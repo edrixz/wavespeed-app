@@ -33,17 +33,17 @@ const onFile = (e: Event) => {
     class="h-screen flex flex-col lg:grid lg:grid-cols-12 overflow-hidden bg-white dark:bg-black"
   >
     <div
-      class="lg:col-span-3 border-r border-black/5 p-4 space-y-4 flex flex-col shrink-0"
+      class="lg:col-span-3 border-r border-black/5 dark:border-white/5 p-4 space-y-4 flex flex-col shrink-0"
     >
       <div
-        class="flex items-center gap-3 font-black uppercase text-[10px] tracking-widest"
+        class="flex items-center gap-3"
       >
         <NuxtLink
           to="/gemini"
-          class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full transition-colors flex items-center justify-center"
+          class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full transition-colors flex items-center justify-center text-gray-700 dark:text-gray-300"
           ><Icon name="lucide:arrow-left" class="w-5 h-5"
         /></NuxtLink>
-        <h2>Magic Eraser</h2>
+        <h2 class="text-xl font-black uppercase tracking-tight text-neutral-900 dark:text-white">Magic Eraser</h2>
       </div>
       <div
         class="p-2 rounded-lg border text-[9px] font-black uppercase flex items-center gap-2"
@@ -100,7 +100,7 @@ const onFile = (e: Event) => {
       <input type="file" ref="fileInput" class="hidden" @change="onFile" />
     </div>
     <div
-      class="lg:col-span-9 flex-1 relative bg-gray-50 flex items-center justify-center overflow-hidden"
+      class="lg:col-span-9 flex-1 relative bg-gray-50 dark:bg-neutral-900/50 flex items-center justify-center overflow-hidden"
     >
       <div
         v-if="uploadedImage && isImageProcessing"

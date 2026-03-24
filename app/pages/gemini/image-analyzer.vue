@@ -26,7 +26,7 @@ const isModalOpen = ref(false);
             class="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors flex items-center justify-center"
             ><Icon name="lucide:arrow-left" class="w-5 h-5"
           /></NuxtLink>
-          <h2 class="text-xl font-black uppercase tracking-tight">
+          <h2 class="text-xl font-black uppercase tracking-tight text-neutral-900 dark:text-white">
             Image Analyzer
           </h2>
         </div>
