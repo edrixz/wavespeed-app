@@ -6,7 +6,7 @@ export const usePayloadMapper = () => {
   const { uploadImage } = useUploadToSupabase();
 
   const imageStore = useImagesStore();
-  const { images, filesToUpload } = storeToRefs(imageStore);
+  const { images } = storeToRefs(imageStore);
 
   const payloadStore = useSeedreamPayloadStore();
   const {
@@ -25,40 +25,43 @@ export const usePayloadMapper = () => {
    * @returns {Promise<seedreamEditPayload>} The formatted payload
    */
   const buildPayload = async (): Promise<seedreamEditPayload> => {
-    const finalImageUrls: string[] = [];
+    // Upload LOCAL files concurrently first, preserving their index mapping
+    const localEntries = images.value
+      .map((img, idx) => ({ img, idx }))
+      .filter((e) => e.img.type === "LOCAL" && e.img.file);
 
-    // Collect existing URLs
-    images.value.forEach((img) => {
-      if (img.url.startsWith("http") && !img.url.startsWith("blob:"))
-        finalImageUrls.push(img.url);
-    });
+    let uploadedMap = new Map<number, string>();
 
-    // Upload new files to Supabase if present
-    if (filesToUpload.value.length > 0) {
+    if (localEntries.length > 0) {
       setStatus(
-        `Uploading ${filesToUpload.value.length} images to Supabase...`,
+        `Uploading ${localEntries.length} images to Supabase...`,
         "loading",
       );
 
-      // Upload multiple files concurrently
-      const uploadPromises = filesToUpload.value.map((file) =>
-        uploadImage(file, "tmp-files"),
+      const uploadPromises = localEntries.map((e) =>
+        uploadImage(e.img.file!, "tmp-files"),
       );
-
       const uploadedUrls = await Promise.all(uploadPromises);
 
-      // Filter out failed uploads (null values)
-      const validUrls = uploadedUrls.filter(
-        (url): url is string => url !== null,
-      );
-
-      if (validUrls.length !== filesToUpload.value.length) {
+      // Validate all uploads succeeded
+      const failedCount = uploadedUrls.filter((url) => url === null).length;
+      if (failedCount > 0) {
         throw new Error("Some images failed to upload to Supabase.");
       }
 
-      finalImageUrls.push(...validUrls);
+      // Map each uploaded URL back to its original index
+      localEntries.forEach((e, i) => {
+        uploadedMap.set(e.idx, uploadedUrls[i] as string);
+      });
+
       setStatus("Upload complete.", "success");
     }
+
+    // Build final URLs array in the exact same order as the UI
+    const finalImageUrls: string[] = images.value.map((img, idx) => {
+      if (uploadedMap.has(idx)) return uploadedMap.get(idx)!;
+      return img.url;
+    });
 
     return {
       enable_base64_output: enableBase64Output.value,
