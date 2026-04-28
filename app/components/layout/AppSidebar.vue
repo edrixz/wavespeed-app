@@ -4,6 +4,7 @@ defineEmits(["close"]);
 
 const menuItems = [
   { name: "Seedream AI", icon: "lucide:sparkles", path: "/" },
+  { name: "GPT Image", icon: "gpt", path: "/gpt-image" },
   { name: "Grok AI", icon: "grok", path: "/grok" },
   { name: "Gemini", icon: "gemini", path: "/gemini" },
   { name: "Gallery", icon: "lucide:image", path: "/gallery" },
@@ -39,6 +40,7 @@ const menuItems = [
           <div class="icon-wrapper">
             <PartsIconsGrok v-if="item.icon === 'grok'" />
             <PartsIconsGemini v-if="item.icon === 'gemini'" />
+            <PartsIconsGpt v-if="item.icon === 'gpt'" />
             <Icon v-else :name="item.icon" size="20" />
           </div>
           <span class="font-medium text-[14px]">{{ item.name }}</span>

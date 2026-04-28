@@ -1,1 +1,2 @@
-export const DEFAULT_IMAGE_URL = "https://static.wavespeed.ai/examples/20568785c65c48b78fc9035bb9e9bcf9/1764761316371833793_r5ZX531Z.jpeg";
+export const DEFAULT_IMAGE_URL =
+  "https://static.wavespeed.ai/examples/20568785c65c48b78fc9035bb9e9bcf9/1764761316371833793_r5ZX531Z.jpeg";
